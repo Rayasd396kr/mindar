@@ -39,6 +39,11 @@
       const targetLat = 24.151017427806234;
       const targetLon = 120.68146003039392;
 
+      // 平滑過渡函數
+      function smoothMove(current, target, alpha) {
+        return current + (target - current) * alpha;
+      }
+
       // 檢查距離並顯示或隱藏物件
       navigator.geolocation.watchPosition(function(position) {
         const userLat = position.coords.latitude;
@@ -56,11 +61,21 @@
           const offsetX = Math.sin(radianRotation) * 2;
           const offsetZ = Math.cos(radianRotation) * 2;
           
-          box.setAttribute('position', {
+          const targetPosition = {
             x: cameraPosition.x + offsetX,
             y: cameraPosition.y,
             z: cameraPosition.z - offsetZ
+          };
+
+          const currentPosition = box.getAttribute('position');
+          
+          // 平滑過渡位置
+          box.setAttribute('position', {
+            x: smoothMove(currentPosition.x, targetPosition.x, 0.1),
+            y: smoothMove(currentPosition.y, targetPosition.y, 0.1),
+            z: smoothMove(currentPosition.z, targetPosition.z, 0.1)
           });
+
           box.setAttribute('visible', 'true');
           box.setAttribute('look-at', '[gps-camera]'); // 確保物件始終朝向相機
         } else {
@@ -71,7 +86,7 @@
       }, {
         enableHighAccuracy: true,
         maximumAge: 0,
-        timeout: 27000
+        timeout: 5000
       });
 
       // 檢查方向感應器
