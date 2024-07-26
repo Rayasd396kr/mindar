@@ -1,71 +1,61 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <title>AR Geolocation</title>
-    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
-    <script src="https://unpkg.com/aframe-look-at-component/dist/aframe-look-at-component.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.js"></script>
-  </head>
-  <body style="margin: 0; overflow: hidden;">
-    <a-scene
-      vr-mode-ui="enabled: false"
-      renderer="logarithmicDepthBuffer: true;"
-      embedded
-      arjs="sourceType: webcam; debugUIEnabled: false;">
-      
-      <!-- 添加 3D 物件 -->
-      <a-box id="targetBox" position="0 0 0" material="color: red;" visible="true" look-at="[gps-camera]"></a-box>
+<head>
+  <meta charset="utf-8" />
+  <title>方向感應器地圖</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <style>
+    #map {
+      height: 100vh;
+      width: 100%;
+    }
+    .rotate {
+      transform-origin: center;
+      transition: transform 0.1s linear;
+    }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script>
+    // 初始化地圖
+    const map = L.map('map').setView([0, 0], 18);
 
-      <a-camera id="gps-camera" gps-camera rotation-reader></a-camera>
-    </a-scene>
+    // 加入 OpenStreetMap 圖層
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19
+    }).addTo(map);
 
-    <script>
-      // 設置目標位置
-      const targetLat = 24.151017427806234;
-      const targetLon = 120.68146003039392;
+    // 添加使用者位置的標記
+    const userIcon = L.divIcon({className: 'user-icon', html: '📍'});
+    const userMarker = L.marker([0, 0], {icon: userIcon}).addTo(map);
 
-      // 檢查距離並顯示或隱藏物件
-      navigator.geolocation.watchPosition(function(position) {
-        const userLat = position.coords.latitude;
-        const userLon = position.coords.longitude;
-        const box = document.getElementById('targetBox');
-        const camera = document.getElementById('gps-camera');
+    // 獲取並更新使用者位置
+    navigator.geolocation.watchPosition(function(position) {
+      const userLat = position.coords.latitude;
+      const userLon = position.coords.longitude;
+      userMarker.setLatLng([userLat, userLon]);
+      map.setView([userLat, userLon]);
+    }, function(error) {
+      console.error('Geolocation error:', error);
+    }, {
+      enableHighAccuracy: true,
+      maximumAge: 0,
+      timeout: 5000
+    });
 
-        // 設定物件顯示在相機前方 2 米處
-        const cameraPosition = camera.getAttribute('position');
-        const cameraRotation = camera.getAttribute('rotation');
-        
-        const radianRotation = cameraRotation.y * Math.PI / 180;
-        const offsetX = Math.sin(radianRotation) * 2;
-        const offsetZ = Math.cos(radianRotation) * 2;
-        
-        const targetPosition = {
-          x: cameraPosition.x + offsetX,
-          y: cameraPosition.y,
-          z: cameraPosition.z - offsetZ
-        };
-
-        // 直接設定位置
-        box.setAttribute('position', targetPosition);
-        box.setAttribute('visible', 'true');
-        box.setAttribute('look-at', '[gps-camera]'); // 確保物件始終朝向相機
-      }, function(error) {
-        console.error('Geolocation error:', error);
-      }, {
-        enableHighAccuracy: true,
-        maximumAge: 0,
-        timeout: 5000
-      });
-
-      // 檢查方向感應器
-      window.addEventListener('deviceorientation', function(event) {
-        if (event.alpha === null) {
-          console.warn('Device orientation not supported or not enabled.');
-        } else {
-          console.log('Device orientation available.');
-        }
-      });
-    </script>
-  </body>
+    // 獲取並更新方向
+    window.addEventListener('deviceorientation', function(event) {
+      if (event.alpha !== null) {
+        const alpha = event.alpha;
+        const rotation = 360 - alpha; // 逆時針旋轉
+        document.querySelector('.user-icon').style.transform = `rotate(${rotation}deg)`;
+      } else {
+        console.warn('Device orientation not supported or not enabled.');
+      }
+    });
+  </script>
+</body>
 </html>
