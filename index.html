@@ -62,6 +62,7 @@
             z: cameraPosition.z - offsetZ
           });
           box.setAttribute('visible', 'true');
+          box.setAttribute('look-at', '[gps-camera]'); // 確保物件始終朝向相機
         } else {
           box.setAttribute('visible', 'false');
         }
@@ -71,6 +72,15 @@
         enableHighAccuracy: true,
         maximumAge: 0,
         timeout: 27000
+      });
+
+      // 檢查方向感應器
+      window.addEventListener('deviceorientation', function(event) {
+        if (event.alpha === null) {
+          console.warn('Device orientation not supported or not enabled.');
+        } else {
+          console.log('Device orientation available.');
+        }
       });
     </script>
   </body>
