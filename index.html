@@ -1,101 +1,82 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>Compass Example</title>
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Geolocation and Orientation with OpenLayers</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@latest/ol.css" type="text/css">
   <style>
-    body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
+    .map {
       height: 100vh;
-      margin: 0;
-      background-color: #f0f0f0;
-    }
-    .compass {
-      position: relative;
-      width: 150px;
-      height: 150px;
-      border: 2px solid #333;
-      border-radius: 50%;
-      background-color: #fff;
-    }
-    .compass .needle {
-      position: absolute;
-      width: 2px;
-      height: 50%;
-      background-color: red;
-      top: 25%;
-      left: 50%;
-      transform-origin: bottom center;
-      transform: rotate(0deg);
-    }
-    .compass .direction {
-      position: absolute;
       width: 100%;
-      height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
     }
-    .compass .direction span {
-      position: absolute;
-      font-size: 20px;
-      font-weight: bold;
+    .user-marker {
+      width: 50px;
+      height: 50px;
+      background: url('https://upload.wikimedia.org/wikipedia/commons/e/ec/RedDot.svg') no-repeat center;
+      background-size: cover;
+      transform-origin: center;
     }
-    .compass .north { top: 5%; }
-    .compass .east { right: 5%; }
-    .compass .south { bottom: 5%; }
-    .compass .west { left: 5%; }
   </style>
 </head>
 <body>
-  <div class="compass">
-    <div class="needle"></div>
-    <div class="direction north"><span>N</span></div>
-    <div class="direction east"><span>E</span></div>
-    <div class="direction south"><span>S</span></div>
-    <div class="direction west"><span>W</span></div>
-  </div>
+  <div id="map" class="map"></div>
+  <script src="https://cdn.jsdelivr.net/npm/ol@latest/dist/ol.js"></script>
   <script>
-    const needle = document.querySelector('.needle');
+    // Create map and base layer
+    const map = new ol.Map({
+      target: 'map',
+      layers: [
+        new ol.layer.Tile({
+          source: new ol.source.OSM()
+        })
+      ],
+      view: new ol.View({
+        center: ol.proj.fromLonLat([0, 0]),
+        zoom: 15
+      })
+    });
 
+    // Create user marker
+    const userIconElement = document.createElement('div');
+    userIconElement.className = 'user-marker';
+
+    const userMarker = new ol.Overlay({
+      positioning: 'center-center',
+      element: userIconElement,
+      stopEvent: false
+    });
+    map.addOverlay(userMarker);
+
+    // Update user position
+    const updateUserPosition = (coords) => {
+      const { latitude, longitude } = coords;
+      const position = ol.proj.fromLonLat([longitude, latitude]);
+      userMarker.setPosition(position);
+      map.getView().setCenter(position);
+    };
+
+    // Track user's location
+    if ('geolocation' in navigator) {
+      navigator.geolocation.watchPosition((position) => {
+        updateUserPosition(position.coords);
+      }, (error) => {
+        console.error('Geolocation error:', error);
+      }, {
+        enableHighAccuracy: true,
+        maximumAge: 0,
+        timeout: 27000
+      });
+    } else {
+      alert('Geolocation not supported');
+    }
+
+    // Update user orientation
     if (window.DeviceOrientationEvent) {
       window.addEventListener('deviceorientation', (event) => {
         if (event.alpha !== null) {
-          // alpha is the compass direction the device is facing relative to the north
-          const alpha = event.alpha;
-          const beta = event.beta;
-          const gamma = event.gamma;
-
-          // Calculate the true heading
-          let heading = alpha;
-
-          // Check if the device is in portrait or landscape orientation
-          if (window.screen.orientation.angle === 0) {
-            // Portrait mode
-            if (gamma > 0) {
-              heading = alpha - beta + 90;
-            } else {
-              heading = alpha - beta - 90;
-            }
-          } else if (window.screen.orientation.angle === 90) {
-            // Landscape mode (right side up)
-            heading = alpha - beta + 180;
-          } else if (window.screen.orientation.angle === -90) {
-            // Landscape mode (left side up)
-            heading = alpha - beta;
-          } else if (window.screen.orientation.angle === 180) {
-            // Portrait mode (upside down)
-            heading = alpha + beta - 90;
-          }
-
-          // Normalize the heading value to be between 0 and 360
-          heading = (heading + 360) % 360;
-
-          // Apply a CSS transform to rotate the needle
-          needle.style.transform = `rotate(${heading}deg)`;
+          const heading = (360 - event.alpha) % 360;
+          userIconElement.style.transform = `rotate(${heading}deg)`;
         }
       }, true);
     } else {
