@@ -10,6 +10,14 @@
       height: 100vh;
       width: 100%;
     }
+    .user-icon {
+      font-size: 48px; /* 調整標記的大小 */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 48px; /* 寬度和高度一致 */
+      height: 48px;
+    }
     .rotate {
       transform-origin: center;
       transition: transform 0.1s linear;
@@ -29,7 +37,7 @@
     }).addTo(map);
 
     // 添加使用者位置的標記
-    const userIcon = L.divIcon({className: 'user-icon', html: '📍'});
+    const userIcon = L.divIcon({className: 'user-icon rotate', html: '📍'});
     const userMarker = L.marker([0, 0], {icon: userIcon}).addTo(map);
 
     // 獲取並更新使用者位置
