@@ -37,7 +37,12 @@
     }).addTo(map);
 
     // 添加使用者位置的標記
-    const userIcon = L.divIcon({className: 'user-icon rotate', html: '📍'});
+    const userIcon = L.divIcon({
+      className: 'user-icon rotate',
+      html: '📍',
+      iconSize: [48, 48], // 設置標記的大小
+      iconAnchor: [24, 24] // 設置標記的錨點為中心
+    });
     const userMarker = L.marker([0, 0], {icon: userIcon}).addTo(map);
 
     // 獲取並更新使用者位置
