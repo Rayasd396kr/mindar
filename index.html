@@ -48,7 +48,12 @@
           source: new ol.source.OSM()
         })
       ],
-      view: view
+      view: view,
+      controls: ol.control.defaults({
+        attributionOptions: {
+          collapsible: false
+        }
+      }).extend([]) // 移除預設控制器（包括右上角的校准按钮）
     });
 
     const userIconElement = document.createElement('div');
