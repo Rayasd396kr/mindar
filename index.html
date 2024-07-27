@@ -1,186 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Geolocation and Orientation with OpenLayers</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@latest/ol.css" type="text/css">
-  <style>
-    .map {
-      height: 100vh;
-      width: 100%;
-    }
-    .user-marker {
-      width: 50px;
-      height: 50px;
-      background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZD0iTTEyIDJsOSAyMUgtM0wxMiAyeiIgZmlsbD0icmVkIi8+PC9zdmc+') no-repeat center;
-      background-size: cover;
-      transform-origin: center;
-      transition: transform 0.1s linear; /* 添加平滑过渡效果 */
-    }
-    #info {
-      position: fixed;
-      bottom: 1em;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(255, 255, 255, 0.9);
-      padding: 1em;
-      border-radius: 4px;
-      z-index: 1000;
-      font-size: 1.2em;
-    }
-    #geolocate {
-      position: fixed;
-      top: 1em;
-      left: 50%;
-      transform: translateX(-50%);
-      padding: 1em;
-      background: #007bff;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      z-index: 1000;
-    }
-    #geolocate:disabled {
-      background: #6c757d;
-    }
-  </style>
-</head>
-<body>
-  <div id="map" class="map"></div>
-  <div id="info">Please click "Start Tracking" to begin.</div>
-  <button id="geolocate">Start Tracking</button>
-  <script src="https://cdn.jsdelivr.net/npm/ol@latest/dist/ol.js"></script>
-  <script>
-    const view = new ol.View({
-      center: ol.proj.fromLonLat([120.68146003039392, 24.151017427806234]),
-      zoom: 15,
-    });
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaflet Tutorial</title>
 
-    const tileLayer = new ol.layer.Tile({
-      source: new ol.source.OSM(),
-    });
+    <!-- leaflet css  -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@v0.74.0/dist/L.Control.Locate.min.css" />
 
-    const map = new ol.Map({
-      layers: [tileLayer],
-      target: 'map',
-      view: view,
-    });
+<script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@v0.74.0/dist/L.Control.Locate.min.js" charset="utf-8"></script>
 
-    const markerEl = document.createElement('div');
-    markerEl.className = 'user-marker';
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@0.74.4/dist/L.Control.Locate.min.css" />
 
-    const marker = new ol.Overlay({
-      positioning: 'center-center',
-      element: markerEl,
-      stopEvent: false,
-    });
-    map.addOverlay(marker);
-
-    const positions = new ol.geom.LineString([], 'XYZM');
-
-    const geolocation = new ol.Geolocation({
-      projection: view.getProjection(),
-      trackingOptions: {
-        maximumAge: 10000,
-        enableHighAccuracy: true,
-        timeout: 600000,
-      },
-    });
-
-    let deltaMean = 500;
-
-    geolocation.on('change', function () {
-      const position = geolocation.getPosition();
-      const accuracy = geolocation.getAccuracy();
-      const heading = geolocation.getHeading() || 0;
-      const speed = geolocation.getSpeed() || 0;
-      const m = Date.now();
-
-      addPosition(position, heading, m, speed);
-
-      const coords = ol.proj.toLonLat(position);
-      const html = [
-        'Position: ' + coords[1].toFixed(6) + ', ' + coords[0].toFixed(6),
-        'Accuracy: ' + accuracy,
-        'Heading: ' + Math.round(radToDeg(heading)) + '&deg;',
-        'Speed: ' + (speed * 3.6).toFixed(1) + ' km/h',
-      ].join('<br />');
-      document.getElementById('info').innerHTML = html;
-    });
-
-    function radToDeg(rad) {
-      return (rad * 360) / (Math.PI * 2);
-    }
-
-    function degToRad(deg) {
-      return (deg * Math.PI * 2) / 360;
-    }
-
-    function mod(n) {
-      return ((n % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
-    }
-
-    function addPosition(position, heading, m, speed) {
-      const x = position[0];
-      const y = position[1];
-      const fCoords = positions.getCoordinates();
-      const previous = fCoords[fCoords.length - 1];
-      const prevHeading = previous && previous[2];
-      if (prevHeading) {
-        let headingDiff = heading - mod(prevHeading);
-
-        if (Math.abs(headingDiff) > Math.PI) {
-          const sign = headingDiff >= 0 ? 1 : -1;
-          headingDiff = -sign * (2 * Math.PI - Math.abs(headingDiff));
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
         }
-        heading = prevHeading + headingDiff;
-      }
-      positions.appendCoordinate([x, y, heading, m]);
 
-      positions.setCoordinates(positions.getCoordinates().slice(-20));
-    }
+        #map {
+            width: 100%;
+            height: 100vh;
+        }
+    </style>
+</head>
 
-    function getCenterWithHeading(position, rotation, resolution) {
-      const size = map.getSize();
-      const height = size[1];
-
-      return [
-        position[0] - (Math.sin(rotation) * height * resolution * 1) / 4,
-        position[1] + (Math.cos(rotation) * height * resolution * 1) / 4,
-      ];
-    }
-
-    let previousM = 0;
-    function updateView() {
-      let m = Date.now() - deltaMean * 1.5;
-      m = Math.max(m, previousM);
-      previousM = m;
-      const c = positions.getCoordinateAtM(m, true);
-      if (c) {
-        view.setCenter(getCenterWithHeading(c, -c[2], view.getResolution()));
-        view.setRotation(-c[2]);
-        marker.setPosition(c);
-        console.log(`Rotating marker to ${radToDeg(c[2])} degrees`);
-        markerEl.style.transform = `rotate(${radToDeg(c[2])}deg)`;
-        map.render();
-      }
-    }
-
-    const geolocateBtn = document.getElementById('geolocate');
-    geolocateBtn.addEventListener('click', function () {
-      geolocation.setTracking(true);
-
-      tileLayer.on('postrender', updateView);
-      map.render();
-
-      disableButtons();
-    }, false);
-
-    function disableButtons() {
-      geolocateBtn.disabled = true;
-    }
-  </script>
+<body>
+    <div id="map"></div>
 </body>
 </html>
+
+<!-- leaflet js  -->
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@0.74.0/dist/L.Control.Locate.min.js" charset="utf-8"></script>
+
+
+<script>
+    // Map initialization 
+    var map = L.map('map').setView([28.3949, 84.1240], 8);
+
+    //osm layer
+    var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    });
+    osm.addTo(map);
+    
+    
+
+    L.control.locate().addTo(map);
+
+</script>
