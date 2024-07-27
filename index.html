@@ -16,6 +16,7 @@
       background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZD0iTTEyIDJsOSAyMUgtM0wxMiAyeiIgZmlsbD0icmVkIi8+PC9zdmc+') no-repeat center;
       background-size: cover;
       transform-origin: center;
+      transition: transform 0.1s linear; /* 添加平滑过渡效果 */
     }
     #info {
       position: fixed;
@@ -161,6 +162,7 @@
         view.setCenter(getCenterWithHeading(c, -c[2], view.getResolution()));
         view.setRotation(-c[2]);
         marker.setPosition(c);
+        console.log(`Rotating marker to ${radToDeg(c[2])} degrees`);
         markerEl.style.transform = `rotate(${radToDeg(c[2])}deg)`;
         map.render();
       }
