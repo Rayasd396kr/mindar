@@ -96,13 +96,18 @@
     // 自動啟用地理定位跟蹤
     geolocation.setTracking(true);
 
+    const updateOrientation = (alpha) => {
+      userIconElement.style.transform = `rotate(${alpha}deg)`;
+      view.setRotation(-alpha * Math.PI / 180);
+    };
+
     if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
       DeviceOrientationEvent.requestPermission().then(permissionState => {
         if (permissionState === 'granted') {
           window.addEventListener('deviceorientationabsolute', (event) => {
             const alpha = event.alpha; // 絕對方位角
             if (alpha !== null) {
-              userIconElement.style.transform = `rotate(${alpha}deg)`;
+              updateOrientation(alpha);
             }
           });
         }
@@ -111,7 +116,7 @@
       window.addEventListener('deviceorientationabsolute', (event) => {
         const alpha = event.alpha; // 絕對方位角
         if (alpha !== null) {
-          userIconElement.style.transform = `rotate(${alpha}deg)`;
+          updateOrientation(alpha);
         }
       });
     }
