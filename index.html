@@ -16,6 +16,7 @@
       background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="red" d="M12 2l9 21h-18l9-21z"/></svg>') no-repeat center;
       background-size: cover;
       transform-origin: center;
+      transition: transform 0.2s ease; /* 平滑過渡效果 */
     }
     #calibration-message {
       display: none;
@@ -91,6 +92,7 @@
     geolocation.setTracking(true);
 
     const updateOrientation = (alpha) => {
+      // alpha 是設備相對於地球磁北的方位角，範圍是 0 到 360 度
       userIconElement.style.transform = `rotate(${alpha}deg)`;
       console.log(`設備方向 alpha: ${alpha}`);
     };
