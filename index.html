@@ -94,31 +94,31 @@
       console.log(`Device orientation alpha: ${alpha}`);
     };
 
-    if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
-      DeviceOrientationEvent.requestPermission().then(permissionState => {
-        if (permissionState === 'granted') {
-          window.addEventListener('deviceorientationabsolute', (event) => {
-            const alpha = event.alpha; // 絕對方位角
-            if (alpha !== null) {
-              updateOrientation(alpha);
-            } else {
-              console.error('Alpha value is null.');
-            }
-          });
-        } else {
-          console.error('Device orientation permission not granted.');
-        }
-      }).catch(console.error);
-    } else {
-      window.addEventListener('deviceorientationabsolute', (event) => {
-        const alpha = event.alpha; // 絕對方位角
-        if (alpha !== null) {
-          updateOrientation(alpha);
-        } else {
-          console.error('Alpha value is null.');
-        }
-      });
-    }
+    const handleOrientationEvent = (event) => {
+      const alpha = event.alpha; // 絕對方位角
+      if (alpha !== null) {
+        updateOrientation(alpha);
+      } else {
+        console.error('Alpha value is null.');
+      }
+    };
+
+    const initializeOrientation = () => {
+      if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+        DeviceOrientationEvent.requestPermission().then(permissionState => {
+          if (permissionState === 'granted') {
+            window.addEventListener('deviceorientationabsolute', handleOrientationEvent);
+          } else {
+            console.error('Device orientation permission not granted.');
+          }
+        }).catch(console.error);
+      } else {
+        window.addEventListener('deviceorientationabsolute', handleOrientationEvent);
+      }
+    };
+
+    // 在頁面加載時立即初始化設備方向
+    window.addEventListener('load', initializeOrientation);
 
     // 指南針校準事件處理
     window.addEventListener("compassneedscalibration", function(event) {
@@ -129,7 +129,6 @@
     document.getElementById('calibration-message').addEventListener('click', function() {
       this.style.display = 'none';
     });
-
   </script>
 </body>
 </html>
