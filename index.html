@@ -30,8 +30,60 @@
     <script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@0.74.0/dist/L.Control.Locate.min.js" charset="utf-8"></script>
 
     <script>
+        // Define the custom control class
+        L.Control.UserLocation = L.Control.extend({
+            options: {
+                position: 'topleft',
+                title: 'Locate me'
+            },
+
+            onAdd: function (map) {
+                const controlDiv = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-userlocation');
+                L.DomEvent
+                    .addListener(controlDiv, 'click', L.DomEvent.stopPropagation)
+                    .addListener(controlDiv, 'click', L.DomEvent.preventDefault)
+                    .addListener(controlDiv, 'click', () => this._locateUser(map));
+
+                const controlUI = L.DomUtil.create('a', 'leaflet-control-userlocation-button', controlDiv);
+                controlUI.title = this.options.title;
+                controlUI.href = '#';
+                controlUI.innerHTML = '📍';  // You can replace this with any icon or text for the control
+
+                return controlDiv;
+            },
+
+            _locateUser: function (map) {
+                if (!this._userMarker) {
+                    this._userMarker = L.circleMarker(map.getCenter(), {
+                        radius: 10,  // Adjust the size of the circle marker
+                        color: '#520066',  // Color of the circle marker
+                        fillColor: '#cb65ff',
+                        fillOpacity: 1
+                    }).addTo(map);
+                }
+
+                if (navigator.geolocation) {
+                    navigator.geolocation.watchPosition(
+                        (position) => {
+                            const latlng = new L.LatLng(position.coords.latitude, position.coords.longitude);
+                            this._userMarker.setLatLng(latlng);
+                            map.panTo(latlng); // Comment out to update the location without re-centering map
+                        },
+                        (error) => {
+                            console.error("Error retrieving user location:", error);
+                        },
+                        {
+                            enableHighAccuracy: true
+                        }
+                    );
+                } else {
+                    console.error("Geolocation is not supported by this browser.");
+                }
+            }
+        });
+
         // Map initialization 
-        var map = L.map('map').setView([28.3949, 84.1240], 8);
+        var map = L.map('map').setView([24.150445762526548, 120.68275085981597], 18);
 
         // OSM layer
         var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -39,18 +91,21 @@
         });
         osm.addTo(map);
         
-        // Add locate control with auto-start
-        var lc = L.control.locate({
+        // Add default locate control and custom user location control
+        L.control.locate({
             setView: 'always',  // Always set the map view to the user's location
             keepCurrentZoomLevel: true,  // Keep the current zoom level when setting the view
             locateOptions: {
                 enableHighAccuracy: true  // Enable high accuracy mode for location
             },
-            initialZoomLevel: 15  // Optional: set the initial zoom level
+            initialZoomLevel: 20  // Optional: set the initial zoom level
         }).addTo(map);
 
-        // Start locating immediately
-        lc.start();
+        L.control.userLocation = function (opts) {
+            return new L.Control.UserLocation(opts);
+        };
+
+        L.control.userLocation().addTo(map);
     </script>
 </body>
 </html>
