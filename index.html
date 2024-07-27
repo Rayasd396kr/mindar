@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Geolocation and Orientation with OpenLayers</title>
+  <title>OpenLayers 的地理位置和方向</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@latest/ol.css" type="text/css">
   <style>
     .map {
@@ -33,7 +33,7 @@
 </head>
 <body>
   <div id="map" class="map"></div>
-  <div id="calibration-message">Please calibrate your compass by moving your device in a figure-8 motion.</div>
+  <div id="calibration-message">請通過在設備上做「8」字形移動來校準指南針。</div>
   <script src="https://cdn.jsdelivr.net/npm/ol@latest/dist/ol.js"></script>
   <script>
     const view = new ol.View({
@@ -49,11 +49,7 @@
         })
       ],
       view: view,
-      controls: ol.control.defaults({
-        attributionOptions: {
-          collapsible: false
-        }
-      }).extend([]) // 移除預設控制器（包括右上角的校准按钮）
+      controls: [] // 明確移除所有預設控制項
     });
 
     const userIconElement = document.createElement('div');
@@ -71,7 +67,7 @@
       const position = ol.proj.fromLonLat([longitude, latitude]);
       userMarker.setPosition(position);
       view.setCenter(position);
-      console.log(`User position updated to: ${latitude}, ${longitude}`);
+      console.log(`用戶位置更新為: ${latitude}, ${longitude}`);
     };
 
     const geolocation = new ol.Geolocation({
@@ -87,16 +83,16 @@
         const coords = ol.proj.toLonLat(position);
         updateUserPosition({ latitude: coords[1], longitude: coords[0] });
       } else {
-        console.error('Failed to get geolocation position.');
+        console.error('獲取地理位置失敗。');
       }
     });
 
-    // 自動啟用地理定位跟蹤
+    // 啟用地理定位跟蹤
     geolocation.setTracking(true);
 
     const updateOrientation = (alpha) => {
       userIconElement.style.transform = `rotate(${alpha}deg)`;
-      console.log(`Device orientation alpha: ${alpha}`);
+      console.log(`設備方向 alpha: ${alpha}`);
     };
 
     const handleOrientationEvent = (event) => {
@@ -104,7 +100,7 @@
       if (alpha !== null) {
         updateOrientation(alpha);
       } else {
-        console.error('Alpha value is null.');
+        console.error('Alpha 值為 null。');
       }
     };
 
@@ -114,16 +110,16 @@
           if (permissionState === 'granted') {
             window.addEventListener('deviceorientationabsolute', handleOrientationEvent);
           } else {
-            console.error('Device orientation permission not granted.');
+            console.error('未授予設備方向權限。');
           }
         }).catch(console.error);
       } else {
         window.addEventListener('deviceorientationabsolute', handleOrientationEvent);
-        window.addEventListener('deviceorientation', handleOrientationEvent); // 用于其他设备
+        window.addEventListener('deviceorientation', handleOrientationEvent); // 用於其他設備
       }
     };
 
-    // 在頁面加載時立即初始化設備方向
+    // 頁面加載時初始化設備方向
     window.addEventListener('load', initializeOrientation);
 
     // 指南針校準事件處理
