@@ -13,13 +13,6 @@
     .user-marker {
       width: 50px;
       height: 50px;
-      background: url('https://upload.wikimedia.org/wikipedia/commons/e/ec/RedDot.svg') no-repeat center;
-      background-size: cover;
-      transform-origin: center;
-    }
-    .user-arrow {
-      width: 50px;
-      height: 50px;
       background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="red" d="M12 2l9 21h-18l9-21z"/></svg>') no-repeat center;
       background-size: cover;
       transform-origin: center;
@@ -59,7 +52,7 @@
     });
 
     const userIconElement = document.createElement('div');
-    userIconElement.className = 'user-arrow';
+    userIconElement.className = 'user-marker';
 
     const userMarker = new ol.Overlay({
       positioning: 'center-center',
@@ -98,7 +91,6 @@
 
     const updateOrientation = (alpha) => {
       userIconElement.style.transform = `rotate(${alpha}deg)`;
-      view.setRotation(-alpha * Math.PI / 180);
     };
 
     if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
