@@ -30,60 +30,27 @@
     <script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@0.74.0/dist/L.Control.Locate.min.js" charset="utf-8"></script>
 
     <script>
-        // Initialize the map
+        // Map initialization 
         var map = L.map('map').setView([28.3949, 84.1240], 8);
 
-        // Add OSM tile layer
+        // OSM layer
         var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        }).addTo(map);
-
-        // Add locate control
+        });
+        osm.addTo(map);
+        
+        // Add locate control with auto-start
         var lc = L.control.locate({
-            setView: 'always', // Set the view to the user's location
-            keepCurrentZoomLevel: true, // Keep the current zoom level
+            setView: 'always',  // Always set the map view to the user's location
+            keepCurrentZoomLevel: true,  // Keep the current zoom level when setting the view
             locateOptions: {
-                enableHighAccuracy: true // Enable high accuracy
+                enableHighAccuracy: true  // Enable high accuracy mode for location
             },
-            initialZoomLevel: 15 // Initial zoom level
+            initialZoomLevel: 15  // Optional: set the initial zoom level
         }).addTo(map);
 
         // Start locating immediately
         lc.start();
-
-        // Request user's location
-        function requestUserLocation() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    function(position) {
-                        var lat = position.coords.latitude;
-                        var lng = position.coords.longitude;
-
-                        // Center the map on user's location
-                        map.setView([lat, lng], 15);
-
-                        // Optionally, add a marker for the user's location
-                        L.marker([lat, lng]).addTo(map)
-                            .bindPopup('You are here')
-                            .openPopup();
-                    },
-                    function(error) {
-                        console.error('Error getting location: ', error);
-                        alert('Unable to retrieve your location.');
-                    },
-                    {
-                        enableHighAccuracy: true,
-                        timeout: 10000,
-                        maximumAge: 0
-                    }
-                );
-            } else {
-                alert('Geolocation is not supported by this browser.');
-            }
-        }
-
-        // Call the function to request the user's location
-        requestUserLocation();
     </script>
 </body>
 </html>
