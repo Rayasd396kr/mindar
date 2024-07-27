@@ -114,6 +114,7 @@
         }).catch(console.error);
       } else {
         window.addEventListener('deviceorientationabsolute', handleOrientationEvent);
+        window.addEventListener('deviceorientation', handleOrientationEvent); // 用于其他设备
       }
     };
 
