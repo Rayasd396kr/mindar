@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OpenLayers 的地理位置和方向</title>
+  <title>Geolocation and Orientation with OpenLayers</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@latest/ol.css" type="text/css">
   <style>
     .map {
@@ -13,19 +13,11 @@
     .user-marker {
       width: 50px;
       height: 50px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: transparent; /* 背景透明 */
-    }
-    .user-marker svg {
-      width: 100%;
-      height: 100%;
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="red" d="M12 2l9 21h-18l9-21z"/></svg>') no-repeat center;
+      background-size: cover;
       transform-origin: center;
-      transition: transform 0.2s ease; /* 平滑過渡效果 */
     }
-    #calibration-message {
-      display: none;
+    #info {
       position: fixed;
       bottom: 1em;
       left: 50%;
@@ -36,114 +28,156 @@
       z-index: 1000;
       font-size: 1.2em;
     }
+    #geolocate {
+      position: fixed;
+      top: 1em;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 1em;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      z-index: 1000;
+    }
+    #geolocate:disabled {
+      background: #6c757d;
+    }
   </style>
 </head>
 <body>
   <div id="map" class="map"></div>
-  <div id="calibration-message">請通過在設備上做「8」字形移動來校準指南針。</div>
+  <div id="info">Please click "Start Tracking" to begin.</div>
+  <button id="geolocate">Start Tracking</button>
   <script src="https://cdn.jsdelivr.net/npm/ol@latest/dist/ol.js"></script>
   <script>
     const view = new ol.View({
-      center: ol.proj.fromLonLat([120.68146003039392, 24.151017427806234]), // 初始位置
-      zoom: 15
+      center: ol.proj.fromLonLat([120.68146003039392, 24.151017427806234]),
+      zoom: 15,
+    });
+
+    const tileLayer = new ol.layer.Tile({
+      source: new ol.source.OSM(),
     });
 
     const map = new ol.Map({
+      layers: [tileLayer],
       target: 'map',
-      layers: [
-        new ol.layer.Tile({
-          source: new ol.source.OSM()
-        })
-      ],
       view: view,
-      controls: [] // 明確移除所有預設控制項
     });
 
-    const userIconElement = document.createElement('div');
-    userIconElement.className = 'user-marker';
-    userIconElement.innerHTML = `
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-        <path fill="red" d="M12 2l9 21h-18l9-21z"/>
-      </svg>
-    `;
+    const markerEl = document.createElement('div');
+    markerEl.className = 'user-marker';
 
-    const userMarker = new ol.Overlay({
+    const marker = new ol.Overlay({
       positioning: 'center-center',
-      element: userIconElement,
-      stopEvent: false
+      element: markerEl,
+      stopEvent: false,
     });
-    map.addOverlay(userMarker);
+    map.addOverlay(marker);
 
-    const updateUserPosition = (coords) => {
-      const { latitude, longitude } = coords;
-      const position = ol.proj.fromLonLat([longitude, latitude]);
-      userMarker.setPosition(position);
-      view.setCenter(position);
-      console.log(`用戶位置更新為: ${latitude}, ${longitude}`);
-    };
+    const positions = new ol.geom.LineString([], 'XYZM');
 
     const geolocation = new ol.Geolocation({
+      projection: view.getProjection(),
       trackingOptions: {
+        maximumAge: 10000,
         enableHighAccuracy: true,
+        timeout: 600000,
       },
-      projection: view.getProjection()
     });
 
-    geolocation.on('change:position', () => {
+    let deltaMean = 500;
+
+    geolocation.on('change', function () {
       const position = geolocation.getPosition();
-      if (position) {
-        const coords = ol.proj.toLonLat(position);
-        updateUserPosition({ latitude: coords[1], longitude: coords[0] });
-      } else {
-        console.error('獲取地理位置失敗。');
-      }
+      const accuracy = geolocation.getAccuracy();
+      const heading = geolocation.getHeading() || 0;
+      const speed = geolocation.getSpeed() || 0;
+      const m = Date.now();
+
+      addPosition(position, heading, m, speed);
+
+      const coords = ol.proj.toLonLat(position);
+      const html = [
+        'Position: ' + coords[1].toFixed(6) + ', ' + coords[0].toFixed(6),
+        'Accuracy: ' + accuracy,
+        'Heading: ' + Math.round(radToDeg(heading)) + '&deg;',
+        'Speed: ' + (speed * 3.6).toFixed(1) + ' km/h',
+      ].join('<br />');
+      document.getElementById('info').innerHTML = html;
     });
 
-    // 啟用地理定位跟蹤
-    geolocation.setTracking(true);
+    function radToDeg(rad) {
+      return (rad * 360) / (Math.PI * 2);
+    }
 
-    const updateOrientation = (alpha) => {
-      // alpha 是設備相對於地球磁北的方位角，範圍是 0 到 360 度
-      userIconElement.querySelector('svg').style.transform = `rotate(${alpha}deg)`;
-      console.log(`設備方向 alpha: ${alpha}`);
-    };
+    function degToRad(deg) {
+      return (deg * Math.PI * 2) / 360;
+    }
 
-    const handleOrientationEvent = (event) => {
-      const alpha = event.alpha; // 絕對方位角
-      if (alpha !== null) {
-        updateOrientation(alpha);
-      } else {
-        console.error('Alpha 值為 null。');
+    function mod(n) {
+      return ((n % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
+    }
+
+    function addPosition(position, heading, m, speed) {
+      const x = position[0];
+      const y = position[1];
+      const fCoords = positions.getCoordinates();
+      const previous = fCoords[fCoords.length - 1];
+      const prevHeading = previous && previous[2];
+      if (prevHeading) {
+        let headingDiff = heading - mod(prevHeading);
+
+        if (Math.abs(headingDiff) > Math.PI) {
+          const sign = headingDiff >= 0 ? 1 : -1;
+          headingDiff = -sign * (2 * Math.PI - Math.abs(headingDiff));
+        }
+        heading = prevHeading + headingDiff;
       }
-    };
+      positions.appendCoordinate([x, y, heading, m]);
 
-    const initializeOrientation = () => {
-      if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
-        DeviceOrientationEvent.requestPermission().then(permissionState => {
-          if (permissionState === 'granted') {
-            window.addEventListener('deviceorientationabsolute', handleOrientationEvent);
-          } else {
-            console.error('未授予設備方向權限。');
-          }
-        }).catch(console.error);
-      } else {
-        window.addEventListener('deviceorientationabsolute', handleOrientationEvent);
-        window.addEventListener('deviceorientation', handleOrientationEvent); // 用於其他設備
+      positions.setCoordinates(positions.getCoordinates().slice(-20));
+    }
+
+    function getCenterWithHeading(position, rotation, resolution) {
+      const size = map.getSize();
+      const height = size[1];
+
+      return [
+        position[0] - (Math.sin(rotation) * height * resolution * 1) / 4,
+        position[1] + (Math.cos(rotation) * height * resolution * 1) / 4,
+      ];
+    }
+
+    let previousM = 0;
+    function updateView() {
+      let m = Date.now() - deltaMean * 1.5;
+      m = Math.max(m, previousM);
+      previousM = m;
+      const c = positions.getCoordinateAtM(m, true);
+      if (c) {
+        view.setCenter(getCenterWithHeading(c, -c[2], view.getResolution()));
+        view.setRotation(-c[2]);
+        marker.setPosition(c);
+        map.render();
       }
-    };
+    }
 
-    // 頁面加載時初始化設備方向
-    window.addEventListener('load', initializeOrientation);
+    const geolocateBtn = document.getElementById('geolocate');
+    geolocateBtn.addEventListener('click', function () {
+      geolocation.setTracking(true);
 
-    // 指南針校準事件處理
-    window.addEventListener("compassneedscalibration", function(event) {
-      event.preventDefault();
-      document.getElementById('calibration-message').style.display = 'block';
-    });
+      tileLayer.on('postrender', updateView);
+      map.render();
 
-    document.getElementById('calibration-message').addEventListener('click', function() {
-      this.style.display = 'none';
-    });
+      disableButtons();
+    }, false);
+
+    function disableButtons() {
+      geolocateBtn.disabled = true;
+    }
   </script>
 </body>
 </html>
