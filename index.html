@@ -91,6 +91,7 @@
 
     const updateOrientation = (alpha) => {
       userIconElement.style.transform = `rotate(${alpha}deg)`;
+      console.log(`Device orientation alpha: ${alpha}`);
     };
 
     if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
@@ -100,8 +101,12 @@
             const alpha = event.alpha; // 絕對方位角
             if (alpha !== null) {
               updateOrientation(alpha);
+            } else {
+              console.error('Alpha value is null.');
             }
           });
+        } else {
+          console.error('Device orientation permission not granted.');
         }
       }).catch(console.error);
     } else {
@@ -109,6 +114,8 @@
         const alpha = event.alpha; // 絕對方位角
         if (alpha !== null) {
           updateOrientation(alpha);
+        } else {
+          console.error('Alpha value is null.');
         }
       });
     }
