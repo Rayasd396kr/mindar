@@ -1,4 +1,3 @@
-
 <html>
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -13,19 +12,24 @@
     <script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@0.74.0/dist/L.Control.Locate.min.js" charset="utf-8"></script>
 
     <style>
-        #map {
-                width: 100%;
-                height: 30vh;
-                position: absolute;
-                bottom: 0px;
-                left: 0;
-                z-index: 999;
-            }
-            .fa-map-marker {
-            position: relative;
-            top: 5px; /* Adjust this value to move the marker down */
-        }
-      </style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden; /* Prevent scrolling */
+      }
+      #map {
+        width: 100%;
+        height: 30vh;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        z-index: 999;
+      }
+      .fa-map-marker {
+        position: relative;
+        top: 5px; /* Adjust this value to move the marker down */
+      }
+    </style>
   </head>
   
   <body>
@@ -65,27 +69,64 @@
         window.parent.postMessage({ action: 'navigate', url: '/introduce' }, '*');
     });
 
-    // Map initialization 
-    var map = L.map('map').setView([24.150445762526548, 120.68275085981597], 18);
+    // Function to handle motion and orientation permissions
+    function requestPermissions() {
+      if (typeof DeviceMotionEvent.requestPermission === 'function' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+        Promise.all([
+          DeviceMotionEvent.requestPermission(),
+          DeviceOrientationEvent.requestPermission()
+        ]).then(results => {
+          if (results.every(result => result === 'granted')) {
+            initializeMap();
+          } else {
+            alert('Permission denied for motion and orientation.');
+          }
+        }).catch(console.error);
+      } else {
+        initializeMap();
+      }
+    }
 
-    // OSM layer
-    var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    // Function to initialize the map
+    function initializeMap() {
+      var map = L.map('map').setView([24.150445762526548, 120.68275085981597], 18);
+
+      var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    });
-    osm.addTo(map);
+      });
+      osm.addTo(map);
 
-    // Add locate control with auto-start
-    var lc = L.control.locate({
-        setView: 'always',  // Always set the map view to the user's location
-        keepCurrentZoomLevel: true,  // Keep the current zoom level when setting the view
+      var lc = L.control.locate({
+        setView: 'always',
+        keepCurrentZoomLevel: true,
         locateOptions: {
-            enableHighAccuracy: true  // Enable high accuracy mode for location
+          enableHighAccuracy: true
         },
-        initialZoomLevel: 20  // Optional: set the initial zoom level
-    }).addTo(map);
+        initialZoomLevel: 20
+      }).addTo(map);
 
-    // Start locating immediately
-    lc.start();
+      lc.start();
+
+      map.on('locationfound', function(e) {
+        if (e.bounds) {
+          map.fitBounds(e.bounds);
+        }
+      });
+
+      map.on('locationerror', function(e) {
+        console.error(e.message);
+      });
+
+      window.addEventListener('deviceorientation', function(event) {
+        if (event.alpha !== null) {
+          map.setBearing(event.alpha);
+        }
+      }, true);
+    }
+
+    // Request permissions on page load
+    window.addEventListener('load', requestPermissions);
+
   </script>
  
 </html>
