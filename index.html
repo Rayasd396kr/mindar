@@ -1,4 +1,3 @@
-
 <html>
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -86,6 +85,26 @@
 
     // Start locating immediately
     lc.start();
+
+    // Listen for location found event to get user's direction
+    map.on('locationfound', function(e) {
+        if (e.bounds) {
+            map.fitBounds(e.bounds);  // Adjust map bounds to include accuracy circle
+        }
+        
+        // Get the direction from the location event
+        if (e.heading) {
+            map.setBearing(e.heading);  // Set the map bearing to user's heading (direction)
+        } else if (e.angle) {
+            map.setBearing(e.angle);  // Fallback to using angle if heading is not available
+        }
+    });
+
+    // Handle location error
+    map.on('locationerror', function(e) {
+        console.error(e.message);
+    });
+
   </script>
  
 </html>
