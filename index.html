@@ -1,4 +1,3 @@
-
 <html>
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -13,47 +12,44 @@
     <script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@0.74.0/dist/L.Control.Locate.min.js" charset="utf-8"></script>
 
     <style>
-        #map {
-                width: 100%;
-                height: 30vh;
-                position: absolute;
-                bottom: 0px;
-                left: 0;
-                z-index: 999;
-            }
-            .fa-map-marker {
-            position: relative;
-            top: 5px; /* Adjust this value to move the marker down */
-        }
-      </style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden; /* Prevent scrolling */
+      }
+      #map {
+        width: 100%;
+        height: 30vh;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        z-index: 999;
+      }
+      .fa-map-marker {
+        position: relative;
+        top: 5px; /* Adjust this value to move the marker down */
+      }
+    </style>
   </head>
   
   <body>
     
     <a-scene mindar-image="uiScanning: #example-scanning-overlay;filterMinCF:0.0001; filterBeta: 0.001;imageTargetSrc: https://raw.githubusercontent.com/Rayasd396kr/ar/main/t1.mind;" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
       
-
-        <a-camera position="0 0 0" look-controls="enabled: false" cursor="fuse: false; rayOrigin: mouse;" raycaster="far: ${customFields.libVersion}; objects: .clickable"></a-camera>
+      <a-camera position="0 0 0" look-controls="enabled: false" cursor="fuse: false; rayOrigin: mouse;" raycaster="far: ${customFields.libVersion}; objects: .clickable"></a-camera>
 
       <a-entity id="bearEntity" mindar-image-target="targetIndex: 0" >
         <a-plane opacity="0.5" color="white" width="10" height="10" position="0 0 0"></a-plane>
         <a-text value="test" color="black" align="center" position="0 0 0"></a-text>
-          <!-- <a-gltf-model rotation="0 0 0 " position="0 -0.25 0" scale="1 1 1" src="https://raw.githubusercontent.com/Rayasd396kr/ar/main/asset.gltf" animation-mixer></a-gltf-model> -->
       </a-entity>
 
       <a-entity id="raccoonEntity" mindar-image-target="targetIndex: 1">
           <a-image src="https://raw.githubusercontent.com/Rayasd396kr/ar/main/a.png" position="0 1.2 0" scale="0.75 0.75 0.75"></a-image>
           <a-text id="clickable" value="Zcl" color="black" align="center"  position="0 -0.5 0"></a-text>
           <a-gltf-model rotation="0 0 0 " position="0 -0.25 0" scale="1 1 1" src="https://raw.githubusercontent.com/Rayasd396kr/ar/main/zcl.glb" animation-mixer></a-gltf-model>
-          <!-- <a-plane id="example-plane" class="clickable" color="blue" opacity="0.5" position="0 0 0" height="0.552" width="1" rotation="0 0 0"></a-plane> -->
           <a-box id="button-left" class="clickable" color="black" width="0.7" height="0.3" depth="0.2" position="0 -0.8 0">
             <a-text value="introduce" align="center" color="white" position="0 0 0.1" scale="0.5 0.5 0.5"></a-text>
           </a-box>
-          <!-- <a-box class="clickable" color="black" width="0.7" height="0.3" depth="0.2" position="0.6 -0.8 0">
-            <a-text value="introduce" align="center" color="white" position="0 0 0.1" scale="0.5 0.5 0.5"></a-text>
-          </a-box> -->
-
-
       </a-entity>
     </a-scene>
     <div id="map"></div>
@@ -65,27 +61,55 @@
         window.parent.postMessage({ action: 'navigate', url: '/introduce' }, '*');
     });
 
-    // Map initialization 
-    var map = L.map('map').setView([24.150445762526548, 120.68275085981597], 18);
+    // Function to initialize the map
+    function initializeMap() {
+      var map = L.map('map').setView([24.150445762526548, 120.68275085981597], 18);
 
-    // OSM layer
-    var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    });
-    osm.addTo(map);
+      });
+      osm.addTo(map);
 
-    // Add locate control with auto-start
-    var lc = L.control.locate({
-        setView: 'always',  // Always set the map view to the user's location
-        keepCurrentZoomLevel: true,  // Keep the current zoom level when setting the view
+      var lc = L.control.locate({
+        setView: 'always',
+        keepCurrentZoomLevel: true,
         locateOptions: {
-            enableHighAccuracy: true  // Enable high accuracy mode for location
+          enableHighAccuracy: true
         },
-        initialZoomLevel: 20  // Optional: set the initial zoom level
-    }).addTo(map);
+        initialZoomLevel: 20
+      }).addTo(map);
 
-    // Start locating immediately
-    lc.start();
+      lc.start();
+
+      // Simulate button click to trigger location
+      setTimeout(() => {
+        const locateButton = document.querySelector('.leaflet-bar-part.leaflet-bar-part-single');
+        locateButton.click(); // First click
+        setTimeout(() => {
+          locateButton.click(); // Second click
+        }, 1000); // Wait 1 second before the second click
+      }, 1000); // Wait 1 second after lc.start() to ensure locate button is ready
+    }
+
+    // Function to handle motion and orientation permissions
+    function requestPermissions() {
+      if (typeof DeviceMotionEvent.requestPermission === 'function' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+        Promise.all([
+          DeviceMotionEvent.requestPermission(),
+          DeviceOrientationEvent.requestPermission()
+        ]).then(results => {
+          if (results.every(result => result === 'granted')) {
+            initializeMap();
+          } else {
+            alert('Permission denied for motion and orientation.');
+          }
+        }).catch(console.error);
+      } else {
+        initializeMap();
+      }
+    }
+
+    // Request permissions on page load
+    window.addEventListener('load', requestPermissions);
   </script>
- 
 </html>
