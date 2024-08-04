@@ -19,35 +19,130 @@
             left: 0;
             z-index: 999;
         }
-        .fa-map-marker {
+        .custom-div-icon {
+            text-align: center;
+            font-size: 15px;
+        }
+        .custom-div-icon .circle {
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            width: 15px;
+            height: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 2px solid #000;
+            margin-bottom: 2px;
+        }
+        .custom-div-icon .text {
             position: relative;
-            top: 5px; 
+            left: -15px;
+        }
+        .info-window {
+            position: fixed;
+            bottom: 31%;  
+            left: 50%;  
+            transform: translateX(-50%);  
+            width: 70%;
+            background: white;
+            border: 1px solid #ccc;
+            padding: 10px;
+            display: none;
+            z-index: 1000;
+            box-sizing: border-box;
+            overflow: auto;
+        }
+
+        .info-window img {
+            width: 80px;
+            height: 80px;
+            float: left;
+            margin-right: 10px;
+        }
+        .info-window h3 {
+            margin: 0;
+        }
+        .info-window p {
+            margin: 5px 0;
+        }
+        .info-window button {
+            display: block;
+            margin-top: 10px;
+        }
+        .button-container {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            position: fixed;
+            top: 10px;
+            width: 100%;
+            overflow-x: auto;
+            z-index: 1001;
+            white-space: nowrap;
+            padding: 10px 0;
+            box-sizing: border-box;
+        }
+        .button-container button {
+            margin: 0 10px;
+            padding: 10px 20px;
+            border: none;
+            background-color: #307fb7;
+            color: white;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+        .button-container::-webkit-scrollbar {
+            display: none; 
         }
     </style>
 </head>
 <body>
+    <div class="button-container">
+        <button onclick="navigation()">導覽路線</button>
+        <button onclick="showBuildings()">大樓</button>
+        <button onclick="showOffices()">處室</button>
+        <button onclick="showSports()">運動場</button>
+        <button onclick="showEvents()">活動</button>
+    </div>
+
     <a-scene mindar-image="uiScanning: #example-scanning-overlay;filterMinCF:0.0001; filterBeta: 0.001;imageTargetSrc: https://raw.githubusercontent.com/Rayasd396kr/ar/main/t3.mind;" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
-      <a-camera position="0 0 0" look-controls="enabled: false" cursor="fuse: false; rayOrigin: mouse;" raycaster="far: ${customFields.libVersion}; objects: .clickable"></a-camera>
-      <a-entity id="bearEntity" mindar-image-target="targetIndex: 0">
-        <a-plane opacity="0.5" color="white" width="10" height="10" position="0 0 0"></a-plane>
-        <a-text value="test" color="black" align="center" position="0 0 0"></a-text>
-      </a-entity>
-      <a-entity id="raccoonEntity" mindar-image-target="targetIndex: 1">
-          <a-image src="https://raw.githubusercontent.com/Rayasd396kr/ar/main/a.png" position="0 1.2 0" scale="0.75 0.75 0.75"></a-image>
-          <a-text id="clickable" value="Zcl" color="black" align="center" position="0 -0.5 0"></a-text>
-          <a-gltf-model rotation="0 0 0 " position="0 -0.25 0" scale="1 1 1" src="https://raw.githubusercontent.com/Rayasd396kr/ar/main/zcl.glb" animation-mixer></a-gltf-model>
-          <a-box id="button-left" class="clickable" color="black" width="0.7" height="0.3" depth="0.2" position="0 -0.8 0">
-            <a-text value="introduce" align="center" color="white" position="0 0 0.1" scale="0.5 0.5 0.5"></a-text>
-          </a-box>
-      </a-entity>
+        <a-camera position="0 0 0" look-controls="enabled: false" cursor="fuse: false; rayOrigin: mouse;" raycaster="far: ${customFields.libVersion}; objects: .clickable"></a-camera>
+        <a-entity id="bearEntity" mindar-image-target="targetIndex: 0">
+            <a-plane opacity="0.5" color="white" width="10" height="10" position="0 0 0"></a-plane>
+            <a-text value="test" color="black" align="center" position="0 0 0"></a-text>
+        </a-entity>
+        <a-entity id="raccoonEntity" mindar-image-target="targetIndex: 1">
+            <a-image src="https://raw.githubusercontent.com/Rayasd396kr/ar/main/a.png" position="0 1.2 0" scale="0.75 0.75 0.75"></a-image>
+            <a-text id="clickable" value="Zcl" color="black" align="center" position="0 -0.5 0"></a-text>
+            <a-gltf-model rotation="0 0 0 " position="0 -0.25 0" scale="1 1 1" src="https://raw.githubusercontent.com/Rayasd396kr/ar/main/zcl.glb" animation-mixer></a-gltf-model>
+            <a-box id="button-left" class="clickable" color="black" width="0.7" height="0.3" depth="0.2" position="0 -0.8 0">
+                <a-text value="introduce" align="center" color="white" position="0 0 0.1" scale="0.5 0.5 0.5"></a-text>
+            </a-box>
+        </a-entity>
+        <a-entity>
+            <a-box position="0 1.5 0" rotation="0 45 45" color="#4CC3D9"></a-box>
+            <a-text value="Hello, AR World!" position="0 2 0" rotation="0 0 0" align="center" color="#FFFFFF"></a-text>    
+        </a-entity>
     </a-scene>
+
     <div id="map"></div>
+    <div id="info-window" class="info-window">
+        <img id="info-image" src="" alt="Info Image">
+        <div>
+            <h3 id="info-title">Title</h3>
+            <p id="info-description">Description</p>
+            <button id="info-button">Learn More</button>
+        </div>
+    </div>
 
     <script>
-        const buttonleft = document.querySelector('#button-left');
-        buttonleft.addEventListener("click", event => {
-            window.parent.postMessage({ action: 'navigate', url: '/introduce' }, '*');
-        });
+        const infoWindow = document.getElementById('info-window');
+        const infoImage = document.getElementById('info-image');
+        const infoTitle = document.getElementById('info-title');
+        const infoDescription = document.getElementById('info-description');
+        const infoButton = document.getElementById('info-button');
 
         var map = L.map('map').setView([24.150445762526548, 120.68275085981597], 18);
 
@@ -55,76 +150,62 @@
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
 
-        var campusRoute = [
-            [24.151316720437045, 120.68216157777869],
-            [24.151350984453767, 120.68313253740402],
-            [24.151249712100967, 120.68396645870185],
-            [24.15054174566227, 120.68403863341727],
-            [24.149779946928522, 120.68366843184863],
-            [24.14995021318592, 120.68321549415676],
-            [24.150025005025668, 120.68248712721095],
-            [24.150381739416552, 120.68299739471283],
-        ];
-
-        var polyline = L.polyline(campusRoute, { color: 'blue' }).addTo(map);
-
         var locations = [
-            { name: "資管樓", coords: [24.149900, 120.683700] }
+            { circle: "1", name: "行政&資訊樓", coords: [24.14961330934904, 120.68364591589136], image: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/zcl.png', title: '行政&資訊樓', description: '行政&資訊樓的描述', buttonText: '集點' },
+            { circle: "2", name: "中正樓", coords: [24.14981989588874, 120.68318962532109], image: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/zcl.png', title: '中正樓', description: '中正樓的描述', buttonText: '集點' },
+            { circle: "3", name: "活動中心", coords: [24.15002756948417, 120.68259788356026], image: 'https://example.com/image3.jpg', title: '活動中心', description: '活動中心的描述', buttonText: '了解更多' },
+            { circle: "4", name: "昌明樓", coords: [24.150397919894687, 120.68298858486425] },
+            { circle: "5", name: "翰英樓", coords: [24.151290909932047, 120.68315169317616] },
+            { circle: "6", name: "中商大樓", coords: [24.15123377909032, 120.68217149067684] },
+            { circle: "7", name: "宿舍", coords: [24.151830165086253, 120.68329357159718] },
+            { circle: "8", name: "奇秀樓", coords: [24.151224781813994, 120.68397935752898] },
+            { circle: "9", name: "弘業樓", coords: [24.1505058854478, 120.68404953097337] },
+            { circle: "10", name: "home", coords: [24.150996625919188, 120.68148734742584], image: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/zcl.png', title: 'home', description: '家的描述', buttonText: '集點' },
         ];
 
         locations.forEach(location => {
-            L.marker(location.coords)
-                .bindPopup(`<b>${location.name}</b>`)
-                .addTo(map);
+            var textMarker = L.divIcon({
+                className: 'custom-div-icon',
+                html: `<div class='circle'>${location.circle}</div><div class='text'>${location.name}</div>`,
+                iconSize: [50, 50],
+                iconAnchor: [15, 0]
+            });
+
+            L.marker(location.coords, { icon: textMarker }).addTo(map);
         });
 
         var lc = L.control.locate({
-            setView: 'always',  
-            keepCurrentZoomLevel: true,  
+            setView: 'always',
+            keepCurrentZoomLevel: true,
             locateOptions: {
-                enableHighAccuracy: true  
+                enableHighAccuracy: true
             },
-            initialZoomLevel: 20 
+            initialZoomLevel: 20
         }).addTo(map);
 
-        function findClosestPoint(latlng, route) {
-            let closestPoint = route[0];
-            let minDistance = map.distance(latlng, closestPoint);
-            for (let i = 1; i < route.length; i++) {
-                let distance = map.distance(latlng, route[i]);
-                if (distance < minDistance) {
-                    minDistance = distance;
-                    closestPoint = route[i];
-                }
-            }
-            return closestPoint;
-        }
-
-        var currentIndex = 0;
-        function onLocationFound(e) {
-            var latlng = e.latlng;
-
-            if (currentIndex === 0) {
-                let closestPoint = findClosestPoint(latlng, campusRoute);
-                currentIndex = campusRoute.indexOf(closestPoint);
-                campusRoute = campusRoute.slice(currentIndex);
-                polyline.setLatLngs(campusRoute);
-
-                var initialLine = L.polyline([latlng, closestPoint], { color: 'red' }).addTo(map);
-            }
-
-            let distanceToNextPoint = map.distance(latlng, campusRoute[0]);
-            if (distanceToNextPoint < 10) { 
-                campusRoute.shift();
-                polyline.setLatLngs(campusRoute);
-            }
-
-            map.fitBounds(polyline.getBounds());
-        }
-
-        map.on('locationfound', onLocationFound);
-
         lc.start();
+
+        function updateInfoWindow(latlng) {
+            var closestLocation = locations.reduce((closest, location) => {
+                var distance = map.distance(latlng, location.coords);
+                return distance < closest.distance ? { location, distance } : closest;
+            }, { distance: Infinity }).location;
+
+            if (map.distance(latlng, closestLocation.coords) < 50) { 
+                infoImage.src = closestLocation.image;
+                infoTitle.textContent = closestLocation.title;
+                infoDescription.textContent = closestLocation.description;
+                infoButton.textContent = closestLocation.buttonText;
+                infoButton.onclick = () => alert('Button clicked!');
+                infoWindow.style.display = 'block';
+            } else {
+                infoWindow.style.display = 'none';
+            }
+        }
+
+        map.on('locationfound', function(e) {
+            updateInfoWindow(e.latlng);
+        });
     </script>
 </body>
 </html>
