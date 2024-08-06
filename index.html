@@ -18,6 +18,7 @@
             bottom: 0px;
             left: 0;
             z-index: 999;
+            transition: height 0.5s, width 0.5s;
         }
         .custom-div-icon {
             text-align: center;
@@ -52,7 +53,6 @@
             box-sizing: border-box;
             overflow: auto;
         }
-
         .info-window img {
             width: 80px;
             height: 80px;
@@ -96,6 +96,19 @@
         .button-container::-webkit-scrollbar {
             display: none; 
         }
+        .zoom-button {
+            position: absolute;
+            bottom: 40px;
+            right: 10px;
+            z-index: 1000;
+            background-color: #307fb7;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+            cursor: pointer;
+            font-size: 16px;
+        }
     </style>
 </head>
 <body>
@@ -136,6 +149,7 @@
             <button id="info-button">Learn More</button>
         </div>
     </div>
+    <button class="zoom-button" onclick="toggleFullScreen()">放大地圖</button>
 
     <script>
         const infoWindow = document.getElementById('info-window');
@@ -206,6 +220,18 @@
         map.on('locationfound', function(e) {
             updateInfoWindow(e.latlng);
         });
+
+        function toggleFullScreen() {
+            const mapElement = document.getElementById('map');
+            if (mapElement.style.height === '100vh') {
+                mapElement.style.height = '30vh';
+                mapElement.style.width = '100%';
+            } else {
+                mapElement.style.height = '100vh';
+                mapElement.style.width = '100%';
+            }
+            map.invalidateSize(); 
+        }
     </script>
 </body>
 </html>
