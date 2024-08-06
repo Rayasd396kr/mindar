@@ -167,10 +167,8 @@
     </div>
     <button class="zoom-button" onclick="toggleFullScreen()">放大地圖</button>
 
-    
-
     <script>
-        var map = L.map('map').setView([24.150996625919188, 120.68148734742584], 15);
+        var map = L.map('map').setView([24.150996625919188, 120.68148734742584], 18);
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -183,7 +181,7 @@
         var infoWindow = document.getElementById('info-window');
 
         var locations = [
-        { circle: "1", name: "行政&資訊樓", coords: [24.14961330934904, 120.68364591589136], image: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/zcl.png', title: '行政&資訊樓', description: '行政&資訊樓的描述', buttonText: '集點' },
+            { circle: "1", name: "行政&資訊樓", coords: [24.14961330934904, 120.68364591589136], image: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/zcl.png', title: '行政&資訊樓', description: '行政&資訊樓的描述', buttonText: '集點' },
             { circle: "2", name: "中正樓", coords: [24.14960142559353, 120.68333783333679], image: 'https://example.com/image2.jpg', title: '中正樓', description: '中正樓的描述', buttonText: '了解更多' },
             { circle: "3", name: "活動中心", coords: [24.15002756948417, 120.68259788356026], image: 'https://example.com/image3.jpg', title: '活動中心', description: '活動中心的描述', buttonText: '了解更多' },
             { circle: "4", name: "昌明樓", coords: [24.150397919894687, 120.68298858486425] },
@@ -217,6 +215,8 @@
 
         lc.start();
 
+        var userLatLng = [24.150996625919188, 120.68148734742584]; // 初始用户位置
+
         function updateInfoWindow(latlng) {
             var closestLocation = locations.reduce((closest, location) => {
                 var distance = map.distance(latlng, location.coords);
@@ -236,15 +236,20 @@
         }
 
         map.on('locationfound', function(e) {
+            userLatLng = [e.latlng.lat, e.latlng.lng];
             updateInfoWindow(e.latlng);
         });
+
+        var initialCenter = [24.150068244137064, 120.68247776551931];
 
         function toggleFullScreen() {
             const mapElement = document.getElementById('map');
             if (mapElement.style.height === '100vh') {
                 mapElement.style.height = '30vh';
-                mapElement.style.position = 'fixed';
-                map.invalidateSize(); // 确保地图更新大小
+                setTimeout(() => {
+                    map.invalidateSize(); // 确保地图更新大小
+                    map.setView(userLatLng, map.getZoom()); // 重新设置中心点为用户位置
+                }, 500); // 等待过渡完成
                 document.querySelector('.content').style.paddingTop = '30vh'; // 恢复内容的 padding-top
             } else {
                 mapElement.style.height = '100vh';
@@ -252,6 +257,7 @@
                 document.querySelector('.content').style.paddingTop = '100vh'; // 增加内容的 padding-top
                 setTimeout(() => {
                     map.invalidateSize(); // 确保地图更新大小
+                    map.setView(userLatLng, map.getZoom()); // 重新设置中心点为用户位置
                 }, 500); // 等待过渡完成
             }
         }
