@@ -169,8 +169,14 @@
         }
         .info-window button {
             display: block;
-            margin-top: 10px;
+            background-color: rgb(125, 163, 192);
+            color: white;
+            border: none;
+            font-size: 15px; 
+            padding: 5px 10px;
+            border-radius: 5px; 
         }
+
         .button-container {
             display: flex;
             justify-content: flex-start;
@@ -200,7 +206,7 @@
         }
         .zoom-button {
             position: absolute;
-            bottom: 40px;
+            bottom: 60px;
             right: 10px;
             z-index: 1000;
             background-color: #307fb7;
@@ -380,7 +386,7 @@
         var locations = {
             navigation: [
                 { circle: "1", name: "行政&資訊樓", coords: [24.14961330934904, 120.68364591589136], image: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/zcl.png', title: '行政&資訊樓', description: '行政&資訊樓的描述', buttonText: '集點', slideIndex: 0  },
-                { circle: "2", name: "中正樓", coords: [24.14960142559353, 120.68333783333679], image: 'https://example.com/image2.jpg', title: '中正樓', description: '中正樓的描述', buttonText: '了解更多' },
+                { circle: "2", name: "中正樓", coords: [24.14960142559353, 120.68333783333679], image: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/zcl.png', title: '中正樓', description: '中正樓的描述', buttonText: '集點', slideIndex: 1},
                 { circle: "3", name: "活動中心", coords: [24.15002756948417, 120.68259788356026], image: 'https://example.com/image3.jpg', title: '活動中心', description: '活動中心的描述', buttonText: '了解更多' },
                 { circle: "4", name: "昌明樓", coords: [24.150397919894687, 120.68298858486425] },
                 { circle: "5", name: "翰英樓", coords: [24.151290909932047, 120.68315169317616] },
@@ -487,6 +493,7 @@
             document.getElementById('info-button').addEventListener('click', () => {
                 if (swiperContainer.style.display === 'none' || swiperContainer.style.display === '') {
                     swiperContainer.style.display = 'block'; 
+                    swiper.update();
                 } else {
                     swiperContainer.style.display = 'none'; 
                 }
@@ -533,6 +540,8 @@
         function toggleMap() {
             var mapElement = document.getElementById('map');
             var mapToggleIcon = document.querySelector('.map-toggle-icon');
+            mapElement.classList.remove('slide-up');
+            mapElement.classList.remove('slide-down');
             mapElement.classList.toggle('show');
             mapToggleIcon.classList.toggle('active');
         }
