@@ -6,10 +6,13 @@
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
     <script src="https://cdn.rawgit.com/donmccurdy/aframe-extras/v6.1.0/dist/aframe-extras.min.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@v0.74.0/dist/L.Control.Locate.min.css" />
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@0.74.0/dist/L.Control.Locate.min.js" charset="utf-8"></script>
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
     <style>
         body, html {
             margin: 0;
@@ -18,6 +21,39 @@
             width: 100%;
             overflow: hidden;
         }
+        @keyframes slideDown {
+            from {
+                transform: translateY(100%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(-200%);
+            }
+            to {
+                transform: translateY(0%);
+            }
+        }
+        @keyframes mapdown {
+            from {
+                transform: translateY(0);
+            }
+            to {
+                transform: translateY(100%);
+            }
+        }
+        @keyframes mapup {
+            from {
+                transform: translateY(100%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
         #map {
             width: 100%;
             height: 30vh;
@@ -25,7 +61,66 @@
             bottom: 0;
             left: 0;
             z-index: 999;
-            transition: height 0.5s;
+
+            animation: mapup 0.5s forwards;
+
+        }
+
+        #map.slide-down {
+            animation: slideDown 0.5s forwards;
+        }
+
+        #map.slide-up {
+            animation: slideUp 0.5s forwards;
+        }
+
+        #map.show {
+            animation: mapdown 0.5s forwards;
+        }
+        .map-toggle-icon {
+            position: fixed;
+            top: 100px;  
+            right: 10px; 
+            z-index: 1000;
+            background-color: #307fb7;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+            cursor: pointer;
+            font-size: 24px;
+            transition: background-color 0.3s, color 0.3s; 
+            width: 25px; 
+            height: 25px; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .map-toggle-icon.active {
+            background-color: #a49d9d; 
+            color: white; 
+        }
+        .toggle-info-window {
+            position: fixed;
+            top: 160px;  
+            right: 10px; 
+            z-index: 1001;
+            background-color: #307fb7;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+            cursor: pointer;
+            font-size: 24px;
+            width: 25px; 
+            height: 25px; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .toggle-info-window.active {
+            background-color: #a49d9d; 
+            color: white; 
         }
         .custom-div-icon {
             text-align: center;
@@ -116,14 +211,68 @@
             cursor: pointer;
             font-size: 16px;
         }
-        .content {
-            padding: 20px;
-            padding-top: 70vh;
-            background: #f0f0f0;
+        
+        .swiper-container {
+            position: absolute;
+            bottom: 140px;
+            right: 0px;
+            width: 100%;
+            height: 50vh;
+            background-position: center;
+            background-size: cover;
+            border-radius: 10px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+
+        .swiper-slide {
+            text-align: center;
+            background: rgba(116, 145, 155, 0.807);
+            background-size: cover;
+            background-position: center;
+            width: 80%;
+        }
+
+        .swiper-slide .slide-content {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             height: 100%;
-            box-sizing: border-box;
-            z-index: 1002;
-            position: relative;
+        }
+        .swiper-slide img {
+            display: block;
+            max-width: 100%;
+            max-height: 50%; 
+            object-fit: cover; 
+        }
+        .slide-title {
+            color: white;
+            height: 10%; 
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .slide-text {
+            padding: 0 5%;
+            color: white;
+            height: 20%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
+            color: white;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -156,17 +305,64 @@
             <a-text value="Hello, AR World!" position="0 2 0" rotation="0 0 0" align="center" color="#FFFFFF"></a-text>
         </a-entity>
     </a-scene>
-
-    <div id="map"></div>
+    <i class="fa-solid fa-map-location-dot map-toggle-icon" aria-hidden="true" onclick="toggleMap()"></i>
+    <i class="fa-solid fa-file-lines toggle-info-window" id="toggle-info-window" aria-hidden="true" onclick="toggleinfo()"></i>
+    <div id="map">
+        <i class="fa fa-expand zoom-button" aria-hidden="true" onclick="toggleFullScreen()"></i>
+    </div>
     <div id="info-window" class="info-window">
         <img id="info-image" src="" alt="Info Image">
         <div>
             <h3 id="info-title">Title</h3>
             <p id="info-description">Description</p>
-            <button id="info-button">Learn More</button>
+            <button id="info-button" >Learn More</button>
         </div>
     </div>
-    <i class="fa fa-expand zoom-button" aria-hidden="true" onclick="toggleFullScreen()"></i>
+    <div class="swiper-container">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide">
+                <div class="slide-content">
+                    <span class="close-btn">&times;</span>
+                    <h2 class="slide-title">1.資管四樓某地方</h2>
+                    <img src="https://swiperjs.com/demos/images/nature-3.jpg" />
+                    <p class="slide-text">此處是資管大本營，每個資管人都在此上過課，培養出很多優秀人才。</p>
+                </div>
+            </div>
+            <div class="swiper-slide">
+                <div class="slide-content">
+                    <span class="close-btn">&times;</span>
+                    <h2 class="slide-title">2.弘業樓</h2>
+                    <img src="https://swiperjs.com/demos/images/nature-3.jpg" />
+                    <p class="slide-text">此處是資管大本營，每個資管人都在此上過課，培養出很多優秀人才，此處是資管大本營</p>
+                </div>
+            </div>
+            <div class="swiper-slide">
+                <div class="slide-content">
+                    <span class="close-btn">&times;</span>
+                    <h2 class="slide-title">1.資管四樓某地方</h2>
+                    <img src="https://swiperjs.com/demos/images/nature-3.jpg" />
+                    <p class="slide-text">此處是資管大本營，每個資管人都在此上過課，培養出很多優秀人才。</p>
+                </div>
+            </div>
+            <div class="swiper-slide">
+                <div class="slide-content">
+                    <span class="close-btn">&times;</span>
+                    <h2 class="slide-title">1.資管四樓某地方</h2>
+                    <img src="https://swiperjs.com/demos/images/nature-3.jpg" />
+                    <p class="slide-text">此處是資管大本營，每個資管人都在此上過課，培養出很多優秀人才。</p>
+                </div>
+            </div>
+            <div class="swiper-slide">
+                <div class="slide-content">
+                    <span class="close-btn">&times;</span>
+                    <h2 class="slide-title">1.資管四樓某地方</h2>
+                    <img src="https://swiperjs.com/demos/images/nature-3.jpg" />
+                    <p class="slide-text">此處是資管大本營，每個資管人都在此上過課，培養出很多優秀人才。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+      
 
     <script>
         var map = L.map('map', { zoomControl: false }).setView([24.150996625919188, 120.68148734742584], 17);
@@ -183,7 +379,7 @@
 
         var locations = {
             navigation: [
-                { circle: "1", name: "行政&資訊樓", coords: [24.14961330934904, 120.68364591589136], image: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/zcl.png', title: '行政&資訊樓', description: '行政&資訊樓的描述', buttonText: '集點' },
+                { circle: "1", name: "行政&資訊樓", coords: [24.14961330934904, 120.68364591589136], image: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/zcl.png', title: '行政&資訊樓', description: '行政&資訊樓的描述', buttonText: '集點', slideIndex: 0  },
                 { circle: "2", name: "中正樓", coords: [24.14960142559353, 120.68333783333679], image: 'https://example.com/image2.jpg', title: '中正樓', description: '中正樓的描述', buttonText: '了解更多' },
                 { circle: "3", name: "活動中心", coords: [24.15002756948417, 120.68259788356026], image: 'https://example.com/image3.jpg', title: '活動中心', description: '活動中心的描述', buttonText: '了解更多' },
                 { circle: "4", name: "昌明樓", coords: [24.150397919894687, 120.68298858486425] },
@@ -192,7 +388,7 @@
                 { circle: "7", name: "宿舍", coords: [24.151830165086253, 120.68329357159718] },
                 { circle: "8", name: "奇秀樓", coords: [24.151224781813994, 120.68397935752898] },
                 { circle: "9", name: "弘業樓", coords: [24.1505058854478, 120.68404953097337] },
-                { circle: "10", name: "home", coords: [24.150996625919188, 120.68148734742584], image: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/zcl.png', title: 'home', description: '家的描述', buttonText: '集點' }
+                { circle: "10", name: "home", coords: [24.150996625919188, 120.68148734742584], image: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/zcl.png', title: 'home', description: '家的描述', buttonText: '集點', slideIndex: 1  }
             ],
             buildings: [
                 { circle: "1", name: "行政&資訊樓", coords: [24.14961330934904, 120.68364591589136], image: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/zcl.png', title: '行政&資訊樓', description: '行政&資訊樓的描述', buttonText: '集點' },
@@ -258,16 +454,45 @@
             }, { distance: Infinity }).location;
 
             if (map.distance(latlng, closestLocation.coords) < 50) { 
-                infoImage.src = closestLocation.image;
-                infoTitle.textContent = closestLocation.title;
-                infoDescription.textContent = closestLocation.description;
-                infoButton.textContent = closestLocation.buttonText;
-                infoButton.onclick = () => alert('Button clicked!');
+                infoImage.src = closestLocation.image || '';
+                infoTitle.textContent = closestLocation.title || '';
+                infoDescription.textContent = closestLocation.description || '';
+                infoButton.textContent = closestLocation.buttonText || 'Learn More';
+                infoButton.onclick = () => jumpToSlide(closestLocation.slideIndex || 0);
                 infoWindow.style.display = 'block';
+                
             } else {
                 infoWindow.style.display = 'none';
             }
         }
+
+        document.getElementById('toggle-info-window').addEventListener('click', function() {
+            var infoWindow = document.getElementById('info-window');
+            if (infoWindow.style.display === 'none' || infoWindow.style.display === '') {
+                infoWindow.style.display = 'block';
+            } else {
+                infoWindow.style.display = 'none';
+            }
+        });
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const closeButtons = document.querySelectorAll('.close-btn');
+            const swiperContainer = document.querySelector('.swiper-container');
+
+            closeButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    swiperContainer.style.display = 'none'; 
+                });
+            });
+
+            document.getElementById('info-button').addEventListener('click', () => {
+                if (swiperContainer.style.display === 'none' || swiperContainer.style.display === '') {
+                    swiperContainer.style.display = 'block'; 
+                } else {
+                    swiperContainer.style.display = 'none'; 
+                }
+            });
+        });
+
 
         map.on('locationfound', function(e) {
             userLatLng = [e.latlng.lat, e.latlng.lng];
@@ -276,22 +501,64 @@
 
         function toggleFullScreen() {
             const mapElement = document.getElementById('map');
-            if (mapElement.style.height === '100vh') {
+            const isFullScreen = mapElement.style.height === '100vh';
+
+            if (isFullScreen) {
+                mapElement.classList.add('slide-up');
+                mapElement.classList.remove('slide-down');
                 mapElement.style.height = '30vh';
+                
                 setTimeout(() => {
-                    map.invalidateSize(); 
-                    map.setView(userLatLng, map.getZoom()); 
-                }, 500); 
+                    mapElement.style.position = 'fixed';
+                    map.invalidateSize();
+                    map.setView(userLatLng, map.getZoom());
+                }, 500);
+
                 document.querySelector('.content').style.paddingTop = '30vh';
             } else {
+                mapElement.classList.add('slide-down');
+                mapElement.classList.remove('slide-up');
                 mapElement.style.height = '100vh';
-                mapElement.style.position = 'fixed';
-                document.querySelector('.content').style.paddingTop = '100vh'; 
+
                 setTimeout(() => {
-                    map.invalidateSize(); 
-                    map.setView(userLatLng, map.getZoom()); 
-                }, 500); 
+                    map.invalidateSize();
+                    map.setView(userLatLng, map.getZoom());
+                }, 500);
+
+                document.querySelector('.content').style.paddingTop = '100vh';
             }
+        }
+
+
+        function toggleMap() {
+            var mapElement = document.getElementById('map');
+            var mapToggleIcon = document.querySelector('.map-toggle-icon');
+            mapElement.classList.toggle('show');
+            mapToggleIcon.classList.toggle('active');
+        }
+        function toggleinfo(){
+            var infoToggleIcon = document.querySelector('.toggle-info-window');
+            infoToggleIcon.classList.toggle('active');
+        }
+        var swiper = new Swiper('.swiper-container', {
+            effect: 'coverflow',
+            grabCursor: true,
+            centeredSlides: true,
+            slidesPerView: 'auto',
+            coverflowEffect: {
+            rotate: 50,
+            stretch: 0,
+            depth: 100,
+            modifier: 1,
+            slideShadows: true,
+            },
+            pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+            },
+        });
+        function jumpToSlide(index) {
+            swiper.slideTo(index);
         }
     </script>
 </body>
