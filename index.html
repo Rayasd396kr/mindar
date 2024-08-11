@@ -453,7 +453,13 @@
 
         lc.start();
 
+        let isManuallyClosed = false;  
+
         function updateInfoWindow(latlng) {
+            if (isManuallyClosed) {
+                return;  
+            }
+
             var closestLocation = Object.values(locations).flat().reduce((closest, location) => {
                 var distance = map.distance(latlng, location.coords);
                 return distance < closest.distance ? { location, distance } : closest;
@@ -466,7 +472,6 @@
                 infoButton.textContent = closestLocation.buttonText || 'Learn More';
                 infoButton.onclick = () => jumpToSlide(closestLocation.slideIndex || 0);
                 infoWindow.style.display = 'block';
-                
             } else {
                 infoWindow.style.display = 'none';
             }
@@ -478,8 +483,18 @@
                 infoWindow.style.display = 'block';
             } else {
                 infoWindow.style.display = 'none';
+                var closestLocation = Object.values(locations).flat().reduce((closest, location) => {
+                    var distance = map.distance(userLatLng, location.coords);
+                    return distance < closest.distance ? { location, distance } : closest;
+                }, { distance: Infinity }).location;
+                
+                
+                if (map.distance(userLatLng, closestLocation.coords) < 50) {
+                    isManuallyClosed = true;
+                }
             }
         });
+
         document.addEventListener('DOMContentLoaded', (event) => {
             const closeButtons = document.querySelectorAll('.close-btn');
             const swiperContainer = document.querySelector('.swiper-container');
