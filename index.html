@@ -117,10 +117,52 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            text-align: center;
         }
         .toggle-info-window.active {
             background-color: #a49d9d; 
             color: white; 
+        }
+        .toggleStamp{
+            position: fixed;
+            top: 220px;  
+            right: 10px; 
+            z-index: 1001;
+            background-color: #307fb7;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+            cursor: pointer;
+            font-size: 24px;
+            width: 25px; 
+            height: 25px; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            width: 200px;
+            height: 200px;
+            position: fixed;
+            top: 220px;
+            right: 70px;
+            z-index: 1005;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .grid-item {
+            background-color: #f0f0f0;
+            text-align: center;
+            padding: 20px;
+            border: 1px solid #ccc;
+            cursor: pointer;
         }
         .custom-div-icon {
             text-align: center;
@@ -176,7 +218,16 @@
             padding: 5px 10px;
             border-radius: 5px; 
         }
-
+        .info-window-close-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: none;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            color: #000;
+        }
         .button-container {
             display: flex;
             justify-content: flex-start;
@@ -306,18 +357,27 @@
                 <a-text value="introduce" align="center" color="white" position="0 0 0.1" scale="0.5 0.5 0.5"></a-text>
             </a-box>
         </a-entity>
-        <a-entity>
-            <a-box position="0 1.5 0" rotation="0 45 45" color="#4CC3D9"></a-box>
-            <a-text value="Hello, AR World!" position="0 2 0" rotation="0 0 0" align="center" color="#FFFFFF"></a-text>
-        </a-entity>
     </a-scene>
     <i class="fa-solid fa-map-location-dot map-toggle-icon" aria-hidden="true" onclick="toggleMap()"></i>
-    <i class="fa-solid fa-file-lines toggle-info-window" id="toggle-info-window" aria-hidden="true" onclick="toggleinfo()"></i>
+    <i class="fa-solid fa-file-lines toggle-info-window" id="toggle-info-window" aria-hidden="true" onclick="toggleinfo()" ></i>
+    <i class="fa-solid fa-stamp stamp-icon toggleStamp" id="toggleStamp" aria-hidden="true" onclick="toggleGrid()"></i>
+    <div id="grid-container" class="grid-container" style="display: none;">
+        <div class="grid-item">1</div>
+        <div class="grid-item">2</div>
+        <div class="grid-item">3</div>
+        <div class="grid-item">4</div>
+        <div class="grid-item">5</div>
+        <div class="grid-item">6</div>
+        <div class="grid-item">7</div>
+        <div class="grid-item">8</div>
+        <div class="grid-item">9</div>
+    </div>
     <div id="map">
         <i class="fa fa-expand zoom-button" aria-hidden="true" onclick="toggleFullScreen()"></i>
     </div>
     <div id="info-window" class="info-window">
         <img id="info-image" src="" alt="Info Image">
+        <button class="info-window-close-btn" id="info-window-close-btn" onclick="toggleinfo()">✖</button>
         <div>
             <h3 id="info-title">Title</h3>
             <p id="info-description">Description</p>
@@ -456,6 +516,7 @@
         let isManuallyClosed = false;  
 
         function updateInfoWindow(latlng) {
+            var toggleinfobutton = document.getElementById('toggle-info-window');
             if (isManuallyClosed) {
                 return;  
             }
@@ -472,12 +533,32 @@
                 infoButton.textContent = closestLocation.buttonText || 'Learn More';
                 infoButton.onclick = () => jumpToSlide(closestLocation.slideIndex || 0);
                 infoWindow.style.display = 'block';
+                toggleinfobutton.style.display = 'block';
             } else {
                 infoWindow.style.display = 'none';
+                toggleinfobutton.style.display = 'none';
             }
         }
 
         document.getElementById('toggle-info-window').addEventListener('click', function() {
+            var infoWindow = document.getElementById('info-window');
+            if (infoWindow.style.display === 'none' || infoWindow.style.display === '') {
+                infoWindow.style.display = 'block';
+            } else {
+                infoWindow.style.display = 'none';
+                var closestLocation = Object.values(locations).flat().reduce((closest, location) => {
+                    var distance = map.distance(userLatLng, location.coords);
+                    return distance < closest.distance ? { location, distance } : closest;
+                }, { distance: Infinity }).location;
+                
+                
+                if (map.distance(userLatLng, closestLocation.coords) < 50) {
+                    isManuallyClosed = true;
+                }
+            }
+        });
+        
+        document.getElementById('info-window-close-btn').addEventListener('click', function() {
             var infoWindow = document.getElementById('info-window');
             if (infoWindow.style.display === 'none' || infoWindow.style.display === '') {
                 infoWindow.style.display = 'block';
@@ -583,6 +664,14 @@
         });
         function jumpToSlide(index) {
             swiper.slideTo(index);
+        }
+        function toggleGrid() {
+            var gridContainer = document.getElementById("grid-container");
+            if (gridContainer.style.display === "none") {
+                gridContainer.style.display = "grid";
+            } else {
+                gridContainer.style.display = "none";
+            }
         }
     </script>
 </body>
