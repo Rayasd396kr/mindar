@@ -183,6 +183,11 @@
             position: relative;
             left: -15px;
         }
+        .building-name {
+            font-size: 14px;
+            position: relative;
+            left: -25px;
+        }
         .info-window {
             position: fixed;
             bottom: 31%;
@@ -245,7 +250,7 @@
             margin: 0 10px;
             padding: 10px 20px;
             border: none;
-            background-color: #307fb7;
+            background-color: #6296bc93;
             color: white;
             border-radius: 15px;
             cursor: pointer;
@@ -331,6 +336,9 @@
             color: white;
             cursor: pointer;
         }
+        button.active {
+            background-color: #307fb7; /* 被点击时的背景颜色 */
+        }
     </style>
 </head>
 <body>
@@ -362,8 +370,8 @@
     <i class="fa-solid fa-file-lines toggle-info-window" id="toggle-info-window" aria-hidden="true" onclick="toggleinfo()" ></i>
     <i class="fa-solid fa-stamp stamp-icon toggleStamp" id="toggleStamp" aria-hidden="true" onclick="toggleGrid()"></i>
     <div id="grid-container" class="grid-container" style="display: none;">
-        <div class="grid-item">1</div>
-        <div class="grid-item">2</div>
+        <div id="cell-1" class="grid-item">1</div>
+        <div id="cell-2" class="grid-item">2</div>
         <div class="grid-item">3</div>
         <div class="grid-item">4</div>
         <div class="grid-item">5</div>
@@ -371,6 +379,7 @@
         <div class="grid-item">7</div>
         <div class="grid-item">8</div>
         <div class="grid-item">9</div>
+        <button onclick="resetLocalStorage()">重置</button>
     </div>
     <div id="map">
         <i class="fa fa-expand zoom-button" aria-hidden="true" onclick="toggleFullScreen()"></i>
@@ -431,7 +440,7 @@
       
 
     <script>
-        var map = L.map('map', { zoomControl: false }).setView([24.150996625919188, 120.68148734742584], 17);
+        var map = L.map('map', { zoomControl: false }).setView([24.150996625919188, 120.68148734742584], 16);
         var markerLayer = L.layerGroup().addTo(map);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -457,9 +466,18 @@
                 { circle: "10", name: "home", coords: [24.150996625919188, 120.68148734742584], image: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/zcl.png', title: 'home', description: '家的描述', buttonText: '集點', slideIndex: 1  }
             ],
             buildings: [
-                { circle: "1", name: "行政&資訊樓", coords: [24.14961330934904, 120.68364591589136], image: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/zcl.png', title: '行政&資訊樓', description: '行政&資訊樓的描述', buttonText: '集點' },
-                { circle: "2", name: "中正樓", coords: [24.14960142559353, 120.68333783333679], image: 'https://example.com/image2.jpg', title: '中正樓', description: '中正樓的描述', buttonText: '了解更多' },
-                
+                { circle: "2", name: "資訊樓", coords: [24.149419286183875, 120.68358285379435], image: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/zcl.png', title: '行政&資訊樓', description: '行政&資訊樓的描述', buttonText: '集點', slideIndex: 0  },
+                { circle: "1", name: "行政樓", coords: [24.149762346808217, 120.68367584388298], image: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/zcl.png', title: '行政&資訊樓', description: '行政&資訊樓的描述', buttonText: '集點', slideIndex: 0  },
+                { circle: "3", name: "中正樓", coords: [24.149608553230912, 120.68299603551081], image: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/zcl.png', title: '中正樓', description: '中正樓的描述', buttonText: '集點', slideIndex: 1},
+                { circle: "", name: "活動中心", coords: [24.149991580590665, 120.68249043909975], image: 'https://example.com/image3.jpg', title: '活動中心', description: '活動中心的描述', buttonText: '了解更多' },
+                { circle: "4", name: "昌明樓", coords: [24.150366961791566, 120.68299206267189] },
+                { circle: "5", name: "翰英樓", coords: [24.15124281793564, 120.68292705619912] },
+                { circle: "7", name: "中商大樓", coords: [24.15123377909032, 120.68217149067684] },
+                { circle: "", name: "宿舍", coords: [24.151830165086253, 120.68329357159718] },
+                { circle: "8", name: "奇秀樓", coords: [24.151224781813994, 120.68397935752898] },
+                { circle: "6", name: "弘業樓", coords: [24.1505058854478, 120.68404953097337] },
+                { circle: "H", name: "中技大樓", coords: [24.152265120366362, 120.68367700979677] },
+
             ],
             offices: [
                 { circle: "3", name: "行政&資訊樓", coords: [24.14961330934904, 120.68364591589136], image: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/zcl.png', title: '行政&資訊樓', description: '行政&資訊樓的描述', buttonText: '集點' },
@@ -483,17 +501,83 @@
             }
 
             currentMarkers = L.layerGroup().addTo(markerLayer);
-            locations[type].forEach(location => {
-                var textMarker = L.divIcon({
-                    className: 'custom-div-icon',
-                    html: `<div class='circle'>${location.circle}</div><div class='text'>${location.name}</div>`,
-                    iconSize: [50, 50],
-                    iconAnchor: [15, 0]
-                });
 
+            locations[type].forEach(location => {
+                let iconOptions;
+
+                switch (type) {
+                    case 'navigation':
+                    iconOptions = {
+                            className: 'custom-div-icon',
+                            html: `<div class='circle'>${location.circle}</div><div class='text'>${location.name}</div>`,
+                            iconSize: [50, 50],
+                            iconAnchor: [15, 0]
+                        };
+                        break;
+                    case 'buildings':
+                        iconOptions = {
+                            className: 'building-marker',
+                            html: `
+                                <div class='building-icon'>
+                                    <i class='fa-solid fa-building building-icon'></i>
+                                </div>
+                                <div class='building-info'>
+                                    <div class='building-name'>( ${location.circle} )${location.name}</div>
+                                </div>`,
+                            iconSize: [100, 50],
+                            iconAnchor: [0, 0]
+                        };
+                        break;
+
+                    case 'offices':
+                        iconOptions = {
+                            className: 'office-marker',
+                            html: `<div class='circle'>${location.circle}</div><div class='text'>${location.name}</div>`,
+                            iconSize: [60, 60],
+                            iconAnchor: [30, 30]
+                        };
+                        break;
+
+                    case 'sports':
+                        iconOptions = {
+                            className: 'sports-marker',
+                            html: `<div class='sports-icon'>${location.name}</div>`,
+                            iconSize: [60, 60],
+                            iconAnchor: [30, 30]
+                        };
+                        break;
+
+                    case 'events':
+                        iconOptions = {
+                            className: 'event-marker',
+                            html: `<div class='event-icon'>${location.name}</div>`,
+                            iconSize: [60, 60],
+                            iconAnchor: [30, 30]
+                        };
+                        break;
+
+                    default:
+                        iconOptions = {
+                           
+                        };
+                        break;
+                }
+
+                var textMarker = L.divIcon(iconOptions);
                 L.marker(location.coords, { icon: textMarker }).addTo(currentMarkers);
             });
         }
+        const buttons = document.querySelectorAll('.button-container button');
+
+        buttons.forEach(button => {
+            button.addEventListener('click', function() {
+                buttons.forEach(btn => btn.classList.remove('active'));
+
+                this.classList.add('active');
+
+                toggleMarkers(this.getAttribute('onclick').split("'")[1]);
+            });
+        });
 
 
         function clean() {
@@ -503,7 +587,7 @@
         }
 
         var lc = L.control.locate({
-            setView: 'always',
+            setView: 'once',
             keepCurrentZoomLevel: true,
             locateOptions: {
                 enableHighAccuracy: true
@@ -672,6 +756,94 @@
             } else {
                 gridContainer.style.display = "none";
             }
+        }
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const okStatus1 = localStorage.getItem('okStatus1');
+            const okStatus2 = localStorage.getItem('okStatus2');
+                if (okStatus1 === 'true') {
+                    document.getElementById('cell-1').innerText = 'OK';
+                }
+                if (okStatus2 === 'true') {
+                    document.getElementById('cell-2').innerText = 'OK';
+                }
+        });
+
+        let hasShownCongratulations = false;
+
+        const exampleTarget = document.querySelector('#bearEntity');
+
+        exampleTarget.addEventListener("targetFound", event => {
+            console.log("target found");
+            document.getElementById('cell-1').innerText = 'OK';
+            localStorage.setItem('okStatus1', 'true');
+            if (!hasShownCongratulations) {
+                const congratulationsMessage = document.createElement('div');
+                congratulationsMessage.textContent = '恭喜您找到了';
+                congratulationsMessage.style.position = 'fixed';
+                congratulationsMessage.style.top = '50%';
+                congratulationsMessage.style.left = '50%';
+                congratulationsMessage.style.transform = 'translate(-50%, -50%)';
+                congratulationsMessage.style.backgroundColor = 'rgba(255, 255, 255, 0.8)';
+                congratulationsMessage.style.padding = '20px';
+                congratulationsMessage.style.borderRadius = '10px';
+                congratulationsMessage.style.zIndex = '9999';
+
+                document.body.appendChild(congratulationsMessage);
+
+                hasShownCongratulations = true;
+
+                setTimeout(() => {
+                    congratulationsMessage.remove();
+                }, 2000); 
+
+                window.parent.postMessage({ cellId: 'cell-1', value: 'OK' }, '*');
+            }
+        });
+
+
+
+        let hasShownCongratulations2 = false;
+
+        const exampleTarget1 = document.querySelector('#raccoonEntity');
+
+        exampleTarget1.addEventListener("targetFound", event => {
+            console.log("target found1");
+            document.getElementById('cell-2').innerText = 'OK';
+            localStorage.setItem('okStatus2', 'true');
+            if (!hasShownCongratulations2) {
+                const congratulationsMessage = document.createElement('div');
+                congratulationsMessage.textContent = '恭喜您找到了';
+                congratulationsMessage.style.position = 'fixed';
+                congratulationsMessage.style.top = '50%';
+                congratulationsMessage.style.left = '50%';
+                congratulationsMessage.style.transform = 'translate(-50%, -50%)';
+                congratulationsMessage.style.backgroundColor = 'rgba(255, 255, 255, 0.8)';
+                congratulationsMessage.style.padding = '20px';
+                congratulationsMessage.style.borderRadius = '10px';
+                congratulationsMessage.style.zIndex = '9999';
+
+                
+                document.body.appendChild(congratulationsMessage);
+
+                
+                hasShownCongratulations2 = true;
+
+                
+                setTimeout(() => {
+                    congratulationsMessage.remove();
+                }, 2000); 
+
+                //傳送值
+                window.parent.postMessage({ cellId: 'cell-2', value: 'OK' }, '*');
+            }
+        });
+        
+        
+        function resetLocalStorage() {
+            localStorage.removeItem('okStatus1');
+            document.getElementById('cell-1').innerText = '1';
+            localStorage.removeItem('okStatus2');
+            document.getElementById('cell-2').innerText = '2';
         }
     </script>
 </body>
