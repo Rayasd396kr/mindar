@@ -361,7 +361,8 @@
             <a-image src="https://raw.githubusercontent.com/Rayasd396kr/ar/main/a.png" position="0 1.2 0" scale="0.75 0.75 0.75"></a-image>
             <a-text id="clickable" value="Zcl" color="black" align="center" position="0 -0.5 0"></a-text>
             <a-gltf-model rotation="0 0 0 " position="0 -0.25 0" scale="1 1 1" src="https://raw.githubusercontent.com/Rayasd396kr/ar/main/zcl.glb" animation-mixer></a-gltf-model>
-            <a-box id="button-left" class="clickable" color="black" width="0.7" height="0.3" depth="0.2" position="0 -0.8 0">
+            <a-box id="button-left" class="clickable" color="black" width="0.7" height="0.3" depth="0.2" position="0 -0.8 0"
+            onclick="window.parent.postMessage({ action: 'navigate', url: '/floorselcet' }, '*');">
                 <a-text value="introduce" align="center" color="white" position="0 0 0.1" scale="0.5 0.5 0.5"></a-text>
             </a-box>
         </a-entity>
@@ -796,7 +797,7 @@
                     congratulationsMessage.remove();
                 }, 2000); 
 
-                window.parent.postMessage({ cellId: 'cell-1', value: 'OK' }, '*');
+                
             }
         });
 
@@ -833,8 +834,7 @@
                     congratulationsMessage.remove();
                 }, 2000); 
 
-                //傳送值
-                window.parent.postMessage({ cellId: 'cell-2', value: 'OK' }, '*');
+                
             }
         });
         
