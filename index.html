@@ -189,11 +189,12 @@
             border: none;
             cursor: pointer;
             font-size: 16px;
+            color: black;
         }
         #deleteMarkerButton{
-            position: absolute;
-            left: 152px;
-            top: 126px;
+            position: fixed;
+            left: 225px;
+            top: 228px;
             background-color: white;
             border-color: black;
             border-radius: 5px;
@@ -431,7 +432,7 @@
     <i class="fa-solid fa-search searchIcon" id="searchIcon" aria-hidden="true" onclick="toggleSearchBox()"></i>
     <div id="searchBox" class="search-box hidden">
         <input type="text" id="searchInput" placeholder="輸入教室編號，例：2402">
-        <button id="clearButton" onclick="clearInput()">X</button>
+        <!-- <button id="clearButton" onclick="clearInput()">X</button> -->
         <p id="buildingName">大樓名稱: </p>
         <p id="floor">樓層: </p>
         <p id="id">編號: </p>
