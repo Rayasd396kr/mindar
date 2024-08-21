@@ -142,6 +142,64 @@
             justify-content: center;
             text-align: center;
         }
+        .searchIcon{
+            position: fixed;
+            top: 100px;  
+            left: 10px; 
+            z-index: 1001;
+            background-color: #307fb7;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+            cursor: pointer;
+            font-size: 24px;
+            width: 25px; 
+            height: 25px; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        .search-box {
+            display: none;
+            position: absolute;
+            top: 100px; 
+            left: 70px; 
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            background-color: #fff;
+            height: 150px;
+        }
+
+        .search-box input {
+            width: 200px;
+            padding: 5px;
+        }
+
+        .search-box.hidden {
+            display: none;
+        }
+        #clearButton {
+            position: absolute;
+            left: 200px;
+            top: 15px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        #deleteMarkerButton{
+            position: absolute;
+            left: 152px;
+            top: 126px;
+            background-color: white;
+            border-color: black;
+            border-radius: 5px;
+            color: black;
+            padding: 5px;
+        }
         .grid-container {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -370,6 +428,15 @@
     <i class="fa-solid fa-map-location-dot map-toggle-icon" aria-hidden="true" onclick="toggleMap()"></i>
     <i class="fa-solid fa-file-lines toggle-info-window" id="toggle-info-window" aria-hidden="true" onclick="toggleinfo()" ></i>
     <i class="fa-solid fa-stamp stamp-icon toggleStamp" id="toggleStamp" aria-hidden="true" onclick="toggleGrid()"></i>
+    <i class="fa-solid fa-search searchIcon" id="searchIcon" aria-hidden="true" onclick="toggleSearchBox()"></i>
+    <div id="searchBox" class="search-box hidden">
+        <input type="text" id="searchInput" placeholder="輸入教室編號，例：2402">
+        <button id="clearButton" onclick="clearInput()">X</button>
+        <p id="buildingName">大樓名稱: </p>
+        <p id="floor">樓層: </p>
+        <p id="id">編號: </p>
+        <button id="deleteMarkerButton" onclick="deleteMarkers()">刪除標記</button>
+    </div>    
     <div id="grid-container" class="grid-container" style="display: none;">
         <div id="cell-1" class="grid-item">1</div>
         <div id="cell-2" class="grid-item">2</div>
@@ -844,6 +911,105 @@
             localStorage.removeItem('okStatus2');
             document.getElementById('cell-2').innerText = '2';
         }
+
+        function toggleSearchBox() {
+            var searchBox = document.getElementById("searchBox");
+            if (searchBox.classList.contains("hidden")) {
+                searchBox.classList.remove("hidden");
+                searchBox.style.display = "block";
+            } else {
+                searchBox.classList.add("hidden");
+                searchBox.style.display = "none";
+            }
+        }
+        const buildings = [
+            { circle: "2", name: "資訊樓", coords: [24.149419286183875, 120.68358285379435] },
+            { circle: "1", name: "行政樓", coords: [24.149762346808217, 120.68367584388298] },
+            { circle: "3", name: "中正樓", coords: [24.149608553239912, 120.68299603551081] },
+            { circle: "", name: "活動中心", coords: [24.149991580599665, 120.6829403899975] },
+            { circle: "4", name: "昌明樓", coords: [24.150366961791566, 120.68299206267189] },
+            { circle: "5", name: "翰英樓", coords: [24.15124281793564, 120.68292705619912] },
+            { circle: "7", name: "中商大樓", coords: [24.15123737990932, 120.68271499667834] },
+            { circle: "", name: "宿舍", coords: [24.151830615086253, 120.68329571597918] },
+            { circle: "8", name: "奇秀樓", coords: [24.151224781813994, 120.68397935752898] },
+            { circle: "6", name: "弘業樓", coords: [24.1505058854478, 120.68404953973737] },
+            { circle: "H", name: "中技大樓", coords: [24.152265120366362, 120.68367700979677] }
+        ];
+
+        let markers = []; // 用于保存标记的数组
+
+        // 函数: 解析输入并返回建筑信息
+        function parseInput(input) {
+            if (input.length < 2) {
+                return null;
+            }
+
+            const firstDigit = input[0];
+            const floor = input[1];
+            const building = buildings.find(b => b.circle === firstDigit);
+
+            if (building) {
+                return {
+                    buildingName: building.name,
+                    floor: floor,
+                    id: input,
+                    coords: building.coords
+                };
+            } else {
+                return null;
+            }
+        }
+
+        // 函数: 清除输入框及信息
+        function clearInput() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('buildingName').textContent = "大樓名稱: ";
+            document.getElementById('floor').textContent = "樓層: ";
+            document.getElementById('id').textContent = "編號: ";
+        }
+
+        // 函数: 将标记添加到地图
+        function addMarkerToMap(coords, buildingName) {
+            const marker = L.marker(coords).addTo(map)
+                .bindPopup(`<b>${buildingName}</b>`)
+                .openPopup();
+            markers.push(marker); // 将标记添加到数组中
+        }
+
+        // 函数: 删除地图上的所有标记
+        function deleteMarkers() {
+            for (let marker of markers) {
+                map.removeLayer(marker); // 从地图上移除标记
+            }
+            markers = []; // 清空标记数组
+        }
+
+        // 函数: 处理键盘按下事件
+        function handleKeyPress(event) {
+            if (event.key === "Enter") {
+                const input = document.getElementById('searchInput').value;
+                const result = parseInput(input);
+
+                if (result) {
+                    document.getElementById('buildingName').textContent = `大樓名稱: ${result.buildingName}`;
+                    document.getElementById('floor').textContent = `樓層: ${result.floor}`;
+                    document.getElementById('id').textContent = `編號: ${result.id}`;
+                    
+                    addMarkerToMap(result.coords, result.buildingName);
+                } else {
+                    document.getElementById('buildingName').textContent = "大樓名稱: ";
+                    document.getElementById('floor').textContent = "樓層: ";
+                    document.getElementById('id').textContent = "編號: ";
+                }
+            }
+        }
+
+        // 事件监听器: 处理键盘按下事件
+        document.getElementById('searchInput').addEventListener('keydown', handleKeyPress);
+
+
+
+
     </script>
 </body>
 </html>
