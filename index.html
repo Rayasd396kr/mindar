@@ -511,11 +511,23 @@
       
 
     <script>
+        
         var map = L.map('map', { zoomControl: false }).setView([24.150996625919188, 120.68148734742584], 17);
         var markerLayer = L.layerGroup().addTo(map);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
+
+        document.addEventListener('DOMContentLoaded', function() {
+       
+        const button = document.querySelector('.leaflet-bar-part-single');
+
+        if (button) {
+            
+            button.click();
+            button.click();
+        }
+        });
 
         var infoImage = document.getElementById('info-image');
         var infoTitle = document.getElementById('info-title');
