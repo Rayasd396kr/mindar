@@ -518,16 +518,7 @@
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
 
-        document.addEventListener('DOMContentLoaded', function() {
-       
-        const button = document.querySelector('.leaflet-bar-part-single');
-
-        if (button) {
-            
-            button.click();
-            button.click();
-        }
-        });
+        
 
         var infoImage = document.getElementById('info-image');
         var infoTitle = document.getElementById('info-title');
@@ -672,12 +663,16 @@
         var lc = L.control.locate({
             setView: 'once',
             keepCurrentZoomLevel: true,
+            drawCircle: true,
+            follow: true, 
+            showCompass: true,       
+            compassHeading: true,     
             locateOptions: {
                 enableHighAccuracy: true
             },
             initialZoomLevel: 20
         }).addTo(map);
-
+        
         lc.start();
 
         let isManuallyClosed = false;  
