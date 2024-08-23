@@ -660,6 +660,54 @@
             }
         }
 
+        document.addEventListener('DOMContentLoaded', function() {
+        // 检查是否需要请求权限
+        if (typeof DeviceMotionEvent.requestPermission === 'function' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+
+            // 自动请求 motion 事件的权限
+            DeviceMotionEvent.requestPermission()
+            .then(permissionState => {
+                if (permissionState === 'granted') {
+                console.log('DeviceMotion permission granted.');
+                // 开启 motion 事件处理
+                window.addEventListener('devicemotion', handleMotionEvent);
+                } else {
+                console.log('DeviceMotion permission denied.');
+                }
+            })
+            .catch(console.error);
+
+            // 自动请求 orientation 事件的权限
+            DeviceOrientationEvent.requestPermission()
+            .then(permissionState => {
+                if (permissionState === 'granted') {
+                console.log('DeviceOrientation permission granted.');
+                // 开启 orientation 事件处理
+                window.addEventListener('deviceorientation', handleOrientationEvent);
+                } else {
+                console.log('DeviceOrientation permission denied.');
+                }
+            })
+            .catch(console.error);
+
+        } else {
+            // 对于不需要权限请求的设备，直接启用传感器事件监听
+            window.addEventListener('devicemotion', handleMotionEvent);
+            window.addEventListener('deviceorientation', handleOrientationEvent);
+        }
+        });
+
+        function handleMotionEvent(event) {
+        // 处理 motion 事件
+        console.log('DeviceMotion event:', event);
+        }
+
+        function handleOrientationEvent(event) {
+        // 处理 orientation 事件
+        console.log('DeviceOrientation event:', event);
+        }
+
+
         var lc = L.control.locate({
             setView: 'once',
             keepCurrentZoomLevel: true,
@@ -674,6 +722,8 @@
         }).addTo(map);
         
         lc.start();
+
+
 
         let isManuallyClosed = false;  
 
