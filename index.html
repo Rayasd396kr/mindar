@@ -80,6 +80,38 @@
         #map.show {
             animation: mapdown 0.5s forwards;
         }
+        .hand-icon {
+            position: absolute;
+            top: 30px;
+            left: 40px;
+            z-index: 2000;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            font-size: 24px;
+            color: #c73d3d; 
+            animation: click-animation 1.5s infinite;
+        }
+
+        @keyframes click-animation {
+            0%, 100% { 
+                transform: translate(-50%, -50%) scale(1) rotate(-45deg); 
+                opacity: 1;
+            }
+            10% { 
+                transform: translate(-50%, -50%) scale(1.1) rotate(-45deg); 
+                opacity: 0.9;
+            }
+            30% {
+                transform: translate(-50%, -50%) scale(0.9) translateY(10px) rotate(-45deg); 
+                opacity: 0.7;
+            }
+            50% { 
+                transform: translate(-50%, -50%) scale(1) rotate(-45deg); 
+                opacity: 1;
+            }
+        }
+
         .map-toggle-icon {
             position: fixed;
             top: 220px;  
@@ -173,7 +205,8 @@
             border-radius: 5px;
             padding: 10px;
             background-color: #fff;
-            height: 150px;
+            height: 190px;
+            z-index: 1001;
         }
 
         .search-box input {
@@ -195,14 +228,13 @@
             color: black;
         }
         #deleteMarkerButton{
-            position: fixed;
-            left: 225px;
-            top: 228px;
-            background-color: white;
-            border-color: black;
+            background-color: rgba(0, 0, 0, 0.507);
             border-radius: 5px;
-            color: black;
+            color: white;
             padding: 5px;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
         }
         .grid-container {
             display: grid;
@@ -435,11 +467,10 @@
     <i class="fa-solid fa-search searchIcon" id="searchIcon" aria-hidden="true" onclick="toggleSearchBox()"></i>
     <div id="searchBox" class="search-box hidden">
         <input type="text" id="searchInput" placeholder="輸入教室編號，例：2402">
-        <!-- <button id="clearButton" onclick="clearInput()">X</button> -->
-        <p id="buildingName">大樓名稱: </p>
-        <p id="floor">樓層: </p>
-        <p id="id">編號: </p>
-        <button id="deleteMarkerButton" onclick="deleteMarkers()">刪除標記</button>
+        <p id="buildingName">大樓名稱：</p>
+        <p id="floor">樓層：</p>
+        <p id="id">編號：</p>
+        <p id="deleteMarkerButton" onclick="deleteMarkers()">刪除標記</p>
     </div>    
     <div id="grid-container" class="grid-container" style="display: none;">
         <div id="cell-1" class="grid-item">1</div>
@@ -454,6 +485,7 @@
     </div>
     <div id="map">
         <i class="fa fa-expand zoom-button" aria-hidden="true" onclick="toggleFullScreen()"></i>
+        <i class="fa-solid fa-hand-pointer hand-icon" aria-hidden="true"></i>
     </div>
     <div id="info-window" class="info-window">
         <img id="info-image" src="" alt="Info Image">
@@ -952,11 +984,11 @@
             { circle: "H", name: "中技大樓", coords: [24.152265120366362, 120.68367700979677] }
         ];
 
-        let markers = []; // 用于保存标记的数组
+        let markers = []; 
 
-        // 函数: 解析输入并返回建筑信息
+        
         function parseInput(input) {
-            if (input.length < 2) {
+            if (input.length < 4) {
                 return null;
             }
 
@@ -976,51 +1008,48 @@
             }
         }
 
-        // 函数: 清除输入框及信息
         function clearInput() {
             document.getElementById('searchInput').value = '';
-            document.getElementById('buildingName').textContent = "大樓名稱: ";
-            document.getElementById('floor').textContent = "樓層: ";
-            document.getElementById('id').textContent = "編號: ";
+            document.getElementById('buildingName').textContent = "大樓名稱：";
+            document.getElementById('floor').textContent = "樓層：";
+            document.getElementById('id').textContent = "編號：";
         }
 
-        // 函数: 将标记添加到地图
         function addMarkerToMap(coords, buildingName) {
             const marker = L.marker(coords).addTo(map)
                 .bindPopup(`<b>${buildingName}</b>`)
                 .openPopup();
-            markers.push(marker); // 将标记添加到数组中
+            markers.push(marker); 
         }
 
-        // 函数: 删除地图上的所有标记
         function deleteMarkers() {
             for (let marker of markers) {
-                map.removeLayer(marker); // 从地图上移除标记
+                map.removeLayer(marker); 
             }
-            markers = []; // 清空标记数组
+            markers = []; 
         }
 
-        // 函数: 处理键盘按下事件
         function handleKeyPress(event) {
             if (event.key === "Enter") {
                 const input = document.getElementById('searchInput').value;
                 const result = parseInput(input);
-
                 if (result) {
-                    document.getElementById('buildingName').textContent = `大樓名稱: ${result.buildingName}`;
-                    document.getElementById('floor').textContent = `樓層: ${result.floor}`;
-                    document.getElementById('id').textContent = `編號: ${result.id}`;
+                    document.getElementById('searchInput').value = '';
+                    document.getElementById('buildingName').textContent = `大樓名稱：${result.buildingName}`;
+                    document.getElementById('floor').textContent = `樓層：${result.floor}`;
+                    document.getElementById('id').textContent = `編號：${result.id}`;
                     
                     addMarkerToMap(result.coords, result.buildingName);
                 } else {
-                    document.getElementById('buildingName').textContent = "大樓名稱: ";
-                    document.getElementById('floor').textContent = "樓層: ";
-                    document.getElementById('id').textContent = "編號: ";
+                    document.getElementById('searchInput').value = '';
+                    document.getElementById('buildingName').textContent = "大樓名稱：";
+                    document.getElementById('floor').textContent = "樓層：";
+                    document.getElementById('id').textContent = "編號：";
                 }
+                
             }
         }
 
-        // 事件监听器: 处理键盘按下事件
         document.getElementById('searchInput').addEventListener('keydown', handleKeyPress);
 
 
