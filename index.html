@@ -82,13 +82,13 @@
         }
         .hand-icon {
             position: absolute;
-            top: 30px;
-            left: 40px;
+            top: 34px;
+            left: 44px;
             z-index: 2000;
             border: none;
             padding: 10px;
             cursor: pointer;
-            font-size: 24px;
+            font-size: 18px;
             color: #c73d3d; 
             animation: click-animation 1.5s infinite;
         }
@@ -205,7 +205,6 @@
             border-radius: 5px;
             padding: 10px;
             background-color: #fff;
-            height: 190px;
             z-index: 1001;
         }
 
@@ -217,21 +216,13 @@
         .search-box.hidden {
             display: none;
         }
-        #clearButton {
-            position: absolute;
-            left: 200px;
-            top: 15px;
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
-            color: black;
-        }
+       
         #deleteMarkerButton{
             background-color: rgba(0, 0, 0, 0.507);
             border-radius: 5px;
             color: white;
             padding: 5px;
+            margin: 0px;
             align-items: center;
             justify-content: center;
             text-align: center;
@@ -485,7 +476,7 @@
     </div>
     <div id="map">
         <i class="fa fa-expand zoom-button" aria-hidden="true" onclick="toggleFullScreen()"></i>
-        <i class="fa-solid fa-hand-pointer hand-icon" aria-hidden="true"></i>
+        <i class="fa-solid fa-hand-pointer hand-icon" aria-hidden="true" id="hand-icon"></i>
     </div>
     <div id="info-window" class="info-window">
         <img id="info-image" src="" alt="Info Image">
@@ -709,6 +700,15 @@
         }).addTo(map);
         
         // lc.start();
+
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const locationButton = document.querySelector('.leaflet-bar-part-single');
+            const handIcon = document.getElementById('hand-icon');
+
+            locationButton.addEventListener('click', () => {
+                handIcon.style.display = 'none';
+            });
+        });
 
 
 
@@ -1052,6 +1052,7 @@
 
         document.getElementById('searchInput').addEventListener('keydown', handleKeyPress);
 
+        
 
 
 
