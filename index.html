@@ -231,8 +231,6 @@
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 10px;
-            width: 200px;
-            height: 100px;
             position: fixed;
             top: 100px;
             right: 90px;
@@ -240,6 +238,8 @@
             align-items: center;
             justify-content: center;
             text-align: center;
+            background-color: white;
+            border-radius: 5px;
         }
 
         .grid-item {
@@ -248,6 +248,7 @@
             padding: 20px;
             border: 1px solid #ccc;
             cursor: pointer;
+            margin: 10px;
         }
         .custom-div-icon {
             text-align: center;
@@ -557,7 +558,8 @@
                 { circle: "4", name: "昌明樓", coords: [24.150397919894687, 120.68298858486425] },
                 { circle: "5", name: "翰英樓", coords: [24.151290909932047, 120.68315169317616] },
                 { circle: "6", name: "中商大樓", coords: [24.15123377909032, 120.68217149067684] },
-                { circle: "7", name: "宿舍", coords: [24.151830165086253, 120.68329357159718] },
+                { circle: "7", name: "宿舍(女)", coords: [24.151830165086253, 120.68329357159718] },
+                { circle: "7", name: "宿舍(男)", coords: [24.15157844348967, 120.68410448132035] },
                 { circle: "8", name: "奇秀樓", coords: [24.151224781813994, 120.68397935752898] },
                 { circle: "9", name: "弘業樓", coords: [24.1505058854478, 120.68404953097337] },
                 { circle: "10", name: "home", coords: [24.150996625919188, 120.68148734742584], image: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/zcl.png', title: 'home', description: '家的描述', buttonText: '集點', slideIndex: 1  }
@@ -577,12 +579,33 @@
 
             ],
             offices: [
-                { circle: "3", name: "行政&資訊樓", coords: [24.14961330934904, 120.68364591589136], image: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/zcl.png', title: '行政&資訊樓', description: '行政&資訊樓的描述', buttonText: '集點' },
-                { circle: "4", name: "中正樓", coords: [24.14960142559353, 120.68333783333679], image: 'https://example.com/image2.jpg', title: '中正樓', description: '中正樓的描述', buttonText: '了解更多' },
-
+                { circle: "2", name: "資訊樓", coords: [24.149419286183875, 120.68358285379435], image: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/zcl.png', title: '行政&資訊樓', description: '行政&資訊樓的描述', buttonText: '集點', slideIndex: 0  },
+                { circle: "1", name: "行政樓", coords: [24.149762346808217, 120.68367584388298], image: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/zcl.png', title: '行政&資訊樓', description: '行政&資訊樓的描述', buttonText: '集點', slideIndex: 0  },
+                { circle: "3", name: "中正樓", coords: [24.149608553230912, 120.68299603551081], image: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/zcl.png', title: '中正樓', description: '中正樓的描述', buttonText: '集點', slideIndex: 1},
+                { circle: "", name: "活動中心", coords: [24.149991580590665, 120.68249043909975], image: 'https://example.com/image3.jpg', title: '活動中心', description: '活動中心的描述', buttonText: '了解更多' },
+                { circle: "4", name: "昌明樓", coords: [24.150366961791566, 120.68299206267189] },
+                { circle: "5", name: "翰英樓", coords: [24.15124281793564, 120.68292705619912] },
+                { circle: "7", name: "中商大樓", coords: [24.15123377909032, 120.68217149067684] },
+                { circle: "", name: "宿舍", coords: [24.151830165086253, 120.68329357159718] },
+                { circle: "8", name: "奇秀樓", coords: [24.151224781813994, 120.68397935752898] },
+                { circle: "6", name: "弘業樓", coords: [24.1505058854478, 120.68404953097337] },
+                { circle: "H", name: "中技大樓", coords: [24.152265120366362, 120.68367700979677] },
             ],
             sports: [
-               
+                { circle: "2", name: "有氧教室", coords: [24.149419286183875, 120.68358285379435], image: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/zcl.png', title: '行政&資訊樓', description: '行政&資訊樓的描述', buttonText: '集點', slideIndex: 0  },
+                { circle: "", name: "羽球場", coords: [24.149991580590665, 120.68249043909975], image: 'https://example.com/image3.jpg', title: '活動中心', description: '活動中心的描述', buttonText: '了解更多' },
+                { circle: "4", name: "撞球室", coords: [24.151224781813994, 120.68397935752898] },
+                { circle: "", name: "健身房、飛鏢室", coords: [24.151830165086253, 120.68329357159718] },
+                { circle: "8", name: "桌球場", coords: [24.1508525821429, 120.68363722461531] },
+                { circle: "6", name: "體育館(籃球、羽球)", coords: [24.150625562016405, 120.6837616229793] },
+                { circle: "6", name: "籃球場", coords: [24.150558620102444, 120.68259100233186] },
+                { circle: "6", name: "排球場", coords: [24.15027629948941, 120.6824761730654] },
+                { circle: "6", name: "排球場", coords: [24.15099519715003, 120.682922731372] },
+                { circle: "6", name: "排球場", coords: [24.151501624643654, 120.68313963110252] },
+                { circle: "6", name: "操場、網球場", coords: [24.151143633002647, 120.68336291023688] },
+                { circle: "6", name: "棒球場", coords: [24.150908466450176, 120.68391374262593] },
+
+
             ],
             events: [
                
@@ -629,18 +652,30 @@
                     case 'offices':
                         iconOptions = {
                             className: 'office-marker',
-                            html: `<div class='circle'>${location.circle}</div><div class='text'>${location.name}</div>`,
-                            iconSize: [60, 60],
-                            iconAnchor: [30, 30]
+                            html: `
+                                <div class='building-icon'>
+                                    <i class='fa-solid fa-building building-icon'></i>
+                                </div>
+                                <div class='building-info'>
+                                    <div class='building-name'>( ${location.circle} )${location.name}</div>
+                                </div>`,
+                            iconSize: [100, 50],
+                            iconAnchor: [0, 0]
                         };
                         break;
 
                     case 'sports':
                         iconOptions = {
                             className: 'sports-marker',
-                            html: `<div class='sports-icon'>${location.name}</div>`,
-                            iconSize: [60, 60],
-                            iconAnchor: [30, 30]
+                            html: `
+                                <div class='building-icon'>
+                                    <i class='fa-solid fa-basketball-ball building-icon'></i>
+                                </div>
+                                <div class='building-info'>
+                                    <div class='building-name'>${location.name}</div>
+                                </div>`,
+                            iconSize: [100, 50],
+                            iconAnchor: [0, 0]
                         };
                         break;
 
