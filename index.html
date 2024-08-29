@@ -14,6 +14,9 @@
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 
     <style>
+        .hidden {
+            display: none;
+        }
         body, html {
             margin: 0;
             padding: 0;
@@ -196,36 +199,89 @@
             justify-content: center;
             text-align: center;
         }
+       
+
+        .button-container-search {
+            display: flex;
+            width: 100%;
+        }
+
+        .button-container-search button {
+            flex: 1;
+            margin: 0;
+            padding: 5px 0;
+            border: none;
+            color: black;
+            cursor: pointer;
+            text-align: center;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        .button-container-search-button {
+            background-color: rgba(0, 0, 0, 0.251);
+            border: none;
+            cursor: pointer;
+        }
+
+        .button-container-search-button.active {
+            background-color: #fff;
+        }
+        .button-container-search-button1.active {
+            background-color: #fff;
+            border-radius: 5px 0 0 0;
+        }
+        .button-container-search-button3.active {
+            background-color: #fff;
+            border-radius: 0 5px 0 0;
+        }
         .search-box {
+            width: 235px;
             display: none;
             position: absolute;
             top: 100px; 
             left: 70px; 
-            border: 1px solid #ccc;
+            border: none;
             border-radius: 5px;
-            padding: 10px;
             background-color: #fff;
             z-index: 1001;
         }
 
         .search-box input {
-            width: 200px;
+            width: 85%;
             padding: 5px;
+            margin: 0 5%;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
         }
 
         .search-box.hidden {
             display: none;
         }
        
+        .search-box p {
+            margin: 10px 10px;
+        }
+
         #deleteMarkerButton{
-            background-color: rgba(0, 0, 0, 0.507);
+            background-color: rgba(0, 0, 0, 0.251);
             border-radius: 5px;
-            color: white;
+            color: black;
             padding: 5px;
-            margin: 0px;
+            margin: 10px;
             align-items: center;
             justify-content: center;
             text-align: center;
+            font-weight: bold;
+        }
+        .dropdownMenu{
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            width: 90%;
+            padding: 5px;
+            margin: 0 5%;
+            font-size: 16px;
         }
         .grid-container {
             display: grid;
@@ -457,13 +513,101 @@
     <i class="fa-solid fa-file-lines toggle-info-window" id="toggle-info-window" aria-hidden="true" onclick="toggleinfo()" ></i>
     <i class="fa-solid fa-stamp stamp-icon toggleStamp" id="toggleStamp" aria-hidden="true" onclick="toggleGrid()"></i>
     <i class="fa-solid fa-search searchIcon" id="searchIcon" aria-hidden="true" onclick="toggleSearchBox()"></i>
+   
     <div id="searchBox" class="search-box hidden">
-        <input type="text" id="searchInput" placeholder="輸入教室編號，例：2402">
-        <p id="buildingName">大樓名稱：</p>
-        <p id="floor">樓層：</p>
-        <p id="id">編號：</p>
-        <p id="deleteMarkerButton" onclick="deleteMarkers()">刪除標記</p>
-    </div>    
+        <div class="button-container-search">
+            <button class="button-container-search-button button-container-search-button1 active" onclick="updateContent('id', this)">編號</button>
+            <button class="button-container-search-button" onclick="updateContent('office', this)">處室</button>
+            <button class="button-container-search-button button-container-search-button3" onclick="updateContent('department', this)">系辦</button>
+        </div>
+        <br>
+        <div id="content-id" class="content-div">
+            <input type="text" id="searchInput" placeholder="輸入教室編號，例：2402">
+            <p id="buildingName">大樓：</p>
+            <p id="floor">樓層：</p>
+            <p id="id">編號：</p>
+            <p id="deleteMarkerButton" onclick="deleteMarkers()">刪除標記</p>
+        </div>
+        <div id="content-office" class="content-div hidden">
+            <select id="dropdownMenu-office" class="dropdownMenu" onchange="updateOffice()">
+                <option value="" selected disabled>請選擇處室</option>
+                <option value="office01">教務處</option>
+                <option value="office02">課務組</option>
+                <option value="office03">註冊組</option>
+                <option value="office04">綜合業務組</option>
+                <option value="office05">教學資源中心</option>
+                <option value="office06">學生事務處</option>
+                <option value="office07">生活輔導組</option>
+                <option value="office08">課外活動指導組</option>
+                <option value="office09">衛生保健組</option>
+                <option value="office10">學生宿舍組</option>
+                <option value="office11">學習與勞動權益組</option>
+                <option value="office12">總務處</option>
+                <option value="office13">事務組</option>
+                <option value="office14">營繕組</option>
+                <option value="office15">文書組</option>
+                <option value="office16">出納組</option>
+                <option value="office17">資產經營管理組</option>
+                <option value="office18">國際事務處</option>
+                <option value="office19">諮商輔導組</option>
+                <option value="office20">服務學習輔導組</option>
+                <option value="office21">實習與就業輔導組</option>
+                <option value="office22">電算中心</option>
+                <option value="office23">圖書館</option>
+                <option value="office24">環境與衛生安全中心</option>
+                <option value="office25">進修部</option>
+                <option value="office26">進修部假日班</option>
+                <option value="office27">推廣部</option>
+                <option value="office28">軍訓室</option>
+                <option value="office29">稽核室</option>
+                <option value="office30">校務研究中心</option>
+                <option value="office31">人事室</option>
+                <option value="office32">主計室</option>
+                <option value="office33">空中學院</option>
+
+            </select>
+            <p id="buildingName-office">大樓：</p>
+            <p id="floor-office">樓層：</p>
+            <p id="id-office">編號：</p>
+            <p id="deleteMarkerButton" onclick="deleteMarkers()">刪除標記</p>
+        </div>        
+        <div id="content-department" class="content-div hidden">
+            <select id="dropdownMenu-department" class="dropdownMenu" onchange="updateDepartment()">
+                <option value="" selected disabled>請選擇系所</option>
+                <option value="department01" disabled>商學院</option>
+                <option value="department02">國際貿易與經營系</option>
+                <option value="department03">會計資訊系</option>
+                <option value="department04">保險金融管理系</option>
+                <option value="department05">企業管理系</option>
+                <option value="department06">財政稅務系</option>
+                <option value="department07">財務金融系</option>
+                <option value="department08">休閒事業經營系</option>
+                <option value="department09">應用統計系</option>
+                <option value="department10" disabled>設計學院</option>
+                <option value="department11">商業設計系</option>
+                <option value="department12">多媒體設計系</option>
+                <option value="department13">室內設計系</option>
+                <option value="department14">創意商品設計系</option>
+                <option value="department15" disabled>資訊與流通學院</option>
+                <option value="department16">資訊管理系</option>
+                <option value="department17">資訊工程系</option>
+                <option value="department18">流通管理系</option>
+                <option value="department19">人工智慧應用工程</option>
+                <option value="department20" disabled>語文學院</option>
+                <option value="department21">應用英語系</option>
+                <option value="department22">應用日語系</option>
+                <option value="department23">應用中文系</option>
+                <option value="department24" disabled>智慧產業學院</option>
+                <option value="department25">商業經營系</option>
+                <option value="department26">智慧生產工程系</option>
+            </select>
+            <p id="buildingName-department">大樓：</p>
+            <p id="floor-department">樓層：</p>
+            <p id="id-department">編號：</p>
+            <p id="deleteMarkerButton" onclick="deleteMarkers()">刪除標記</p>
+        </div>
+    </div>
+    
     <div id="grid-container" class="grid-container" style="display: none;">
         <div id="cell-1" class="grid-item">1</div>
         <div id="cell-2" class="grid-item">2</div>
@@ -1012,7 +1156,7 @@
             { circle: "", name: "活動中心", coords: [24.149991580599665, 120.6829403899975] },
             { circle: "4", name: "昌明樓", coords: [24.150366961791566, 120.68299206267189] },
             { circle: "5", name: "翰英樓", coords: [24.15124281793564, 120.68292705619912] },
-            { circle: "7", name: "中商大樓", coords: [24.15123737990932, 120.68271499667834] },
+            { circle: "7", name: "中商大樓", coords: [24.151258399379415, 120.68217414104268] },
             { circle: "", name: "宿舍", coords: [24.151830615086253, 120.68329571597918] },
             { circle: "8", name: "奇秀樓", coords: [24.151224781813994, 120.68397935752898] },
             { circle: "6", name: "弘業樓", coords: [24.1505058854478, 120.68404953973737] },
@@ -1045,7 +1189,7 @@
 
         function clearInput() {
             document.getElementById('searchInput').value = '';
-            document.getElementById('buildingName').textContent = "大樓名稱：";
+            document.getElementById('buildingName').textContent = "大樓：";
             document.getElementById('floor').textContent = "樓層：";
             document.getElementById('id').textContent = "編號：";
         }
@@ -1070,7 +1214,7 @@
                 const result = parseInput(input);
                 if (result) {
                     document.getElementById('searchInput').value = '';
-                    document.getElementById('buildingName').textContent = `大樓名稱：${result.buildingName}`;
+                    document.getElementById('buildingName').textContent = `大樓：${result.buildingName}`;
                     document.getElementById('floor').textContent = `樓層：${result.floor}`;
                     document.getElementById('id').textContent = `編號：${result.id}`;
                     
@@ -1086,6 +1230,396 @@
         }
 
         document.getElementById('searchInput').addEventListener('keydown', handleKeyPress);
+
+        function updateContent(buttonType, clickedButton) {
+
+            const searchBox = document.getElementById("searchBox");
+            const buttons = document.querySelectorAll('.button-container-search-button');
+            
+            buttons.forEach(button => {
+                button.classList.remove('active');
+            });
+
+            clickedButton.classList.add('active');
+
+            document.querySelectorAll('.content-div').forEach(div => {
+                div.classList.add('hidden');
+            });
+
+            if (buttonType === 'id') {
+                document.getElementById('content-id').classList.remove('hidden');
+
+            } else if (buttonType === 'office') {
+                document.getElementById('content-office').classList.remove('hidden');
+                
+                document.getElementById('dropdownMenu-office').dropdownMenu.style.display = 'block'; 
+            } else if (buttonType === 'department') {
+                document.getElementById('content-department').classList.remove('hidden');
+                
+            }
+        }
+        function updateOffice() {
+            const dropdownMenu = document.getElementById("dropdownMenu-office");
+            const buildingName = document.getElementById("buildingName-office");
+            const floor = document.getElementById("floor-office");
+            const id = document.getElementById("id-office");
+
+            const selectedValue = dropdownMenu.value;
+
+            switch (selectedValue) {
+                case "office01":
+                    buildingName.textContent = "大樓：中商大樓";
+                    floor.textContent = "樓層：2樓";
+                    id.textContent = "編號：7201";
+                    break;
+                case "office02":
+                    buildingName.textContent = "大樓：中正大樓";
+                    floor.textContent = "樓層：7樓";
+                    id.textContent = "編號：3705";
+                    break;
+                case "office03":
+                    buildingName.textContent = "大樓：中商大樓";
+                    floor.textContent = "樓層：4樓";
+                    id.textContent = "編號：7413";
+                    break;
+                case "office04":
+                    buildingName.textContent = "大樓：中商大樓";
+                    floor.textContent = "樓層：7樓";
+                    id.textContent = "編號：7711";
+                    break;
+                case "office05":
+                    buildingName.textContent = "大樓：中商大樓";
+                    floor.textContent = "樓層：8樓";
+                    id.textContent = "編號：7810";
+                    break;
+                case "office06":
+                    buildingName.textContent = "大樓：中商大樓";
+                    floor.textContent = "樓層：9樓";
+                    id.textContent = "編號：7923";
+                    break;
+                case "office07":
+                    buildingName.textContent = "大樓：中技大樓";
+                    floor.textContent = "樓層：6樓";
+                    id.textContent = "編號：H602";
+                    break;
+                case "office08":
+                    buildingName.textContent = "大樓：中技大樓";
+                    floor.textContent = "樓層：4樓";
+                    id.textContent = "編號：H414";
+                    break;
+                case "office09":
+                    buildingName.textContent = "大樓：中商大樓";
+                    floor.textContent = "樓層：5樓";
+                    id.textContent = "編號：7501/7511";
+                    break;
+                case "office10":
+                    buildingName.textContent = "大樓：昌明樓";
+                    floor.textContent = "樓層：2樓";
+                    id.textContent = "編號：4213";
+                    break;
+                case "office11":
+                    buildingName.textContent = "大樓：昌明樓";
+                    floor.textContent = "樓層：5樓";
+                    id.textContent = "編號：4512/4513";
+                    break;
+                case "office12":
+                    buildingName.textContent = "大樓：昌明樓";
+                    floor.textContent = "樓層：4樓";
+                    id.textContent = "編號：4410";
+                    break;
+                case "office13":
+                    buildingName.textContent = "大樓：昌明樓";
+                    floor.textContent = "樓層：3樓";
+                    id.textContent = "編號：4310";
+                    break;
+                case "office14":
+                    buildingName.textContent = "大樓：昌明樓";
+                    floor.textContent = "樓層：2樓";
+                    id.textContent = "編號：4220";
+                    break;
+                case "office15":
+                    buildingName.textContent = "大樓：資訊樓";
+                    floor.textContent = "樓層：8樓";
+                    id.textContent = "編號：2805";
+                    break;
+                case "office16":
+                    buildingName.textContent = "大樓：資訊樓";
+                    floor.textContent = "樓層：4樓";
+                    id.textContent = "編號：2406";
+                    break;
+                case "office17":
+                    buildingName.textContent = "大樓：資訊樓";
+                    floor.textContent = "樓層：5樓";
+                    id.textContent = "編號：2505";
+                    break;
+                case "office18":
+                    buildingName.textContent = "大樓：弘業樓";
+                    floor.textContent = "樓層：2樓";
+                    id.textContent = "編號：6201";
+                    break;
+                case "office19":
+                    buildingName.textContent = "大樓：資訊樓";
+                    floor.textContent = "樓層：8樓";
+                    id.textContent = "編號：2805";
+                    break;
+                case "office20":
+                    buildingName.textContent = "大樓：中正大樓";
+                    floor.textContent = "樓層：3樓";
+                    id.textContent = "編號：3301";
+                    break;
+                case "office21":
+                    buildingName.textContent = "大樓：中正大樓";
+                    floor.textContent = "樓層：5樓";
+                    id.textContent = "編號：3515";
+                    break;
+                case "office22":
+                    buildingName.textContent = "大樓：中正大樓";
+                    floor.textContent = "樓層：6樓";
+                    id.textContent = "編號：3615";
+                    break;
+                case "office23":
+                    buildingName.textContent = "大樓：中正大樓";
+                    floor.textContent = "樓層：9樓";
+                    id.textContent = "編號：3910";
+                    break;
+                case "office24":
+                    buildingName.textContent = "大樓：民生校區誠敬樓";
+                    floor.textContent = "樓層：2樓";
+                    id.textContent = "編號：T212";
+                    break;
+                case "office25":
+                    buildingName.textContent = "大樓：民生校區仁愛樓";
+                    floor.textContent = "樓層：3樓";
+                    id.textContent = "編號：R301";
+                    break;
+                case "office26":
+                    buildingName.textContent = "大樓：民生校區仁愛樓";
+                    floor.textContent = "樓層：1樓";
+                    id.textContent = "編號：R102";
+                    break;
+                case "office27":
+                    buildingName.textContent = "大樓：民生校區仁愛樓";
+                    floor.textContent = "樓層：3樓";
+                    id.textContent = "編號：R305";
+                    break;
+                case "office28":
+                    buildingName.textContent = "大樓：中正大樓";
+                    floor.textContent = "樓層：1樓";
+                    id.textContent = "編號：3104A";
+                    break;
+                case "office29":
+                    buildingName.textContent = "大樓：中正大樓";
+                    floor.textContent = "樓層：1樓";
+                    id.textContent = "編號：3104B";
+                    break;
+                case "office30":
+                    buildingName.textContent = "大樓：資訊樓";
+                    floor.textContent = "樓層：1樓";
+                    id.textContent = "編號：2107";
+                    break;
+                case "office31":
+                    buildingName.textContent = "大樓：資訊樓";
+                    floor.textContent = "樓層：1樓";
+                    id.textContent = "編號：2107";
+                    break;
+                case "office32":
+                    buildingName.textContent = "大樓：資訊樓";
+                    floor.textContent = "樓層：1樓";
+                    id.textContent = "編號：2107";
+                    break;
+                case "office33":
+                    buildingName.textContent = "大樓：資訊樓";
+                    floor.textContent = "樓層：1樓";
+                    id.textContent = "編號：2107";
+                    break;
+                default:
+                    buildingName.textContent = "大樓：";
+                    floor.textContent = "樓層：";
+                    id.textContent = "編號：";
+            }
+
+        }
+
+
+        function updateDepartment() {
+            const dropdownMenu = document.getElementById("dropdownMenu-department");
+            const buildingName = document.getElementById("buildingName-department");
+            const floor = document.getElementById("floor-department");
+            const id = document.getElementById("id-department");
+
+            const selectedValue = dropdownMenu.value;
+            let building, coords;
+
+            switch (selectedValue) {
+                case "department01":
+                    buildingName.textContent = "大樓：中商大樓";
+                    floor.textContent = "樓層：2樓";
+                    id.textContent = "編號：7201";
+                    building = "中商大樓";
+                    break;
+                case "department02":
+                    buildingName.textContent = "大樓：中正大樓";
+                    floor.textContent = "樓層：7樓";
+                    id.textContent = "編號：3705";
+                    building = "中正大樓";
+                    break;
+                case "department03":
+                    buildingName.textContent = "大樓：中商大樓";
+                    floor.textContent = "樓層：4樓";
+                    id.textContent = "編號：7413";
+                    building = "中商大樓";
+                    break;
+                case "department04":
+                    buildingName.textContent = "大樓：中商大樓";
+                    floor.textContent = "樓層：7樓";
+                    id.textContent = "編號：7711";
+                    building = "中商大樓";
+                    break;
+                case "department05":
+                    buildingName.textContent = "大樓：中商大樓";
+                    floor.textContent = "樓層：8樓";
+                    id.textContent = "編號：7810";
+                    building = "中商大樓";
+                    break;
+                case "department06":
+                    buildingName.textContent = "大樓：中商大樓";
+                    floor.textContent = "樓層：9樓";
+                    id.textContent = "編號：7923";
+                    building = "中商大樓";
+                    break;
+                case "department07":
+                    buildingName.textContent = "大樓：中技大樓";
+                    floor.textContent = "樓層：6樓";
+                    id.textContent = "編號：H602";
+                    building = "中技大樓";
+                    break;
+                case "department08":
+                    buildingName.textContent = "大樓：中技大樓";
+                    floor.textContent = "樓層：4樓";
+                    id.textContent = "編號：H414";
+                    building = "中技大樓";
+                    break;
+                case "department09":
+                    buildingName.textContent = "大樓：中商大樓";
+                    floor.textContent = "樓層：5樓";
+                    id.textContent = "編號：7501/7511";
+                    building = "中商大樓";
+                    break;
+                case "department10":
+                    buildingName.textContent = "大樓：昌明樓";
+                    floor.textContent = "樓層：2樓";
+                    id.textContent = "編號：4213";
+                    building = "昌明樓";
+                    break;
+                case "department11":
+                    buildingName.textContent = "大樓：昌明樓";
+                    floor.textContent = "樓層：5樓";
+                    id.textContent = "編號：4512/4513";
+                    building = "昌明樓";
+                    break;
+                case "department12":
+                    buildingName.textContent = "大樓：昌明樓";
+                    floor.textContent = "樓層：4樓";
+                    id.textContent = "編號：4410";
+                    building = "昌明樓";
+                    break;
+                case "department13":
+                    buildingName.textContent = "大樓：昌明樓";
+                    floor.textContent = "樓層：3樓";
+                    id.textContent = "編號：4310";
+                    building = "昌明樓";
+                    break;
+                case "department14":
+                    buildingName.textContent = "大樓：昌明樓";
+                    floor.textContent = "樓層：2樓";
+                    id.textContent = "編號：4220";
+                    building = "昌明樓";
+                    break;
+                case "department15":
+                    buildingName.textContent = "大樓：資訊樓";
+                    floor.textContent = "樓層：8樓";
+                    id.textContent = "編號：2805";
+                    building = "資訊樓";
+                    break;
+                case "department16":
+                    buildingName.textContent = "大樓：資訊樓";
+                    floor.textContent = "樓層：4樓";
+                    id.textContent = "編號：2406";
+                    building = "資訊樓";
+                    break;
+                case "department17":
+                    buildingName.textContent = "大樓：資訊樓";
+                    floor.textContent = "樓層：5樓";
+                    id.textContent = "編號：2505";
+                    building = "資訊樓";
+                    break;
+                case "department18":
+                    buildingName.textContent = "大樓：弘業樓";
+                    floor.textContent = "樓層：2樓";
+                    id.textContent = "編號：6201";
+                    building = "弘業樓";
+                    break;
+                case "department19":
+                    buildingName.textContent = "大樓：資訊樓";
+                    floor.textContent = "樓層：8樓";
+                    id.textContent = "編號：2805";
+                    building = "資訊樓";
+                    break;
+                case "department20":
+                    buildingName.textContent = "大樓：中正樓";
+                    floor.textContent = "樓層：3樓";
+                    id.textContent = "編號：3301";
+                    building = "中正樓";
+                    break;
+                case "department21":
+                    buildingName.textContent = "大樓：中正樓";
+                    floor.textContent = "樓層：5樓";
+                    id.textContent = "編號：3515";
+                    building = "中正樓";
+                    break;
+                case "department22":
+                    buildingName.textContent = "大樓：中正樓";
+                    floor.textContent = "樓層：6樓";
+                    id.textContent = "編號：3615";
+                    building = "中正樓";
+                    break;
+                case "department23":
+                    buildingName.textContent = "大樓：中正樓";
+                    floor.textContent = "樓層：9樓";
+                    id.textContent = "編號：3910";
+                    building = "中正樓";
+                    break;
+                case "department24":
+                    buildingName.textContent = "大樓：中正樓";
+                    floor.textContent = "樓層：1樓";
+                    id.textContent = "編號：3104A";
+                    building = "中正樓";
+                    break;
+                case "department25":
+                    buildingName.textContent = "大樓：中正樓";
+                    floor.textContent = "樓層：1樓";
+                    id.textContent = "編號：3104B";
+                    building = "中正樓";
+                    break;
+                case "department26":
+                    buildingName.textContent = "大樓：資訊樓";
+                    floor.textContent = "樓層：1樓";
+                    id.textContent = "編號：2107";
+                    building = "資訊樓";
+                    break;
+                default:
+                    buildingName.textContent = "大樓：";
+                    floor.textContent = "樓層：";
+                    id.textContent = "編號：";
+                    return; 
+            }
+
+            const buildingData = buildings.find(b => b.name === building);
+            if (buildingData) {
+                coords = buildingData.coords;
+                addMarkerToMap(coords, buildingName.textContent);
+            }
+        }
 
         
 
