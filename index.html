@@ -12,6 +12,9 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@0.74.0/dist/L.Control.Locate.min.js" charset="utf-8"></script>
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-arrowheads@1.2.0/dist/leaflet-arrowheads.min.css">
+    <script src="https://unpkg.com/leaflet-arrowheads@1.2.0/dist/leaflet-arrowheads.min.js"></script>
+
 
     <style>
         .hidden {
@@ -709,7 +712,7 @@
             
             sports: [
             { circle: "2", name: "有氧教室", coords: [24.149419286183875, 120.68358285379435], icon: 'fa-dumbbell', image: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/zcl.png', title: '行政&資訊樓', description: '行政&資訊樓的描述', buttonText: '集點', slideIndex: 0  },
-            { circle: "", name: "羽球場", coords: [24.149991580590665, 120.68249043909975], icon: 'fa-badminton', image: 'https://example.com/image3.jpg', title: '活動中心', description: '活動中心的描述', buttonText: '了解更多' },
+            { circle: "", name: "羽球場", coords: [24.149991580590665, 120.68249043909975], icon: 'fa-futbol', image: 'https://example.com/image3.jpg', title: '活動中心', description: '活動中心的描述', buttonText: '了解更多' },
             { circle: "4", name: "撞球室", coords: [24.151224781813994, 120.68397935752898], icon: 'fa-pool' },
             { circle: "", name: "健身房、飛鏢室", coords: [24.151830165086253, 120.68329357159718], icon: 'fa-dumbbell' },
             { circle: "8", name: "桌球場", coords: [24.1508525821429, 120.68363722461531], icon: 'fa-table-tennis' },
@@ -799,6 +802,7 @@
                 var textMarker = L.divIcon(iconOptions);
                 L.marker(location.coords, { icon: textMarker }).addTo(currentMarkers);
             });
+            
         }
         const buttons = document.querySelectorAll('.button-container button');
 
