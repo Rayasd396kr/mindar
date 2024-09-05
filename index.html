@@ -12,8 +12,8 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@0.74.0/dist/L.Control.Locate.min.js" charset="utf-8"></script>
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet-arrowheads@1.2.0/dist/leaflet-arrowheads.min.css">
-    <script src="https://unpkg.com/leaflet-arrowheads@1.2.0/dist/leaflet-arrowheads.min.js"></script>
+    <script src="https://unpkg.com/leaflet-polylinedecorator"></script>
+
 
 
     <style>
@@ -726,12 +726,18 @@
 
             ],
             events: [
-               
+                {name: "花園廣場", coords: [24.150189393858057, 120.68364282259014], icon: 'fa-tree'},
+                {name: "活動場", coords: [24.15073843132668, 120.68389874894474], icon: 'fa-archway'},
+                {name: "小市集", coords: [24.150548039925443, 120.68376833473943], icon: 'fa-cart-shopping'},
+                {name: "演唱廳", coords: [24.149989661189462, 120.68248604134148], icon: 'fa-music'},
+
             ]
         };
 
         var currentMarkers = null;
         var isNavigationActive = false;
+        var navigationRoute = null; // 用於存儲導航路線的變量
+        
 
         function toggleMarkers(type) {
             if (currentMarkers) {
@@ -786,9 +792,15 @@
                     case 'events':
                         iconOptions = {
                             className: 'event-marker',
-                            html: `<div class='event-icon'>${location.name}</div>`,
-                            iconSize: [60, 60],
-                            iconAnchor: [30, 30]
+                            html: `
+                                <div class='building-icon'>
+                                    <i class='fa-solid ${location.icon} building-icon'></i>
+                                </div>
+                                <div class='building-info'>
+                                    <div class='building-name'>${location.name}</div>
+                                </div>`,
+                            iconSize: [100, 50],
+                            iconAnchor: [0, 0]
                         };
                         break;
 
@@ -802,8 +814,52 @@
                 var textMarker = L.divIcon(iconOptions);
                 L.marker(location.coords, { icon: textMarker }).addTo(currentMarkers);
             });
+            if (type === 'navigation') {
+                drawNavigationRoute();
+            } else {
+                // 刪除導航路線（如果存在）
+                if (navigationRoute) {
+                    markerLayer.removeLayer(navigationRoute);
+                }
+            }
             
         }
+
+        function drawNavigationRoute() {
+            if (navigationRoute) {
+                markerLayer.removeLayer(navigationRoute); // 移除舊的導航路線
+            }
+
+            // 繪製新的導航路線
+            var latlngs = locations.navigation.map(location => location.coords);
+            navigationRoute = L.polyline(latlngs, { color: 'blue', weight: 4 }).addTo(markerLayer);
+
+            // 使用 leaflet-polyline-decorator 插件來添加箭頭
+            latlngs.forEach((latlng, index) => {
+                if (index < latlngs.length - 1) {
+                    var segment = [latlng, latlngs[index + 1]];
+
+                    var line = L.polyline(segment, { color: 'blue', weight: 4 }).addTo(markerLayer);
+
+                    L.polylineDecorator(line, {
+                        patterns: [
+                            {
+                                offset: '100%', // 箭頭出現在線段的末尾
+                                repeat: 0, // 不重複
+                                symbol: L.Symbol.arrowHead({
+                                    pixelSize: 15, // 箭頭的大小
+                                    polygon: false, // 如果想要空心箭頭則設為 false
+                                    pathOptions: { color: 'blue', weight: 2 }
+                                })
+                            }
+                        ]
+                    }).addTo(markerLayer);
+                }
+            });
+        }
+
+
+
         const buttons = document.querySelectorAll('.button-container button');
 
         buttons.forEach(button => {
