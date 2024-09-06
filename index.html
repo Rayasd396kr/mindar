@@ -5,11 +5,11 @@
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
     <script src="https://cdn.rawgit.com/donmccurdy/aframe-extras/v6.1.0/dist/aframe-extras.min.js"></script>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.2/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@v0.81.1/dist/L.Control.Locate.min.css" />
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
-    <script src="https://unpkg.com/leaflet@1.9.2/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@0.81.1/dist/L.Control.Locate.min.js" charset="utf-8"></script>
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
     <script src="https://unpkg.com/leaflet-polylinedecorator"></script>
@@ -286,29 +286,54 @@
             margin: 0 5%;
             font-size: 16px;
         }
+        
         .grid-container {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(3, 1fr);
             gap: 10px;
             position: fixed;
             top: 100px;
-            right: 70px;
+            right: -30px;
+            transform: translateX(-50%);
             z-index: 1005;
             align-items: center;
             justify-content: center;
             text-align: center;
             background-color: white;
             border-radius: 5px;
+            padding: 20px;
         }
 
         .grid-item {
-            background-color: #f0f0f0;
+            background-color: white;
             text-align: center;
             padding: 20px;
             border: 1px solid #ccc;
             cursor: pointer;
-            margin: 10px;
         }
+
+        .grid-header {
+            grid-column: span 3; 
+            text-align: center;
+            font-weight: bold;
+            font-size: 20px; 
+            margin-bottom: 10px; 
+        }
+        .grid-buttom{
+            background-color: rgba(128, 128, 128, 0.247);
+            grid-column: span 3; 
+            border-radius: 5px;
+            color: black;
+            padding: 5px;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-weight: bold;
+            border: none;
+            margin-top: 10px;
+            font-size: 16px; 
+        }
+
         .custom-div-icon {
             text-align: center;
             font-size: 15px;
@@ -596,6 +621,7 @@
     </div>
     
     <div id="grid-container" class="grid-container" style="display: none;">
+        <div class="grid-header">集點</div>
         <div id="cell-1" class="grid-item">1</div>
         <div id="cell-2" class="grid-item">2</div>
         <div class="grid-item">3</div>
@@ -604,8 +630,10 @@
         <div class="grid-item">6</div>
         <div class="grid-item">7</div>
         <div class="grid-item">8</div>
+        <button class="grid-buttom"><i class="fas fa-stamp"></i>集點卡</button>
         <button onclick="resetLocalStorage()">重置</button>
     </div>
+    
     <div id="map">
         <i class="fa fa-expand zoom-button" aria-hidden="true" onclick="toggleFullScreen()"></i>
         <i class="fa-solid fa-hand-pointer hand-icon" aria-hidden="true" id="hand-icon"></i>
@@ -891,12 +919,12 @@
 
 
         var lc = L.control.locate({
-            // setView: 'once',
-            // keepCurrentZoomLevel: true,
-            // drawCircle: true,
-            // follow: true, 
-            // showCompass: true,       
-            // compassHeading: true,     
+            setView: 'once',
+            keepCurrentZoomLevel: true,
+            drawCircle: true,
+            follow: true, 
+            showCompass: true,       
+            compassHeading: true,     
             locateOptions: {
                 enableHighAccuracy: true
             },
