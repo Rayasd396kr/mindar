@@ -7,10 +7,10 @@
     <script src="https://cdn.rawgit.com/donmccurdy/aframe-extras/v6.1.0/dist/aframe-extras.min.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@v0.74.0/dist/L.Control.Locate.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@v0.81.1/dist/L.Control.Locate.min.css" />
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@0.74.0/dist/L.Control.Locate.min.js" charset="utf-8"></script>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@0.81.1/dist/L.Control.Locate.min.js" charset="utf-8"></script>
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
     <script src="https://unpkg.com/leaflet-polylinedecorator"></script>
 
@@ -734,10 +734,10 @@
             ]
         };
 
-        var currentMarkers = null;
-        var isNavigationActive = false;
-        var navigationRoute = null; // 用於存儲導航路線的變量
-        
+        var currentMarkers;
+        var navigationRoute; 
+        var navigationArrows = [];
+        var navigationLines = []; 
 
         function toggleMarkers(type) {
             if (currentMarkers) {
@@ -751,7 +751,7 @@
 
                 switch (type) {
                     case 'navigation':
-                    iconOptions = {
+                        iconOptions = {
                             className: 'custom-div-icon',
                             html: `<div class='circle'>${location.circle}</div><div class='text'>${location.name}</div>`,
                             iconSize: [50, 50],
@@ -772,8 +772,6 @@
                             iconAnchor: [0, 0]
                         };
                         break;
-
-                    
                     case 'sports':
                         iconOptions = {
                             className: 'sports-marker',
@@ -788,7 +786,6 @@
                             iconAnchor: [0, 0]
                         };
                         break;
-
                     case 'events':
                         iconOptions = {
                             className: 'event-marker',
@@ -803,60 +800,71 @@
                             iconAnchor: [0, 0]
                         };
                         break;
-
                     default:
-                        iconOptions = {
-                           
-                        };
+                        iconOptions = {};
                         break;
                 }
 
                 var textMarker = L.divIcon(iconOptions);
                 L.marker(location.coords, { icon: textMarker }).addTo(currentMarkers);
             });
+
             if (type === 'navigation') {
                 drawNavigationRoute();
             } else {
-                // 刪除導航路線（如果存在）
-                if (navigationRoute) {
-                    markerLayer.removeLayer(navigationRoute);
-                }
+                clearNavigationRoute();
             }
-            
         }
 
         function drawNavigationRoute() {
-            if (navigationRoute) {
-                markerLayer.removeLayer(navigationRoute); // 移除舊的導航路線
-            }
+            clearNavigationRoute(); 
 
-            // 繪製新的導航路線
+           
             var latlngs = locations.navigation.map(location => location.coords);
-            navigationRoute = L.polyline(latlngs, { color: 'blue', weight: 4 }).addTo(markerLayer);
+            navigationRoute = L.polyline(latlngs, { color: 'gray', weight: 4 }).addTo(markerLayer);
 
-            // 使用 leaflet-polyline-decorator 插件來添加箭頭
             latlngs.forEach((latlng, index) => {
                 if (index < latlngs.length - 1) {
                     var segment = [latlng, latlngs[index + 1]];
 
-                    var line = L.polyline(segment, { color: 'blue', weight: 4 }).addTo(markerLayer);
+                    var line = L.polyline(segment, { color: 'gray', weight: 4 }).addTo(markerLayer);
+                    navigationLines.push(line); 
 
-                    L.polylineDecorator(line, {
+                    var arrow = L.polylineDecorator(line, {
                         patterns: [
                             {
-                                offset: '100%', // 箭頭出現在線段的末尾
-                                repeat: 0, // 不重複
+                                offset: '100%', 
+                                repeat: 0, 
                                 symbol: L.Symbol.arrowHead({
-                                    pixelSize: 15, // 箭頭的大小
-                                    polygon: false, // 如果想要空心箭頭則設為 false
-                                    pathOptions: { color: 'blue', weight: 2 }
+                                    pixelSize: 15, 
+                                    polygon: false, 
+                                    pathOptions: { color: 'gray', weight: 4 }
                                 })
                             }
                         ]
                     }).addTo(markerLayer);
+
+                    navigationArrows.push(arrow); 
                 }
             });
         }
+
+        function clearNavigationRoute() {
+            if (navigationRoute) {
+                markerLayer.removeLayer(navigationRoute);
+                navigationRoute = null; 
+            }
+            if (navigationArrows.length > 0) {
+                navigationArrows.forEach(arrow => markerLayer.removeLayer(arrow));
+                navigationArrows = []; 
+            }
+            if (navigationLines.length > 0) {
+                navigationLines.forEach(line => markerLayer.removeLayer(line));
+                navigationLines = []; 
+            }
+        }
+
+
 
 
 
