@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@v0.81.1/dist/L.Control.Locate.min.css" />
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.2/dist/leaflet.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@0.81.1/dist/L.Control.Locate.min.js" charset="utf-8"></script>
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
     <script src="https://unpkg.com/leaflet-polylinedecorator"></script>
@@ -667,7 +667,7 @@
 
     <script>
         
-        var map = L.map('map', { zoomControl: false,tap: false, }).setView([24.150996625919188, 120.68148734742584], 17);
+        var map = L.map('map', { zoomControl: false }).setView([24.150996625919188, 120.68148734742584], 17);
         var markerLayer = L.layerGroup().addTo(map);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -891,12 +891,12 @@
 
 
         var lc = L.control.locate({
-            setView: 'once',
-            keepCurrentZoomLevel: true,
-            drawCircle: true,
-            follow: true, 
-            showCompass: true,       
-            compassHeading: true,     
+            // setView: 'once',
+            // keepCurrentZoomLevel: true,
+            // drawCircle: true,
+            // follow: true, 
+            // showCompass: true,       
+            // compassHeading: true,     
             locateOptions: {
                 enableHighAccuracy: true
             },
