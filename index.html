@@ -460,15 +460,15 @@
         }
 
         .swiper-slide {
-            text-align: center;
-            background: rgba(116, 145, 155, 0.807);
+            border:solid 3px #000;
+            border-radius: 10px;
+            background: rgb(175, 206, 216);
             background-size: cover;
             background-position: center;
             width: 80%;
         }
 
         .swiper-slide .slide-content {
-            text-align: center;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -476,34 +476,74 @@
             height: 100%;
         }
         .swiper-slide img {
+            margin: 0 20px 0 20px !important; 
+            border-radius: 30px 30px 0 0;
             display: block;
-            max-width: 100%;
-            max-height: 50%; 
-            object-fit: cover; 
+            max-width: 85%;
+            max-height: 100%; 
+            
         }
+        .slide-background {
+            width: 85%;
+            border-radius: 0 0 10px 10px;
+            background-color: #ffffffb4;
+            height: 25%;
+            display: flex;
+            flex-direction: column;
+            
+        }
+
         .slide-title {
-            color: white;
-            height: 10%; 
-            margin-bottom: 20px;
+            border: solid 3px black;
+            border-radius: 20px;
+            background-color: white;
+            margin: 0px !important;
+            color: balck;
             display: flex;
             align-items: center;
+            text-align: center;
             justify-content: center;
+            padding: 5px;
+            font-weight: bold;
+            
         }
+
         .slide-text {
-            padding: 0 5%;
-            color: white;
-            height: 20%;
+           
+            font-weight: bold;
+            margin: 0px !important;
+            color: black;
             display: flex;
             align-items: center;
-            justify-content: center;
-            overflow: hidden;
+            justify-content: flex-start;
+            padding: 10px;
+            
         }
         .close-btn {
             position: absolute;
-            top: 10px;
+            top: 0px;
             right: 10px;
-            font-size: 24px;
+            font-size:40px;
+            color: black;
+            cursor: pointer;
+        }
+        .fa-camera-retro{
+            position: absolute;
+            bottom: 150px;
+            right: 35px;
+            padding: 10px;
+            font-size:30px;
             color: white;
+            background-color: #ce5252;
+            cursor: pointer;
+            border-radius: 50px;
+        }
+        .fa-number{
+            position: absolute;
+            bottom: 6px;
+            right: 10px;
+            font-size:24px;
+            color: black;
             cursor: pointer;
         }
         button.active {
@@ -630,7 +670,8 @@
         <div class="grid-item">6</div>
         <div class="grid-item">7</div>
         <div class="grid-item">8</div>
-        <button class="grid-buttom"><i class="fas fa-stamp"></i>集點卡</button>
+        <div class="grid-item">9</div>
+        <button class="grid-buttom" id="grid-buttom"><i class="fas fa-stamp"></i>集點卡</button>
         <button onclick="resetLocalStorage()">重置</button>
     </div>
     
@@ -652,41 +693,61 @@
             <div class="swiper-slide">
                 <div class="slide-content">
                     <span class="close-btn">&times;</span>
-                    <h2 class="slide-title">1.資管四樓某地方</h2>
-                    <img src="https://swiperjs.com/demos/images/nature-3.jpg" />
-                    <p class="slide-text">此處是資管大本營，每個資管人都在此上過課，培養出很多優秀人才。</p>
+                    <img class="slide-img" src="https://swiperjs.com/demos/images/nature-3.jpg" />
+                    <i class="fa-solid fa-camera-retro"></i>
+                    <div class="slide-background">
+                        <h2 class="slide-title">資管四樓某地方</h2>
+                        <p class="slide-text">此處是資管大本營，每個資管人都在此上過課，培養出很多優秀人才。</p>
+                    </div>
+                    <i class="fa-solid fa-1 fa-number"></i>
                 </div>
             </div>
             <div class="swiper-slide">
                 <div class="slide-content">
                     <span class="close-btn">&times;</span>
-                    <h2 class="slide-title">2.弘業樓</h2>
-                    <img src="https://swiperjs.com/demos/images/nature-3.jpg" />
-                    <p class="slide-text">此處是資管大本營，每個資管人都在此上過課，培養出很多優秀人才，此處是資管大本營</p>
+                    <img class="slide-img" src="https://swiperjs.com/demos/images/nature-3.jpg" />
+                    <i class="fa-solid fa-camera-retro"></i>
+                    <div class="slide-background">
+                        <h2 class="slide-title">資管四樓某地方</h2>
+                        <p class="slide-text">此處是資管大本營，每個資管人都在此上過課，培養出很多優秀人才。</p>
+                    </div>
+                    <i class="fa-solid fa-2 fa-number"></i>
                 </div>
             </div>
             <div class="swiper-slide">
                 <div class="slide-content">
                     <span class="close-btn">&times;</span>
-                    <h2 class="slide-title">1.資管四樓某地方</h2>
-                    <img src="https://swiperjs.com/demos/images/nature-3.jpg" />
-                    <p class="slide-text">此處是資管大本營，每個資管人都在此上過課，培養出很多優秀人才。</p>
+                    <img class="slide-img" src="https://swiperjs.com/demos/images/nature-3.jpg" />
+                    <i class="fa-solid fa-camera-retro"></i>
+                    <div class="slide-background">
+                        <h2 class="slide-title">資管四樓某地方</h2>
+                        <p class="slide-text">此處是資管大本營，每個資管人都在此上過課，培養出很多優秀人才。</p>
+                    </div>
+                    <i class="fa-solid fa-3 fa-number"></i>
                 </div>
             </div>
             <div class="swiper-slide">
                 <div class="slide-content">
                     <span class="close-btn">&times;</span>
-                    <h2 class="slide-title">1.資管四樓某地方</h2>
-                    <img src="https://swiperjs.com/demos/images/nature-3.jpg" />
-                    <p class="slide-text">此處是資管大本營，每個資管人都在此上過課，培養出很多優秀人才。</p>
+                    <img class="slide-img" src="https://swiperjs.com/demos/images/nature-3.jpg" />
+                    <i class="fa-solid fa-camera-retro"></i>
+                    <div class="slide-background">
+                        <h2 class="slide-title">資管四樓某地方</h2>
+                        <p class="slide-text">此處是資管大本營，每個資管人都在此上過課，培養出很多優秀人才。</p>
+                    </div>
+                    <i class="fa-solid fa-4 fa-number"></i>
                 </div>
             </div>
             <div class="swiper-slide">
                 <div class="slide-content">
                     <span class="close-btn">&times;</span>
-                    <h2 class="slide-title">1.資管四樓某地方</h2>
-                    <img src="https://swiperjs.com/demos/images/nature-3.jpg" />
-                    <p class="slide-text">此處是資管大本營，每個資管人都在此上過課，培養出很多優秀人才。</p>
+                    <img class="slide-img" src="https://swiperjs.com/demos/images/nature-3.jpg" />
+                    <i class="fa-solid fa-camera-retro"></i>
+                    <div class="slide-background">
+                        <h2 class="slide-title">資管四樓某地方</h2>
+                        <p class="slide-text">此處是資管大本營，每個資管人都在此上過課，培養出很多優秀人才。</p>
+                    </div>
+                    <i class="fa-solid fa-5 fa-number"></i>
                 </div>
             </div>
         </div>
@@ -1017,6 +1078,15 @@
                 });
             });
 
+            document.getElementById('grid-buttom').addEventListener('click', () => {
+                if (swiperContainer.style.display === 'none' || swiperContainer.style.display === '') {
+                    swiperContainer.style.display = 'block'; 
+                    swiper.update();
+                } else {
+                    swiperContainer.style.display = 'none'; 
+                }
+            });
+
             document.getElementById('info-button').addEventListener('click', () => {
                 if (swiperContainer.style.display === 'none' || swiperContainer.style.display === '') {
                     swiperContainer.style.display = 'block'; 
@@ -1027,6 +1097,7 @@
             });
         });
 
+        
 
         map.on('locationfound', function(e) {
             userLatLng = [e.latlng.lat, e.latlng.lng];
