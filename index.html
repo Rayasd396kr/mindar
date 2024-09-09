@@ -547,6 +547,26 @@
         button.active {
             background-color: #307fb7;
         }
+        .info-container {
+            
+            display: flex;
+            overflow-x: auto;
+            white-space: nowrap;
+            background-color: #f0f0f0;
+            padding: 10px;
+            margin-top: 10px;
+            z-index: 3000;
+        }
+        .info-box {
+            display: inline-block;
+            width: 200px;
+            margin-right: 10px;
+            padding: 10px;
+            background-color: #c3bebe;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -750,6 +770,7 @@
             </div>
         </div>
     </div>
+    <div class="info-container" id="infoContainer"></div>
       
 
     <script>
@@ -832,8 +853,10 @@
             }
 
             currentMarkers = L.layerGroup().addTo(markerLayer);
+            const infoContainer = document.getElementById('infoContainer');
+            infoContainer.innerHTML = ''; // 清空旧的资讯框
 
-            locations[type].forEach(location => {
+            locations[type].forEach((location, index) => {
                 let iconOptions;
 
                 switch (type) {
@@ -893,7 +916,31 @@
                 }
 
                 var textMarker = L.divIcon(iconOptions);
-                L.marker(location.coords, { icon: textMarker }).addTo(currentMarkers);
+                var marker = L.marker(location.coords, { icon: textMarker }).addTo(currentMarkers);
+
+                
+
+                const infoBox = document.createElement('div');
+                infoBox.className = 'info-box';
+                infoBox.id = `infoBox${index}`;
+                infoBox.innerHTML = `
+                    <h4>${location.name}</h4>
+                    <img src="${location.image}" alt="${location.title}" style="width: 100%; height: auto;">
+                    <p>${location.description}</p>
+                    <button>${location.buttonText}</button>
+                `;
+                infoContainer.appendChild(infoBox);
+
+                if (type === 'navigation') {
+                    // Directly scroll to the info box without clicking
+                    infoBox.scrollIntoView({ behavior: 'smooth' });
+                } else {
+                    // Handle click event for other types
+                    marker.on('click', () => {
+                        document.getElementById(`infoBox${index}`).scrollIntoView({ behavior: 'smooth' });
+                    });
+                }
+                
             });
 
             if (type === 'navigation') {
