@@ -1078,8 +1078,8 @@
 
             function toggleSwiper() {
                 if (swiperContainer.style.display === 'none' || swiperContainer.style.display === '') {
-                    swiperContainer.style.display = 'block'; 
-                    swiperContainer.offsetHeight; 
+                    swiperContainer.style.display = 'block';  
+                    swiper.update();
                     swiper.update();
                 } else {
                     swiperContainer.style.display = 'none'; 
