@@ -706,7 +706,7 @@
                     <img class="slide-img" src="https://swiperjs.com/demos/images/nature-3.jpg" />
                     <i class="fa-solid fa-camera-retro"></i>
                     <div class="slide-background">
-                        <h2 class="slide-title">資管四樓某地方</h2>
+                        <p class="slide-title">資管四樓某地方</p>
                         <p class="slide-text">此處是資管大本營，每個資管人都在此上過課，培養出很多優秀人才。</p>
                     </div>
                     <i class="fa-solid fa-2 fa-number"></i>
@@ -718,7 +718,7 @@
                     <img class="slide-img" src="https://swiperjs.com/demos/images/nature-3.jpg" />
                     <i class="fa-solid fa-camera-retro"></i>
                     <div class="slide-background">
-                        <h2 class="slide-title">資管四樓某地方</h2>
+                        <p class="slide-title">資管四樓某地方</p>
                         <p class="slide-text">此處是資管大本營，每個資管人都在此上過課，培養出很多優秀人才。</p>
                     </div>
                     <i class="fa-solid fa-3 fa-number"></i>
@@ -730,7 +730,7 @@
                     <img class="slide-img" src="https://swiperjs.com/demos/images/nature-3.jpg" />
                     <i class="fa-solid fa-camera-retro"></i>
                     <div class="slide-background">
-                        <h2 class="slide-title">資管四樓某地方</h2>
+                        <p class="slide-title">資管四樓某地方</p>
                         <p class="slide-text">此處是資管大本營，每個資管人都在此上過課，培養出很多優秀人才。</p>
                     </div>
                     <i class="fa-solid fa-4 fa-number"></i>
@@ -742,7 +742,7 @@
                     <img class="slide-img" src="https://swiperjs.com/demos/images/nature-3.jpg" />
                     <i class="fa-solid fa-camera-retro"></i>
                     <div class="slide-background">
-                        <h2 class="slide-title">資管四樓某地方</h2>
+                        <p class="slide-title">資管四樓某地方</p>
                         <p class="slide-text">此處是資管大本營，每個資管人都在此上過課，培養出很多優秀人才。</p>
                     </div>
                     <i class="fa-solid fa-5 fa-number"></i>
@@ -1076,24 +1076,20 @@
                 });
             });
 
-            document.getElementById('grid-buttom').addEventListener('click', () => {
+            function toggleSwiper() {
                 if (swiperContainer.style.display === 'none' || swiperContainer.style.display === '') {
                     swiperContainer.style.display = 'block'; 
+                    swiperContainer.offsetHeight; 
                     swiper.update();
                 } else {
                     swiperContainer.style.display = 'none'; 
                 }
-            });
+            }
 
-            document.getElementById('info-button').addEventListener('click', () => {
-                if (swiperContainer.style.display === 'none' || swiperContainer.style.display === '') {
-                    swiperContainer.style.display = 'block'; 
-                    swiper.update();
-                } else {
-                    swiperContainer.style.display = 'none'; 
-                }
-            });
+            document.getElementById('grid-buttom').addEventListener('click', toggleSwiper);
+            document.getElementById('info-button').addEventListener('click', toggleSwiper);
         });
+
 
         
 
