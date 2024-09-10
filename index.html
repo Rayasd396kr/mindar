@@ -460,6 +460,7 @@
         }
 
         .swiper-slide {
+            position: relative;
             border:solid 3px #000;
             border-radius: 10px;
             background: rgb(175, 206, 216);
@@ -517,17 +518,9 @@
             padding: 10px;
             font-size: 14px;
         }
-        .close-btn {
-            position: absolute;
-            top: 0px;
-            right: 10px;
-            font-size:40px;
-            color: black;
-            cursor: pointer;
-        }
         .fa-camera-retro{
             position: absolute;
-            bottom: 150px;
+            bottom: 200px;
             right: 35px;
             padding: 10px;
             font-size:30px;
@@ -544,20 +537,28 @@
             color: black;
             cursor: pointer;
         }
+        .close-btn {
+            position: absolute;
+            top: 0px;
+            right: 10px;
+            font-size:40px;
+            color: black;
+            cursor: pointer;
+        }
+        
         button.active {
             background-color: #307fb7;
         }
         .info-container {
-            
             display: flex;
             overflow-x: auto;
             white-space: nowrap;
             background-color: #f0f0f0;
             padding: 10px;
             margin-top: 10px;
-            z-index: 3000;
         }
         .info-box {
+            height: 200px;
             display: inline-block;
             width: 200px;
             margin-right: 10px;
@@ -566,13 +567,13 @@
             border: 1px solid #ddd;
             border-radius: 5px;
             text-align: center;
+            z-index: 3000;
         }
     </style>
 </head>
 <body>
     <div class="button-container">
         <button onclick="toggleMarkers('navigation')">導覽路線</button>
-        <button onclick="toggleMarkers('buildings')">大樓</button>
         <button onclick="toggleMarkers('sports')">運動場</button>
         <button onclick="toggleMarkers('events')">活動</button>
         
@@ -788,12 +789,13 @@
         var infoDescription = document.getElementById('info-description');
         var infoButton = document.getElementById('info-button');
         var infoWindow = document.getElementById('info-window');
+        
 
         var locations = {
             navigation: [
                 { circle: "1", name: "行政&資訊樓", coords: [24.14961330934904, 120.68364591589136], image: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/zcl.png', title: '行政&資訊樓', description: '行政&資訊樓的描述', buttonText: '集點', slideIndex: 0  },
-                { circle: "2", name: "中正樓", coords: [24.14960142559353, 120.68333783333679], image: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/zcl.png', title: '中正樓', description: '中正樓的描述', buttonText: '集點', slideIndex: 1},
-                { circle: "3", name: "活動中心", coords: [24.15002756948417, 120.68259788356026], image: 'https://example.com/image3.jpg', title: '活動中心', description: '活動中心的描述', buttonText: '了解更多' },
+                { circle: "2", name: "中正樓", coords: [24.14960142559353, 120.68333783333679], image: '', title: '中正樓', description: '中正樓的描述', buttonText: '集點', slideIndex: 1},
+                { circle: "3", name: "活動中心", coords: [24.15002756948417, 120.68259788356026], image: '', title: '活動中心', description: '活動中心的描述', buttonText: '了解更多' },
                 { circle: "4", name: "昌明樓", coords: [24.150397919894687, 120.68298858486425] },
                 { circle: "5", name: "翰英樓", coords: [24.151290909932047, 120.68315169317616] },
                 { circle: "6", name: "中商大樓", coords: [24.15123377909032, 120.68217149067684] },
@@ -803,20 +805,7 @@
                 { circle: "9", name: "弘業樓", coords: [24.1505058854478, 120.68404953097337] },
                 { circle: "10", name: "home", coords: [24.150996625919188, 120.68148734742584], image: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/zcl.png', title: 'home', description: '家的描述', buttonText: '集點', slideIndex: 1  }
             ],
-            buildings: [
-                { circle: "2", name: "資訊樓", coords: [24.149419286183875, 120.68358285379435], image: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/zcl.png', title: '行政&資訊樓', description: '行政&資訊樓的描述', buttonText: '集點', slideIndex: 0  },
-                { circle: "1", name: "行政樓", coords: [24.149762346808217, 120.68367584388298], image: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/zcl.png', title: '行政&資訊樓', description: '行政&資訊樓的描述', buttonText: '集點', slideIndex: 0  },
-                { circle: "3", name: "中正樓", coords: [24.149608553230912, 120.68299603551081], image: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/zcl.png', title: '中正樓', description: '中正樓的描述', buttonText: '集點', slideIndex: 1},
-                { circle: "", name: "活動中心", coords: [24.149991580590665, 120.68249043909975], image: 'https://example.com/image3.jpg', title: '活動中心', description: '活動中心的描述', buttonText: '了解更多' },
-                { circle: "4", name: "昌明樓", coords: [24.150366961791566, 120.68299206267189] },
-                { circle: "5", name: "翰英樓", coords: [24.15124281793564, 120.68292705619912] },
-                { circle: "7", name: "中商大樓", coords: [24.15123377909032, 120.68217149067684] },
-                { circle: "", name: "宿舍", coords: [24.151830165086253, 120.68329357159718] },
-                { circle: "8", name: "奇秀樓", coords: [24.151224781813994, 120.68397935752898] },
-                { circle: "6", name: "弘業樓", coords: [24.1505058854478, 120.68404953097337] },
-                { circle: "H", name: "中技大樓", coords: [24.152265120366362, 120.68367700979677] },
-
-            ],
+           
             
             sports: [
             { circle: "2", name: "有氧教室", coords: [24.149419286183875, 120.68358285379435], icon: 'fa-dumbbell', image: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/zcl.png', title: '行政&資訊樓', description: '行政&資訊樓的描述', buttonText: '集點', slideIndex: 0  },
@@ -854,7 +843,7 @@
 
             currentMarkers = L.layerGroup().addTo(markerLayer);
             const infoContainer = document.getElementById('infoContainer');
-            infoContainer.innerHTML = ''; // 清空旧的资讯框
+            infoContainer.innerHTML = ''; 
 
             locations[type].forEach((location, index) => {
                 let iconOptions;
@@ -868,20 +857,7 @@
                             iconAnchor: [15, 0]
                         };
                         break;
-                    case 'buildings':
-                        iconOptions = {
-                            className: 'building-marker',
-                            html: `
-                                <div class='building-icon'>
-                                    <i class='fa-solid fa-building building-icon'></i>
-                                </div>
-                                <div class='building-info'>
-                                    <div class='building-name'>( ${location.circle} )${location.name}</div>
-                                </div>`,
-                            iconSize: [100, 50],
-                            iconAnchor: [0, 0]
-                        };
-                        break;
+                    
                     case 'sports':
                         iconOptions = {
                             className: 'sports-marker',
@@ -927,15 +903,18 @@
                     <h4>${location.name}</h4>
                     <img src="${location.image}" alt="${location.title}" style="width: 100%; height: auto;">
                     <p>${location.description}</p>
-                    <button>${location.buttonText}</button>
+                    <button class="infoBox-button">${location.buttonText}</button>
                 `;
                 infoContainer.appendChild(infoBox);
 
                 if (type === 'navigation') {
-                    // Directly scroll to the info box without clicking
+                    
                     infoBox.scrollIntoView({ behavior: 'smooth' });
+                    marker.on('click', () => {
+                        document.getElementById(`infoBox${index}`).scrollIntoView({ behavior: 'smooth' });
+                    });
                 } else {
-                    // Handle click event for other types
+                    
                     marker.on('click', () => {
                         document.getElementById(`infoBox${index}`).scrollIntoView({ behavior: 'smooth' });
                     });
@@ -1135,7 +1114,12 @@
 
             document.getElementById('grid-buttom').addEventListener('click', toggleSwiper);
             document.getElementById('info-button').addEventListener('click', toggleSwiper);
-        });
+            document.body.addEventListener('click', function(event) {
+                if (event.target.classList.contains('infoBox-button')) {
+                    toggleSwiper();
+                }
+            });
+      });
 
 
         
