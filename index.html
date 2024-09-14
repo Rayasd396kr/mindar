@@ -2,18 +2,21 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
-    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
-    <script src="https://cdn.rawgit.com/donmccurdy/aframe-extras/v6.1.0/dist/aframe-extras.min.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@v0.81.1/dist/L.Control.Locate.min.css" />
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
+
+    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+    <script src="https://cdn.rawgit.com/donmccurdy/aframe-extras/v6.1.0/dist/aframe-extras.min.js"></script>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@0.81.1/dist/L.Control.Locate.min.js" charset="utf-8"></script>
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
     <script src="https://unpkg.com/leaflet-polylinedecorator"></script>
-
+    
 
 
     <style>
@@ -65,7 +68,7 @@
         }
         #map {
             width: 100%;
-            height: 30vh;
+            height: 100vh;
             position: fixed;
             bottom: 0;
             left: 0;
@@ -549,31 +552,88 @@
         button.active {
             background-color: #307fb7;
         }
-        .info-container {
-            display: flex;
-            overflow-x: auto;
-            white-space: nowrap;
-            background-color: transparent;
-            padding: 10px;
-            margin-top: 10px;
-        }
+        
+
         .info-box {
-            height: 200px;
             display: inline-block;
-            width: 200px;
-            margin-right: 10px;
+            flex: 0 0 70%;
+            margin: 0 10px;
             padding: 10px;
             background-color: #c3bebe;
             border: 1px solid #ddd;
             border-radius: 5px;
             text-align: center;
             z-index: 1000;
+            scroll-snap-align: center;
+            
+        }
+        .info-container1 {
+            position: absolute;
+            bottom: 100px;
+            right: 0;
+            width: 100%;
+            height: 20vh;
+            border-radius: 10px;
+            background-color: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 5000;
+        }
+        .infoslide {
+            background-color: rgba(228, 222, 222, 0.875);
+            border-radius: 5px;
+            text-align: center;
+            height: 20vh;
+            padding: 10px;
+            box-sizing: border-box;
+            margin: 10px;
+            display: flex;
+            flex-direction: row; 
+            align-items: center; 
+            width: 100%;
+        }
+        .infoslide-img {
+            width: 40%;
+            height: 100%;
+            display: flex;
+            object-fit: cover;
+            align-items: center;
+            justify-content: center;
+            border-top-left-radius: 5px;
+            border-bottom-left-radius: 5px;
+            float: left;
+        }
+        .infoslide-content {
+            width: 60%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 10px;
+            box-sizing: border-box;
+            background-color: rgba(255, 255, 255, 0.752);
+        }
+        .infoslide-title {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+            flex: 0 1 10%;
+        }
+        .infoslide-text {
+            font-size: 1em;
+            margin-bottom: 10px;
+            height: 80%;
+        }
+        .infoslide-button {
+            align-self:center;
+            flex: 0 1 10%; 
         }
     </style>
 </head>
 <body>
     <div class="button-container">
-        <button onclick="toggleMarkers('navigation')">導覽路線</button>
+        <button onclick="toggleMarkers('navigation')" class="active">導覽路線</button>
         <button onclick="toggleMarkers('sports')">運動場</button>
         <button onclick="toggleMarkers('events')">活動</button>
         
@@ -771,8 +831,131 @@
             </div>
         </div>
     </div>
-    <div class="info-container" id="infoContainer"></div>
-      
+    <div class="info-container1">
+        <div class="infoslide">
+            <img class="infoslide-img" src="https://swiperjs.com/demos/images/nature-3.jpg" />
+            <div class="infoslide-content">
+                <div class="infoslide-title">
+                    XX樓1
+                </div>
+                <div class="infoslide-text">
+                    描述
+                </div>
+                <div class="infoslide-button">
+                    <button>按鈕</button>
+                    <button>按鈕</button>
+                </div>
+            </div>
+        </div>
+        <div class="infoslide">
+            <img class="infoslide-img" src="https://swiperjs.com/demos/images/nature-3.jpg" />
+            <div class="infoslide-content">
+                <div class="infoslide-title">
+                    XX樓2
+                </div>
+                <div class="infoslide-text">
+                    描述
+                </div>
+                <div class="infoslide-button">
+                    <button>按鈕</button>
+                    <button>按鈕</button>
+                </div>
+            </div>
+        </div>
+        <div class="infoslide">
+            <img class="infoslide-img" src="https://swiperjs.com/demos/images/nature-3.jpg" />
+            <div class="infoslide-content">
+                <div class="infoslide-title">
+                    XX樓3
+                </div>
+                <div class="infoslide-text">
+                    描述
+                </div>
+                <div class="infoslide-button">
+                    <button>按鈕</button>
+                    <button>按鈕</button>
+                </div>
+            </div>
+        </div>
+        <div class="infoslide">
+            <img class="infoslide-img" src="https://swiperjs.com/demos/images/nature-3.jpg" />
+            <div class="infoslide-content">
+                <div class="infoslide-title">
+                    XX樓4
+                </div>
+                <div class="infoslide-text">
+                    描述
+                </div>
+                <div class="infoslide-button">
+                    <button>按鈕</button>
+                    <button>按鈕</button>
+                </div>
+            </div>
+        </div>
+        <div class="infoslide">
+            <img class="infoslide-img" src="https://swiperjs.com/demos/images/nature-3.jpg" />
+            <div class="infoslide-content">
+                <div class="infoslide-title">
+                    XX樓5
+                </div>
+                <div class="infoslide-text">
+                    描述
+                </div>
+                <div class="infoslide-button">
+                    <button>按鈕</button>
+                    <button>按鈕</button>
+                </div>
+            </div>
+        </div>
+        <div class="infoslide">
+            <img class="infoslide-img" src="https://swiperjs.com/demos/images/nature-3.jpg" />
+            <div class="infoslide-content">
+                <div class="infoslide-title">
+                    XX樓6
+                </div>
+                <div class="infoslide-text">
+                    描述
+                </div>
+                <div class="infoslide-button">
+                    <button>按鈕</button>
+                    <button>按鈕</button>
+                </div>
+            </div>
+        </div>
+    </div>
+   
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+    <script>
+        $(document).ready(function() {
+                $('.info-container1').slick({
+                    centerMode: true,
+                    centerPadding: '120px',
+                    slidesToShow: 1,
+                    responsive: [
+                        {
+                            breakpoint: 768,
+                            settings: {
+                                arrows: false,
+                                centerMode: true,
+                                centerPadding: '80px',
+                                slidesToShow: 3
+                            }
+                        },
+                        {
+                            breakpoint: 480,
+                            settings: {
+                                arrows: false,
+                                centerMode: true,
+                                centerPadding: '80px',
+                                slidesToShow: 1
+                            }
+                        }
+                    ]
+                });
+        });
+
+    </script>
 
     <script>
         
@@ -808,18 +991,18 @@
            
             
             sports: [
-            { circle: "2", name: "有氧教室", coords: [24.149419286183875, 120.68358285379435], icon: 'fa-dumbbell', image: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/zcl.png', title: '行政&資訊樓', description: '行政&資訊樓的描述', buttonText: '集點', slideIndex: 0  },
-            { circle: "", name: "羽球場", coords: [24.149991580590665, 120.68249043909975], icon: 'fa-futbol', image: 'https://example.com/image3.jpg', title: '活動中心', description: '活動中心的描述', buttonText: '了解更多' },
-            { circle: "4", name: "撞球室", coords: [24.151224781813994, 120.68397935752898], icon: 'fa-pool' },
-            { circle: "", name: "健身房、飛鏢室", coords: [24.151830165086253, 120.68329357159718], icon: 'fa-dumbbell' },
-            { circle: "8", name: "桌球場", coords: [24.1508525821429, 120.68363722461531], icon: 'fa-table-tennis' },
-            { circle: "6", name: "體育館(籃球、羽球)", coords: [24.150625562016405, 120.6837616229793], icon: 'fa-basketball-ball' },
-            { circle: "6", name: "籃球場", coords: [24.150558620102444, 120.68259100233186], icon: 'fa-basketball-ball' },
-            { circle: "6", name: "排球場", coords: [24.15027629948941, 120.6824761730654], icon: 'fa-volleyball-ball' },
-            { circle: "6", name: "排球場", coords: [24.15099519715003, 120.682922731372], icon: 'fa-volleyball-ball' },
-            { circle: "6", name: "排球場", coords: [24.151501624643654, 120.68313963110252], icon: 'fa-volleyball-ball' },
-            { circle: "6", name: "操場、網球場", coords: [24.151143633002647, 120.68336291023688], icon: 'fa-baseball' },
-            { circle: "6", name: "棒球場", coords: [24.150908466450176, 120.68391374262593], icon: 'fa-baseball-ball' },
+                { circle: "2", name: "有氧教室", coords: [24.149419286183875, 120.68358285379435], icon: 'fa-dumbbell', image: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/zcl.png', title: '行政&資訊樓', description: '行政&資訊樓的描述', buttonText: '集點', slideIndex: 0  },
+                { circle: "", name: "羽球場", coords: [24.149991580590665, 120.68249043909975], icon: 'fa-futbol', image: 'https://example.com/image3.jpg', title: '活動中心', description: '活動中心的描述', buttonText: '了解更多' },
+                { circle: "4", name: "撞球室", coords: [24.151224781813994, 120.68397935752898], icon: 'fa-pool' },
+                { circle: "", name: "健身房、飛鏢室", coords: [24.151830165086253, 120.68329357159718], icon: 'fa-dumbbell' },
+                { circle: "8", name: "桌球場", coords: [24.1508525821429, 120.68363722461531], icon: 'fa-table-tennis' },
+                { circle: "6", name: "體育館(籃球、羽球)", coords: [24.150625562016405, 120.6837616229793], icon: 'fa-basketball-ball' },
+                { circle: "6", name: "籃球場", coords: [24.150558620102444, 120.68259100233186], icon: 'fa-basketball-ball' },
+                { circle: "6", name: "排球場", coords: [24.15027629948941, 120.6824761730654], icon: 'fa-volleyball-ball' },
+                { circle: "6", name: "排球場", coords: [24.15099519715003, 120.682922731372], icon: 'fa-volleyball-ball' },
+                { circle: "6", name: "排球場", coords: [24.151501624643654, 120.68313963110252], icon: 'fa-volleyball-ball' },
+                { circle: "6", name: "操場、網球場", coords: [24.151143633002647, 120.68336291023688], icon: 'fa-baseball' },
+                { circle: "6", name: "棒球場", coords: [24.150908466450176, 120.68391374262593], icon: 'fa-baseball-ball' },
 
             ],
             events: [
@@ -835,15 +1018,16 @@
         var navigationRoute; 
         var navigationArrows = [];
         var navigationLines = []; 
-
+        document.addEventListener('DOMContentLoaded', function() {
+            toggleMarkers('navigation');
+        });
         function toggleMarkers(type) {
             if (currentMarkers) {
                 markerLayer.removeLayer(currentMarkers);
             }
 
             currentMarkers = L.layerGroup().addTo(markerLayer);
-            const infoContainer = document.getElementById('infoContainer');
-            infoContainer.innerHTML = ''; 
+            
 
             locations[type].forEach((location, index) => {
                 let iconOptions;
@@ -893,33 +1077,9 @@
 
                 var textMarker = L.divIcon(iconOptions);
                 var marker = L.marker(location.coords, { icon: textMarker }).addTo(currentMarkers);
-
-                
-
-                const infoBox = document.createElement('div');
-                infoBox.className = 'info-box';
-                infoBox.id = `infoBox${index}`;
-                infoBox.innerHTML = `
-                    <h4>${location.name}</h4>
-                    <img src="${location.image}" alt="${location.title}" style="width: 100%; height: auto;">
-                    <p>${location.description}</p>
-                    <button class="infoBox-button">${location.buttonText}</button>
-                `;
-                infoContainer.appendChild(infoBox);
-
-                if (type === 'navigation') {
-                    
-                    infoBox.scrollIntoView({ behavior: 'smooth' });
-                    marker.on('click', () => {
-                        document.getElementById(`infoBox${index}`).scrollIntoView({ behavior: 'smooth' });
-                    });
-                } else {
-                    
-                    marker.on('click', () => {
-                        document.getElementById(`infoBox${index}`).scrollIntoView({ behavior: 'smooth' });
-                    });
-                }
-                
+                marker.on('click', function() {
+                    $('.info-container1').slick('slickGoTo', index);
+                });
             });
 
             if (type === 'navigation') {
@@ -927,7 +1087,11 @@
             } else {
                 clearNavigationRoute();
             }
+            
         }
+        
+        
+
 
         function drawNavigationRoute() {
             clearNavigationRoute(); 
@@ -1188,6 +1352,7 @@
             el: '.swiper-pagination',
             clickable: true,
             },
+            loop: true,
         });
         
         function jumpToSlide(index) {
@@ -1723,7 +1888,7 @@
                 addMarkerToMap(coords, buildingName.textContent);
             }
         }
-
+        
         
 
 
