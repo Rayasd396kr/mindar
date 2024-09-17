@@ -73,9 +73,7 @@
             bottom: 0;
             left: 0;
             z-index: 999;
-
-            animation: mapup 0.5s forwards;
-
+            /* animation: mapup 0.5s forwards; */
         }
 
         #map.slide-down {
@@ -90,9 +88,9 @@
             animation: mapdown 0.5s forwards;
         }
         .hand-icon {
-            position: absolute;
-            top: 34px;
-            left: 44px;
+            position: fixed;
+            top: 185px;  
+            left: 50px; 
             z-index: 2000;
             border: none;
             padding: 10px;
@@ -100,6 +98,7 @@
             font-size: 18px;
             color: #c73d3d; 
             animation: click-animation 1.5s infinite;
+            
         }
 
         @keyframes click-animation {
@@ -120,7 +119,7 @@
                 opacity: 1;
             }
         }
-
+        /* 地圖按鈕 */
         .map-toggle-icon {
             position: fixed;
             top: 220px;  
@@ -139,6 +138,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            display: none;
         }
         .map-toggle-icon.active {
             background-color: #a49d9d; 
@@ -433,6 +433,7 @@
         .button-container::-webkit-scrollbar {
             display: none;
         }
+        /* 地圖放大 */
         .zoom-button {
             position: absolute;
             bottom: 60px;
@@ -445,6 +446,7 @@
             padding: 10px;
             cursor: pointer;
             font-size: 16px;
+            display: none;
         }
         
         .swiper-container {
@@ -459,7 +461,7 @@
             display: none;
             align-items: center;
             justify-content: center;
-            z-index: 2000;
+            z-index: 1501;
         }
 
         .swiper-slide {
@@ -532,6 +534,17 @@
             cursor: pointer;
             border-radius: 50px;
         }
+        .fa-location-dot{
+            position: absolute;
+            bottom: 250px;
+            right: 35px;
+            padding: 10px;
+            font-size:30px;
+            color: white;
+            background-color: #527bce;
+            cursor: pointer;
+            border-radius: 50px;
+        }
         .fa-number{
             position: absolute;
             bottom: 6px;
@@ -578,7 +591,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 5000;
+            z-index: 1500;
         }
         .infoslide {
             background-color: rgba(228, 222, 222, 0.875);
@@ -630,8 +643,39 @@
             flex: 0 1 10%; 
         }
         .highlight-text {
-            color: red; /* 你希望的颜色 */
+            color: red;
         }
+        .scene-container {
+            position: absolute; 
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 800px; 
+            height: 600px; 
+            
+        }
+        .close-button {
+            position: absolute;
+            top: 20px;
+            right: 200px;
+            background-color: rgba(255, 255, 255, 0.752);
+            color: black;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            z-index: 2000; 
+        }
+        
+        .leaflet-control-locate {
+            position: fixed;
+            top: 150px;  
+            left: 5px; 
+            z-index: 1001;
+            cursor: pointer;
+        }
+
+        
+
     </style>
 </head>
 <body>
@@ -639,25 +683,28 @@
         <button onclick="toggleMarkers('navigation')" class="active">導覽路線</button>
         <button onclick="toggleMarkers('sports')">運動場</button>
         <button onclick="toggleMarkers('events')">活動</button>
-        
     </div>
-
-    <a-scene mindar-image="uiScanning: #example-scanning-overlay;filterMinCF:0.0001; filterBeta: 0.001;imageTargetSrc: https://raw.githubusercontent.com/Rayasd396kr/ar/main/t3.mind;" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
-        <a-camera position="0 0 0" look-controls="enabled: false" cursor="fuse: false; rayOrigin: mouse;" raycaster="far: ${customFields.libVersion}; objects: .clickable"></a-camera>
-        <a-entity id="bearEntity" mindar-image-target="targetIndex: 0">
-            <a-plane opacity="0.5" color="white" width="10" height="10" position="0 0 0"></a-plane>
-            <a-text value="test" color="black" align="center" position="0 0 0"></a-text>
-        </a-entity>
-        <a-entity id="raccoonEntity" mindar-image-target="targetIndex: 1">
-            <a-image src="https://raw.githubusercontent.com/Rayasd396kr/ar/main/a.png" position="0 1.2 0" scale="0.75 0.75 0.75"></a-image>
-            <a-text id="clickable" value="Zcl" color="black" align="center" position="0 -0.5 0"></a-text>
-            <a-gltf-model rotation="0 0 0 " position="0 -0.25 0" scale="1 1 1" src="https://raw.githubusercontent.com/Rayasd396kr/ar/main/zcl.glb" animation-mixer></a-gltf-model>
-            <a-box id="button-left" class="clickable" color="black" width="0.7" height="0.3" depth="0.2" position="0 -0.8 0"
-            onclick="window.parent.postMessage({ action: 'navigate', url: '/floorselect' }, '*');">
-                <a-text value="introduce" align="center" color="white" position="0 0 0.1" scale="0.5 0.5 0.5"></a-text>
-            </a-box>
-        </a-entity>
-    </a-scene>
+    <div class="scene-container" id="scene-container" style="z-index: 999;">
+        <button class="close-button" onclick="toggleScene()">X</button>
+        <a-scene embedded mindar-image="uiScanning: #example-scanning-overlay;filterMinCF:0.0001; filterBeta: 0.001;imageTargetSrc: https://raw.githubusercontent.com/Rayasd396kr/ar/main/t3.mind;" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
+            <a-camera position="0 0 0" look-controls="enabled: false" cursor="fuse: false; rayOrigin: mouse;" raycaster="far: ${customFields.libVersion}; objects: .clickable"></a-camera>
+            <a-entity id="bearEntity" mindar-image-target="targetIndex: 0">
+                <a-plane opacity="0.5" color="white" width="10" height="10" position="0 0 0"></a-plane>
+                <a-text value="test" color="black" align="center" position="0 0 0"></a-text>
+            </a-entity>
+            <a-entity id="raccoonEntity" mindar-image-target="targetIndex: 1">
+                <!-- <a-image src="https://raw.githubusercontent.com/Rayasd396kr/ar/main/a.png" position="0 1.2 0" scale="0.75 0.75 0.75"></a-image> -->
+                <a-text id="clickable" value="Zcl" color="black" align="center" position="0 -0.5 0"></a-text>
+                <a-gltf-model rotation="0 0 0 " position="0 -0.25 0" scale="1 1 1" src="https://raw.githubusercontent.com/Rayasd396kr/ar/main/zcl.glb" animation-mixer></a-gltf-model>
+                <a-box id="button-left" class="clickable" color="black" width="0.7" height="0.3" depth="0.2" position="0 -0.8 0"
+                onclick="window.parent.postMessage({ action: 'navigate', url: '/floorselect' }, '*');">
+                    <a-text value="introduce" align="center" color="white" position="0 0 0.1" scale="0.5 0.5 0.5"></a-text>
+                </a-box>
+                <a-plane color="white" width="2" height="2.5" position="0 0 -0.5" rotation="0 0 0"></a-plane>
+            </a-entity>
+        </a-scene>
+    </div>
+    
     <i class="fa-solid fa-map-location-dot map-toggle-icon" aria-hidden="true" onclick="toggleMap()"></i>
     <i class="fa-solid fa-file-lines toggle-info-window" id="toggle-info-window" aria-hidden="true" onclick="toggleinfo()" ></i>
     <i class="fa-solid fa-stamp stamp-icon toggleStamp" id="toggleStamp" aria-hidden="true" onclick="toggleGrid()"></i>
@@ -775,8 +822,9 @@
             <div class="swiper-slide">
                 <div class="slide-content">
                     <span class="close-btn">&times;</span>
-                    <img class="slide-img" src="https://swiperjs.com/demos/images/nature-3.jpg" />
+                    <img class="slide-img" src="https://raw.githubusercontent.com/Rayasd396kr/ar/main/zcl.png" />
                     <i class="fa-solid fa-camera-retro"></i>
+                    <i class="fa-solid fa-location-dot"></i>
                     <div class="slide-background">
                         <p class="slide-title">資管四樓某地方</p>
                         <p class="slide-text">此處是資管大本營，每個資管人都在此上過課，培養出很多優秀人才。</p>
@@ -880,33 +928,22 @@
                     <i class="fa-solid fa-9 fa-number"></i>
                 </div>
             </div>
-            <div class="swiper-slide">
-                <div class="slide-content">
-                    <span class="close-btn">&times;</span>
-                    <img class="slide-img" src="https://swiperjs.com/demos/images/nature-3.jpg" />
-                    <i class="fa-solid fa-camera-retro"></i>
-                    <div class="slide-background">
-                        <p class="slide-title">資管四樓某地方</p>
-                        <p class="slide-text">此處是資管大本營，每個資管人都在此上過課，培養出很多優秀人才。</p>
-                    </div>
-                    <i class="fa-solid fa-10 fa-number"></i>
-                </div>
-            </div>
+            
         </div>
     </div>
     <div class="info-container1">
         <div class="infoslide">
-            <img class="infoslide-img" src="https://swiperjs.com/demos/images/nature-3.jpg" />
+            <img class="infoslide-img" src="https://raw.githubusercontent.com/Rayasd396kr/ar/main/zcl.png" />
             <div class="infoslide-content">
                 <div class="infoslide-title">
-                    XX樓1
+                    1.資訊樓
                 </div>
                 <div class="infoslide-text">
                     描述
                 </div>
-                <div class="infoslide-button" id="infoslide-button">
-                    <button>按鈕</button>
-                    <button>按鈕</button>
+                <div class="infoslide-button">
+                    <button onclick="toggleScene()">AR</button>
+                    <button id="infoslide-button">集點</button>
                 </div>
             </div>
         </div>
@@ -1447,7 +1484,14 @@
                 }
             });
       });
-
+      function toggleScene() {
+            const sceneContainer = document.getElementById('scene-container');
+            if (sceneContainer.style.zIndex === '999') {
+                sceneContainer.style.zIndex = '2000'; 
+            } else {
+                sceneContainer.style.zIndex = '999'; 
+            }
+        }
 
         
 
