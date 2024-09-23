@@ -686,11 +686,11 @@
     </div>
     <div class="scene-container" id="scene-container" style="z-index: 999;">
         <button class="close-button" onclick="toggleScene()">X</button>
-        <a-scene embedded mindar-image="uiScanning: #example-scanning-overlay;filterMinCF:0.0001; filterBeta: 0.001;imageTargetSrc: https://raw.githubusercontent.com/Rayasd396kr/ar/main/t3.mind;" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
+        <a-scene embedded mindar-image="uiScanning: #example-scanning-overlay;filterMinCF:0.0001; filterBeta: 0.001;imageTargetSrc: https://raw.githubusercontent.com/Rayasd396kr/ar/main/t4.mind;" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
             <a-camera position="0 0 0" look-controls="enabled: false" cursor="fuse: false; rayOrigin: mouse;" raycaster="far: ${customFields.libVersion}; objects: .clickable"></a-camera>
             <a-entity id="bearEntity" mindar-image-target="targetIndex: 0">
                 <a-plane opacity="0.5" color="white" width="10" height="10" position="0 0 0"></a-plane>
-                <a-text value="test" color="black" align="center" position="0 0 0"></a-text>
+                <a-text value="get!" color="black" align="center" position="0 0 0"></a-text>
             </a-entity>
             <a-entity id="raccoonEntity" mindar-image-target="targetIndex: 1">
                 <!-- <a-image src="https://raw.githubusercontent.com/Rayasd396kr/ar/main/a.png" position="0 1.2 0" scale="0.75 0.75 0.75"></a-image> -->
@@ -822,12 +822,12 @@
             <div class="swiper-slide">
                 <div class="slide-content">
                     <span class="close-btn">&times;</span>
-                    <img class="slide-img" src="https://raw.githubusercontent.com/Rayasd396kr/ar/main/zcl.png" />
-                    <i class="fa-solid fa-camera-retro"></i>
+                    <img class="slide-img" src="https://raw.githubusercontent.com/Rayasd396kr/ar/main/zcl-1.png" />
+                    <i class="fa-solid fa-camera-retro" onclick="toggleScene()"></i>
                     <i class="fa-solid fa-location-dot"></i>
                     <div class="slide-background">
-                        <p class="slide-title">資管四樓某地方</p>
-                        <p class="slide-text">此處是資管大本營，每個資管人都在此上過課，培養出很多優秀人才。</p>
+                        <p class="slide-title">1.資訊館一樓內部</p>
+                        <p class="slide-text">此處位於資訊樓電梯旁邊，有一台關於學生影印相關文件的機器，還有冷氣儲值機。</p>
                     </div>
                     <i class="fa-solid fa-1 fa-number"></i>
                 </div>
@@ -1621,12 +1621,12 @@
 
         let hasShownCongratulations2 = false;
 
-        const exampleTarget1 = document.querySelector('#raccoonEntity');
+        const exampleTarget1 = document.querySelector('#bearEntity');
 
         exampleTarget1.addEventListener("targetFound", event => {
             console.log("target found1");
-            document.getElementById('cell-2').innerText = 'OK';
-            localStorage.setItem('okStatus2', 'true');
+            document.getElementById('cell-1').innerText = 'OK';
+            localStorage.setItem('okStatus1', 'true');
             if (!hasShownCongratulations2) {
                 const congratulationsMessage = document.createElement('div');
                 congratulationsMessage.textContent = '恭喜您找到了';
