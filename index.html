@@ -33,39 +33,7 @@
         input[type="text"] {
             font-size: 16px; 
         }
-        @keyframes slideDown {
-            from {
-                transform: translateY(100%);
-            }
-            to {
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes slideUp {
-            from {
-                transform: translateY(-200%);
-            }
-            to {
-                transform: translateY(0%);
-            }
-        }
-        @keyframes mapdown {
-            from {
-                transform: translateY(0);
-            }
-            to {
-                transform: translateY(100%);
-            }
-        }
-        @keyframes mapup {
-            from {
-                transform: translateY(100%);
-            }
-            to {
-                transform: translateY(0);
-            }
-        }
+        
         #map {
             width: 100%;
             height: 100vh;
@@ -73,20 +41,9 @@
             bottom: 0;
             left: 0;
             z-index: 999;
-            /* animation: mapup 0.5s forwards; */
         }
 
-        #map.slide-down {
-            animation: slideDown 0.5s forwards;
-        }
-
-        #map.slide-up {
-            animation: slideUp 0.5s forwards;
-        }
-
-        #map.show {
-            animation: mapdown 0.5s forwards;
-        }
+       
         .hand-icon {
             position: fixed;
             top: 185px;  
@@ -140,10 +97,26 @@
             justify-content: center;
             display: none;
         }
-        .map-toggle-icon.active {
-            background-color: #a49d9d; 
-            color: white; 
+        .info-toggle-icon {
+            position: fixed;
+            top: 220px;  
+            right: 10px; 
+            z-index: 1000;
+            background-color: #307fb7;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+            cursor: pointer;
+            font-size: 24px;
+            transition: background-color 0.3s, color 0.3s; 
+            width: 25px; 
+            height: 25px; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
+        
         .toggle-info-window {
             position: fixed;
             top: 160px;  
@@ -363,10 +336,10 @@
         }
         .info-window {
             position: fixed;
-            bottom: 31%;
+            top: 15%;
             left: 50%;
             transform: translateX(-50%);
-            width: 70%;
+            width: 60%;
             background: white;
             border: 1px solid #ccc;
             padding: 10px;
@@ -582,7 +555,7 @@
         }
         .info-container1 {
             position: absolute;
-            bottom: 100px;
+            bottom: 80px;
             right: 0;
             width: 100%;
             height: 20vh;
@@ -686,7 +659,7 @@
     </div>
     <div class="scene-container" id="scene-container" style="z-index: 999;">
         <button class="close-button" onclick="toggleScene()">X</button>
-        <a-scene embedded mindar-image="uiScanning: #example-scanning-overlay;filterMinCF:0.0001; filterBeta: 0.001;imageTargetSrc: https://raw.githubusercontent.com/Rayasd396kr/ar/main/t3.mind;" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
+        <a-scene embedded mindar-image="uiScanning: #example-scanning-overlay;filterMinCF:0.0001; filterBeta: 0.001;imageTargetSrc: https://raw.githubusercontent.com/Rayasd396kr/ar/main/t4.mind;" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
             <a-camera position="0 0 0" look-controls="enabled: false" cursor="fuse: false; rayOrigin: mouse;" raycaster="far: ${customFields.libVersion}; objects: .clickable"></a-camera>
             <a-entity id="bearEntity" mindar-image-target="targetIndex: 0">
                 <a-plane opacity="0.5" color="white" width="10" height="10" position="0 0 0"></a-plane>
@@ -705,8 +678,9 @@
         </a-scene>
     </div>
     
-    <i class="fa-solid fa-map-location-dot map-toggle-icon" aria-hidden="true" onclick="toggleMap()"></i>
-    <i class="fa-solid fa-file-lines toggle-info-window" id="toggle-info-window" aria-hidden="true" onclick="toggleinfo()" ></i>
+    <!-- <i class="fa-solid fa-map-location-dot map-toggle-icon" aria-hidden="true" onclick="toggleMap()"></i> -->
+    <i class="fa-solid fa-tag info-toggle-icon" id="toggle-info-window" aria-hidden="true" onclick="toggleinfo()"></i>
+    <i class="fa-solid fa-file-lines toggle-info-window" id="toggle-info-window" aria-hidden="true" onclick="toggleinfo1()" ></i>
     <i class="fa-solid fa-stamp stamp-icon toggleStamp" id="toggleStamp" aria-hidden="true" onclick="toggleGrid()"></i>
     <i class="fa-solid fa-search searchIcon" id="searchIcon" aria-hidden="true" onclick="toggleSearchBox()"></i>
    
@@ -815,6 +789,7 @@
             <h3 id="info-title">Title</h3>
             <p id="info-description">Description</p>
             <button id="info-button" >Learn More</button>
+            <button id="extraButton" onclick="toggleScene()">Toggle Scene</button>
         </div>
     </div>
     <div class="swiper-container">
@@ -1168,6 +1143,7 @@
         var infoDescription = document.getElementById('info-description');
         var infoButton = document.getElementById('info-button');
         var infoWindow = document.getElementById('info-window');
+        var extraButton = document.getElementById('extraButton');
         
 
         var locations = {
@@ -1182,7 +1158,7 @@
                 { circle: "7", name: "宿舍(男)", coords: [24.15157844348967, 120.68410448132035] },
                 { circle: "8", name: "奇秀樓", coords: [24.151224781813994, 120.68397935752898] },
                 { circle: "9", name: "弘業樓", coords: [24.1505058854478, 120.68404953097337] },
-                { circle: "10", name: "home", coords: [24.150996625919188, 120.68148734742584], image: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/zcl.png', title: 'home', description: '家的描述', buttonText: '集點', slideIndex: 1  }
+                { circle: "10", name: "home", coords: [24.150996625919188, 120.68148734742584], image: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/zcl.png', title: 'home', description: '家的描述', buttonText: '集點', slideIndex: 2, toggleScene: true  }
             ],
            
             
@@ -1409,13 +1385,27 @@
                 infoImage.src = closestLocation.image || '';
                 infoTitle.textContent = closestLocation.title || '';
                 infoDescription.textContent = closestLocation.description || '';
-                infoButton.textContent = closestLocation.buttonText || 'Learn More';
-                infoButton.onclick = () => jumpToSlide(closestLocation.slideIndex || 0);
+
+                if (closestLocation.buttonText) {
+                    infoButton.textContent = closestLocation.buttonText;
+                    infoButton.onclick = () => jumpToSlide(closestLocation.slideIndex || 0);
+                    infoButton.style.display = 'block';
+                } else {
+                    infoButton.style.display = 'none';
+                }
+
+                if (closestLocation.toggleScene) {
+                    extraButton.style.display = 'block';
+                } else {
+                    extraButton.style.display = 'none';
+                }
+
                 infoWindow.style.display = 'block';
                 toggleinfobutton.style.display = 'block';
             } else {
                 infoWindow.style.display = 'none';
                 toggleinfobutton.style.display = 'none';
+                extraButton.style.display = 'none';
             }
         }
 
@@ -1500,48 +1490,22 @@
             updateInfoWindow(e.latlng);
         });
 
-        function toggleFullScreen() {
-            const mapElement = document.getElementById('map');
-            const isFullScreen = mapElement.style.height === '100vh';
+        
 
-            if (isFullScreen) {
-                mapElement.classList.add('slide-up');
-                mapElement.classList.remove('slide-down');
-                mapElement.style.height = '30vh';
-                
-                setTimeout(() => {
-                    mapElement.style.position = 'fixed';
-                    map.invalidateSize();
-                    map.setView(userLatLng, map.getZoom());
-                }, 500);
-
-                document.querySelector('.content').style.paddingTop = '30vh';
-            } else {
-                mapElement.classList.add('slide-down');
-                mapElement.classList.remove('slide-up');
-                mapElement.style.height = '100vh';
-
-                setTimeout(() => {
-                    map.invalidateSize();
-                    map.setView(userLatLng, map.getZoom());
-                }, 500);
-
-                document.querySelector('.content').style.paddingTop = '100vh';
+        
+        
+        let isInfoVisible = true;
+        function toggleinfo1(){
+            
+            if(isInfoVisible){
+                document.querySelector('.info-container1').style.display = 'none';
+                document.querySelector('.highlight-text').style.color = 'black';
+            }else{
+                document.querySelector('.info-container1').style.display = 'block';
+                document.querySelector('.highlight-text').style.color = 'red';
             }
-        }
-
-
-        function toggleMap() {
-            var mapElement = document.getElementById('map');
-            var mapToggleIcon = document.querySelector('.map-toggle-icon');
-            mapElement.classList.remove('slide-up');
-            mapElement.classList.remove('slide-down');
-            mapElement.classList.toggle('show');
-            mapToggleIcon.classList.toggle('active');
-        }
-        function toggleinfo(){
-            var infoToggleIcon = document.querySelector('.toggle-info-window');
-            infoToggleIcon.classList.toggle('active');
+            isInfoVisible = !isInfoVisible;
+            
         }
         var swiper = new Swiper('.swiper-container', {
             effect: 'coverflow',
