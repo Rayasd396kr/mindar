@@ -335,50 +335,99 @@
             left: -25px;
         }
         .info-window {
+          position: fixed;
+          top: 15%;
+          left: 50%;
+          display: none;
+          z-index: 1000;
+          box-sizing: border-box;
+        }
+        
+        .info-item {
+          display: block; 
+          background-color: rgba(224, 69, 69, 0.868);
+          padding: 5px 10px;
+          margin-bottom: 10px;
+          max-width: fit-content;
+          border-radius: 5px;
+          animation: pulse 1s infinite;
+          
+        }
+        @keyframes pulse {
+            0%, 100% {
+                transform: translate(-50%, 0) scale(1); 
+            }
+            50% {
+                transform: translate(-50%, 0) scale(1.05); 
+            }
+        }
+
+        .info-item p{
+          width: auto;
+          margin: 0px;
+          text-align: center;
+          color: white;
+          font-size: bold;
+        }
+      
+        .fa-exclamation{
+          font-style: 20px;
+          color: yellow;
+          border-radius: 50%;
+          margin-right: 10px;
+        }
+        .location-dot2{
+          margin-left: 10px;
+        }
+        .custom-info-window {
             position: fixed;
             top: 15%;
             left: 50%;
             transform: translateX(-50%);
-            width: 60%;
-            background: white;
-            border: 1px solid #ccc;
-            padding: 10px;
+            width: 80%;
+            height: 70%;
+            z-index: 2000;
             display: none;
-            z-index: 1000;
-            box-sizing: border-box;
-            overflow: auto;
         }
-        .info-window img {
-            width: 80px;
-            height: 80px;
-            float: left;
-            margin-right: 10px;
+
+       
+        #info-image {
+            object-fit: cover; /* 确保图片覆盖容器 */ 
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
         }
-        .info-window h3 {
+       
+        .overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            width: 100%;
+        }
+
+        #info-text {
+            color: white;
+            font-size: 18px;
             margin: 0;
         }
-        .info-window p {
-            margin: 5px 0;
-        }
-        .info-window button {
-            display: block;
-            background-color: rgb(125, 163, 192);
+
+        #info-button {
+            background-color: rgba(0, 0, 0, 0.5);
             color: white;
             border: none;
-            font-size: 15px; 
-            padding: 5px 10px;
-            border-radius: 5px; 
-        }
-        .info-window-close-btn {
-            position: absolute;
-            top: 5px;
-            right: 5px;
-            background: none;
-            border: none;
-            font-size: 16px;
+            padding: 10px 20px;
             cursor: pointer;
-            color: #000;
+            font-size: 16px;
+            margin-top: 10px;
+            border-radius: 5px;
         }
+
+
+
         .button-container {
             display: flex;
             justify-content: flex-start;
@@ -507,7 +556,7 @@
             cursor: pointer;
             border-radius: 50px;
         }
-        .fa-location-dot{
+        .location-dot1{
             position: absolute;
             bottom: 250px;
             right: 35px;
@@ -679,7 +728,7 @@
     </div>
     
     <!-- <i class="fa-solid fa-map-location-dot map-toggle-icon" aria-hidden="true" onclick="toggleMap()"></i> -->
-    <i class="fa-solid fa-tag info-toggle-icon" id="toggle-info-window" aria-hidden="true" onclick="toggleinfo()"></i>
+    <i class="fa-solid fa-tag info-toggle-icon" id="toggle-info-window" aria-hidden="true" ></i>
     <i class="fa-solid fa-file-lines toggle-info-window" id="toggle-info-window" aria-hidden="true" onclick="toggleinfo1()" ></i>
     <i class="fa-solid fa-stamp stamp-icon toggleStamp" id="toggleStamp" aria-hidden="true" onclick="toggleGrid()"></i>
     <i class="fa-solid fa-search searchIcon" id="searchIcon" aria-hidden="true" onclick="toggleSearchBox()"></i>
@@ -783,15 +832,17 @@
         <i class="fa-solid fa-hand-pointer hand-icon" aria-hidden="true" id="hand-icon"></i>
     </div>
     <div id="info-window" class="info-window">
-        <img id="info-image" src="" alt="Info Image">
-        <button class="info-window-close-btn" id="info-window-close-btn" onclick="toggleinfo()">✖</button>
-        <div>
-            <h3 id="info-title">Title</h3>
-            <p id="info-description">Description</p>
-            <button id="info-button" >Learn More</button>
-            <button id="extraButton" onclick="toggleScene()">Toggle Scene</button>
-        </div>
+      <div id="info-list">
+      </div>
+  </div>  
+  <div id="custom-info-window" class="custom-info-window">
+            <img id="info-image" src="" />
+            <div class="overlay">
+                <p id="info-text">文字</p>
+                <button id="info-button">按鈕</button>
+            </div>
     </div>
+
     <div class="swiper-container">
         <div class="swiper-wrapper">
             <div class="swiper-slide">
@@ -799,7 +850,7 @@
                     <span class="close-btn">&times;</span>
                     <img class="slide-img" src="https://raw.githubusercontent.com/Rayasd396kr/ar/main/zcl-1.png" />
                     <i class="fa-solid fa-camera-retro" onclick="toggleScene()"></i>
-                    <i class="fa-solid fa-location-dot"></i>
+                    <i class="fa-solid fa-location-dot location-dot1"></i>
                     <div class="slide-background">
                         <p class="slide-title">1.資訊館一樓內部</p>
                         <p class="slide-text">此處位於資訊樓電梯旁邊，有一台關於學生影印相關文件的機器，還有冷氣儲值機。</p>
@@ -1138,12 +1189,8 @@
 
         
 
-        var infoImage = document.getElementById('info-image');
-        var infoTitle = document.getElementById('info-title');
-        var infoDescription = document.getElementById('info-description');
-        var infoButton = document.getElementById('info-button');
+       
         var infoWindow = document.getElementById('info-window');
-        var extraButton = document.getElementById('extraButton');
         
 
         var locations = {
@@ -1158,7 +1205,7 @@
                 { circle: "7", name: "宿舍(男)", coords: [24.15157844348967, 120.68410448132035] },
                 { circle: "8", name: "奇秀樓", coords: [24.151224781813994, 120.68397935752898] },
                 { circle: "9", name: "弘業樓", coords: [24.1505058854478, 120.68404953097337] },
-                { circle: "10", name: "home", coords: [24.150996625919188, 120.68148734742584], image: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/zcl.png', title: 'home', description: '家的描述', buttonText: '集點', slideIndex: 2, toggleScene: true  }
+                { circle: "10", name: "home", coords: [24.150996625919188, 120.68148734742584], image: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/zcl.png', title: 'home', description: '家的描述', buttonText: '集點', slideIndex: 2, toggleScene: true  },
             ],
            
             
@@ -1185,7 +1232,17 @@
 
             ]
         };
-
+        var pointsOfInterest = {
+            navigation: [
+                { name: "h", 
+                  coords: [24.150896625919188, 120.68148734742584],
+                  image: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/zcl.png',
+                  description: "描述"
+                },
+                { name: "home2", coords: [24.150896625919188, 120.68148734742584] },
+                
+            ]
+        };
         var currentMarkers;
         var navigationRoute; 
         var navigationArrows = [];
@@ -1368,82 +1425,87 @@
 
 
 
-        let isManuallyClosed = false;  
+        let isManuallyClosed = false;
 
         function updateInfoWindow(latlng) {
-            var toggleinfobutton = document.getElementById('toggle-info-window');
-            if (isManuallyClosed) {
-                return;  
+            var infoWindow = document.getElementById('info-window');
+            var infoList = document.getElementById('info-list');
+
+            if (!infoWindow || !infoList) {
+                console.error('Required elements are missing');
+                return;
             }
 
-            var closestLocation = Object.values(locations).flat().reduce((closest, location) => {
+            if (isManuallyClosed) {
+                return;
+            }
+
+            var nearbyLocations = Object.values(pointsOfInterest).flat().filter(location => {
                 var distance = map.distance(latlng, location.coords);
-                return distance < closest.distance ? { location, distance } : closest;
-            }, { distance: Infinity }).location;
+                return distance < 50;
+            }).map(location => ({
+                location,
+                distance: map.distance(latlng, location.coords)
+            }));
 
-            if (map.distance(latlng, closestLocation.coords) < 50) { 
-                infoImage.src = closestLocation.image || '';
-                infoTitle.textContent = closestLocation.title || '';
-                infoDescription.textContent = closestLocation.description || '';
+            infoList.innerHTML = ''; 
 
-                if (closestLocation.buttonText) {
-                    infoButton.textContent = closestLocation.buttonText;
-                    infoButton.onclick = () => jumpToSlide(closestLocation.slideIndex || 0);
-                    infoButton.style.display = 'block';
-                } else {
-                    infoButton.style.display = 'none';
-                }
-
-                if (closestLocation.toggleScene) {
-                    extraButton.style.display = 'block';
-                } else {
-                    extraButton.style.display = 'none';
-                }
+            if (nearbyLocations.length > 0) {
+                nearbyLocations.forEach(({ location, distance }) => {
+                    var infoItem = document.createElement('div');
+                    infoItem.className = 'info-item';
+                    infoItem.innerHTML = `
+                        <p><i class="fa-solid fa-exclamation"></i>發現${location.name}<i class="fa-solid fa-location-dot location-dot2"></i></p>
+                    `;
+                    infoItem.addEventListener('click', function() {
+                        openCustomInfoWindow(location); 
+                    });
+                    infoList.appendChild(infoItem);
+                });
 
                 infoWindow.style.display = 'block';
-                toggleinfobutton.style.display = 'block';
             } else {
                 infoWindow.style.display = 'none';
-                toggleinfobutton.style.display = 'none';
-                extraButton.style.display = 'none';
             }
         }
+        // <p>發現${location.name}目標物，距離${distance.toFixed(2)}公尺</p>
+        function openCustomInfoWindow(location) {
+            var customInfoWindow = document.getElementById('custom-info-window');
+            var infoImage = document.getElementById('info-image');
+            var infoText = document.getElementById('info-text');
+            var infoButton = document.getElementById('info-button');
 
-        document.getElementById('toggle-info-window').addEventListener('click', function() {
-            var infoWindow = document.getElementById('info-window');
-            if (infoWindow.style.display === 'none' || infoWindow.style.display === '') {
-                infoWindow.style.display = 'block';
-            } else {
-                infoWindow.style.display = 'none';
-                var closestLocation = Object.values(locations).flat().reduce((closest, location) => {
-                    var distance = map.distance(userLatLng, location.coords);
-                    return distance < closest.distance ? { location, distance } : closest;
-                }, { distance: Infinity }).location;
+            infoImage.src = location.image || 'default-image.jpg'; 
+            infoText.textContent = location.description; 
+
+            
+            infoButton.onclick = function() {
+                alert(`你点击了${location.name}的按钮`);
                 
+            };
+
+            
+            customInfoWindow.style.display = 'block';
+        }
+
+        // document.getElementById('toggle-info-window').addEventListener('click', function() {
+        //     var infoWindow = document.getElementById('info-window');
+        //     if (infoWindow.style.display === 'none' || infoWindow.style.display === '') {
+        //         infoWindow.style.display = 'block';
+        //     } else {
+        //         infoWindow.style.display = 'none';
+        //         var closestLocation = Object.values(locations).flat().reduce((closest, location) => {
+        //             var distance = map.distance(userLatLng, location.coords);
+        //             return distance < closest.distance ? { location, distance } : closest;
+        //         }, { distance: Infinity }).location;
                 
-                if (map.distance(userLatLng, closestLocation.coords) < 50) {
-                    isManuallyClosed = true;
-                }
-            }
-        });
+        //         if (map.distance(userLatLng, closestLocation.coords) < 50) {
+        //             isManuallyClosed = true;
+        //         }
+        //     }
+        // });
+
         
-        document.getElementById('info-window-close-btn').addEventListener('click', function() {
-            var infoWindow = document.getElementById('info-window');
-            if (infoWindow.style.display === 'none' || infoWindow.style.display === '') {
-                infoWindow.style.display = 'block';
-            } else {
-                infoWindow.style.display = 'none';
-                var closestLocation = Object.values(locations).flat().reduce((closest, location) => {
-                    var distance = map.distance(userLatLng, location.coords);
-                    return distance < closest.distance ? { location, distance } : closest;
-                }, { distance: Infinity }).location;
-                
-                
-                if (map.distance(userLatLng, closestLocation.coords) < 50) {
-                    isManuallyClosed = true;
-                }
-            }
-        });
 
         document.addEventListener('DOMContentLoaded', (event) => {
             const closeButtons = document.querySelectorAll('.close-btn');
@@ -1466,7 +1528,6 @@
             }
 
             document.getElementById('grid-buttom').addEventListener('click', toggleSwiper);
-            document.getElementById('info-button').addEventListener('click', toggleSwiper);
             document.getElementById('infoslide-button').addEventListener('click', toggleSwiper);
             document.body.addEventListener('click', function(event) {
                 if (event.target.classList.contains('infoBox-button')) {
