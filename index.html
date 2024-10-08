@@ -404,7 +404,7 @@
         #info-close-button {
             position: absolute;
             top: 0px;
-            right: 5px;
+            right: 0px;
             background-color: transparent;
             border: none;
             font-size: 50px;
@@ -1013,10 +1013,7 @@
                 <div class="infoslide-text">
                     描述
                 </div>
-                <div class="infoslide-button">
-                    <button onclick="toggleScene()">AR</button>
-                    <button id="infoslide-button">集點</button>
-                </div>
+                
             </div>
         </div>
         <div class="infoslide">
@@ -1028,10 +1025,7 @@
                 <div class="infoslide-text">
                     描述
                 </div>
-                <div class="infoslide-button">
-                    <button>按鈕</button>
-                    <button>按鈕</button>
-                </div>
+                
             </div>
         </div>
         <div class="infoslide">
@@ -1043,10 +1037,7 @@
                 <div class="infoslide-text">
                     描述
                 </div>
-                <div class="infoslide-button">
-                    <button>按鈕</button>
-                    <button>按鈕</button>
-                </div>
+                
             </div>
         </div>
         <div class="infoslide">
@@ -1058,10 +1049,7 @@
                 <div class="infoslide-text">
                     描述
                 </div>
-                <div class="infoslide-button">
-                    <button>按鈕</button>
-                    <button>按鈕</button>
-                </div>
+                
             </div>
         </div>
         <div class="infoslide">
@@ -1073,10 +1061,7 @@
                 <div class="infoslide-text">
                     描述
                 </div>
-                <div class="infoslide-button">
-                    <button>按鈕</button>
-                    <button>按鈕</button>
-                </div>
+                
             </div>
         </div>
         <div class="infoslide">
@@ -1088,10 +1073,7 @@
                 <div class="infoslide-text">
                     描述
                 </div>
-                <div class="infoslide-button">
-                    <button>按鈕</button>
-                    <button>按鈕</button>
-                </div>
+                
             </div>
         </div>
         <div class="infoslide">
@@ -1103,10 +1085,7 @@
                 <div class="infoslide-text">
                     描述
                 </div>
-                <div class="infoslide-button">
-                    <button>按鈕</button>
-                    <button>按鈕</button>
-                </div>
+                
             </div>
         </div>
         <div class="infoslide">
@@ -1118,10 +1097,7 @@
                 <div class="infoslide-text">
                     描述
                 </div>
-                <div class="infoslide-button">
-                    <button>按鈕</button>
-                    <button>按鈕</button>
-                </div>
+                
             </div>
         </div>
         <div class="infoslide">
@@ -1133,10 +1109,7 @@
                 <div class="infoslide-text">
                     描述
                 </div>
-                <div class="infoslide-button">
-                    <button>按鈕</button>
-                    <button>按鈕</button>
-                </div>
+               
             </div>
         </div>
         <div class="infoslide">
@@ -1148,10 +1121,7 @@
                 <div class="infoslide-text">
                     描述
                 </div>
-                <div class="infoslide-button">
-                    <button>按鈕</button>
-                    <button>按鈕</button>
-                </div>
+                
             </div>
         </div>
         <div class="infoslide">
@@ -1163,10 +1133,7 @@
                 <div class="infoslide-text">
                     描述
                 </div>
-                <div class="infoslide-button">
-                    <button>按鈕</button>
-                    <button>按鈕</button>
-                </div>
+                
             </div>
         </div>
     </div>
@@ -1242,11 +1209,11 @@
     <script>
         
         var map = L.map('map', { zoomControl: false }).setView([24.150996625919188, 120.68148734742584], 17);
-        var markerLayer = L.layerGroup().addTo(map);
+        
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
-
+        var markerLayer = L.layerGroup().addTo(map);
         
 
        
