@@ -17,7 +17,47 @@
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
     <script src="https://unpkg.com/leaflet-polylinedecorator"></script>
     
+    <script>
+        function createBox() {
+          
+          
 
+            // 创建 iframe 容器
+            var iframeContainer = document.createElement('div');
+            iframeContainer.style.position = 'fixed';
+            iframeContainer.style.top = '10%';
+            iframeContainer.style.left = '10%';
+            iframeContainer.style.width = '80%';
+            iframeContainer.style.height = '80%';
+            iframeContainer.style.zIndex = '3000';
+            iframeContainer.style.backgroundColor = 'white';
+
+            // 创建 iframe 元素
+            var iframe = document.createElement('iframe');
+            iframe.src = 'https://rayasd396kr.github.io/ar/index.html'; 
+            iframe.style.width = '100%';
+            iframe.style.height = '100%';
+            iframe.style.border = 'none';
+
+            // 创建关闭按钮
+            var closeButton = document.createElement('button');
+            closeButton.textContent = '關閉';
+            closeButton.style.position = 'absolute';
+            closeButton.style.top = '10px';
+            closeButton.style.right = '10px';
+            closeButton.style.zIndex = '1001';
+            closeButton.onclick = function() {
+                document.body.removeChild(iframeContainer);
+            };
+
+            // 将 iframe 和关闭按钮添加到容器中
+            iframeContainer.appendChild(iframe);
+            iframeContainer.appendChild(closeButton);
+
+            // 将容器添加到body
+            document.body.appendChild(iframeContainer);
+        }
+    </script>
 
     <style>
         .hidden {
@@ -728,6 +768,14 @@
             cursor: pointer;
             z-index: 2000; 
         }
+
+        .onclick-button {
+            position: fixed;
+            top: 200px;  
+            left: 5px; 
+            z-index: 1001;
+            cursor: pointer;
+        }
         
         .leaflet-control-locate {
             position: fixed;
@@ -740,6 +788,7 @@
         
 
     </style>
+
 </head>
 <body>
     <div class="button-container">
@@ -747,10 +796,12 @@
         <button onclick="toggleMarkers('sports')">運動場</button>
         <button onclick="toggleMarkers('events')">活動</button>
     </div>
+    <button class="onclick-button" onclick="createBox()">生成方塊</button>
     <div class="scene-container" id="scene-container" style="z-index: 999;">
         <button class="close-button" onclick="toggleScene()">X</button>
+        
         <a-scene embedded mindar-image="uiScanning: #example-scanning-overlay;filterMinCF:0.0001; filterBeta: 0.001;imageTargetSrc: https://raw.githubusercontent.com/Rayasd396kr/ar/main/t4.mind;" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
-            <a-camera position="0 0 0" look-controls="enabled: false" cursor="fuse: false; rayOrigin: mouse;" raycaster="far: ${customFields.libVersion}; objects: .clickable"></a-camera>
+            <a-camera position="0 0 0" look-controls="enabled: true" cursor="fuse: false; rayOrigin: mouse;" raycaster="far: ${customFields.libVersion}; objects: .clickable"></a-camera>
             <a-entity id="bearEntity" mindar-image-target="targetIndex: 0">
                 <a-plane opacity="0.5" color="white" width="10" height="10" position="0 0 0"></a-plane>
                 <a-text value="get!" color="black" align="center" position="0 0 0"></a-text>
@@ -1207,7 +1258,7 @@
     </script>
 
     <script>
-        
+         
         var map = L.map('map', { zoomControl: false }).setView([24.150996625919188, 120.68148734742584], 17);
         
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -1472,6 +1523,28 @@
 
         let isManuallyClosed = false;
 
+        var additionalMarkers = [
+            { 
+                name: "New Location 1", 
+                coords: [24.150896625919188, 120.68148734742584],
+                title: '新位置1',
+                description: "描述1"
+            },
+            { 
+                name: "New Location 2", 
+                coords: [24.150996625919188, 120.68148734742584],
+                title: '新位置2',
+                description: "描述2"
+            },
+            { 
+                name: "New Location 1", 
+                coords: [24.14961330934904, 120.68364591589136],
+                title: '新位置1',
+                description: "描述1"
+            },
+        ];
+
+        // 更新 updateInfoWindow 函数以包含新的标记
         function updateInfoWindow(latlng) {
             var infoWindow = document.getElementById('info-window');
             var infoList = document.getElementById('info-list');
@@ -1485,7 +1558,7 @@
                 return;
             }
 
-            var nearbyLocations = Object.values(pointsOfInterest).flat().filter(location => {
+            var nearbyLocations = [...Object.values(pointsOfInterest).flat()].filter(location => {
                 var distance = map.distance(latlng, location.coords);
                 return distance < 50;
             }).map(location => ({
@@ -1493,7 +1566,11 @@
                 distance: map.distance(latlng, location.coords)
             }));
 
-            infoList.innerHTML = ''; 
+            infoList.innerHTML = '';
+
+            // 清除之前的标记
+            markers.forEach(marker => map.removeLayer(marker));
+            markers = [];
 
             if (nearbyLocations.length > 0) {
                 nearbyLocations.forEach(({ location, distance }) => {
@@ -1506,6 +1583,15 @@
                         openCustomInfoWindow(location); 
                     });
                     infoList.appendChild(infoItem);
+
+                    // 创建标记
+                    var marker = L.marker(location.coords).addTo(map);
+                    markers.push(marker); 
+
+                    // 为标记添加点击事件
+                    marker.on('click', function() {
+                        createBox(); // 调用 createBox() 函数
+                    });
                 });
 
                 infoWindow.style.display = 'block';
@@ -1513,6 +1599,7 @@
                 infoWindow.style.display = 'none';
             }
         }
+
         // <p>發現${location.name}目標物，距離${distance.toFixed(2)}公尺</p>
         function openCustomInfoWindow(location) {
             var customInfoWindow = document.getElementById('custom-info-window');
@@ -1593,7 +1680,7 @@
             }
 
             document.getElementById('grid-buttom').addEventListener('click', toggleSwiper);
-            document.getElementById('infoslide-button').addEventListener('click', toggleSwiper);
+            // document.getElementById('infoslide-button').addEventListener('click', toggleSwiper);
             document.body.addEventListener('click', function(event) {
                 if (event.target.classList.contains('infoBox-button')) {
                     toggleSwiper();
