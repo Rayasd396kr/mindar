@@ -74,13 +74,19 @@
             font-size: 16px; 
         }
         
-        #map {
+        #map-container {
             position: fixed;
             width: 100%;
-            height: 40vh;
+            height: 40%; /* 确保父容器有固定高度 */
             bottom: 0;
             left: 0;
             z-index: 999;
+            overflow: hidden; /* 防止内容溢出 */
+        }
+
+        #map {
+            width: 100%;
+            height: 100%; /* 确保地图占满父容器 */
         }
 
        
@@ -910,11 +916,13 @@
         <button class="grid-buttom" id="grid-buttom"><i class="fas fa-stamp"></i>集點卡</button>
         <button onclick="resetLocalStorage()">重置</button>
     </div>
-    
-    <div id="map">
-        <i class="fa fa-expand zoom-button" aria-hidden="true" onclick="toggleFullScreen()"></i>
-        <i class="fa-solid fa-hand-pointer hand-icon" aria-hidden="true" id="hand-icon"></i>
+    <div id="map-container">
+        <div id="map">
+            <i class="fa fa-expand zoom-button" aria-hidden="true" onclick="toggleFullScreen()"></i>
+            <i class="fa-solid fa-hand-pointer hand-icon" aria-hidden="true" id="hand-icon"></i>
+        </div>
     </div>
+    
     <div id="info-window" class="info-window">
       <div id="info-list">
       </div>
