@@ -9,9 +9,9 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
 
-    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
-    <script src="https://cdn.rawgit.com/donmccurdy/aframe-extras/v6.1.0/dist/aframe-extras.min.js"></script>
+    <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
+    <script src='https://raw.githack.com/AR-js-org/AR.js/master/three.js/build/ar-threex-location-only.js'></script>
+    <script src='https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js'></script>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@0.81.1/dist/L.Control.Locate.min.js" charset="utf-8"></script>
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
@@ -76,7 +76,7 @@
         
         #map {
             width: 100%;
-            height: 100vh;
+            height: 40vh;
             position: fixed;
             bottom: 0;
             left: 0;
@@ -749,14 +749,14 @@
             color: red;
         }
         .scene-container {
-            position: absolute; 
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 800px; 
-            height: 600px; 
+            position: fixed; 
+            top: 0px;
+            left: 0px;
+            width: 800px;
+            height: 600px;
             
         }
+        /* 相機畫面關閉按鈕 */
         .close-button {
             position: absolute;
             top: 20px;
@@ -766,7 +766,8 @@
             border: none;
             padding: 10px;
             cursor: pointer;
-            z-index: 2000; 
+            z-index: 1000; 
+            display: none;
         }
 
         .onclick-button {
@@ -800,22 +801,13 @@
     <div class="scene-container" id="scene-container" style="z-index: 999;">
         <button class="close-button" onclick="toggleScene()">X</button>
         
-        <a-scene embedded mindar-image="uiScanning: #example-scanning-overlay;filterMinCF:0.0001; filterBeta: 0.001;imageTargetSrc: https://raw.githubusercontent.com/Rayasd396kr/ar/main/t4.mind;" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
-            <a-camera position="0 0 0" look-controls="enabled: true" cursor="fuse: false; rayOrigin: mouse;" raycaster="far: ${customFields.libVersion}; objects: .clickable"></a-camera>
-            <a-entity id="bearEntity" mindar-image-target="targetIndex: 0">
-                <a-plane opacity="0.5" color="white" width="10" height="10" position="0 0 0"></a-plane>
-                <a-text value="get!" color="black" align="center" position="0 0 0"></a-text>
-            </a-entity>
-            <a-entity id="raccoonEntity" mindar-image-target="targetIndex: 1">
-                <!-- <a-image src="https://raw.githubusercontent.com/Rayasd396kr/ar/main/a.png" position="0 1.2 0" scale="0.75 0.75 0.75"></a-image> -->
-                <a-text id="clickable" value="資訊樓" font="https://raw.githubusercontent.com/Rayasd396kr/ar/main/custom-msdf.json" negate="false" color="black" align="center" position="0 -0.5 0"></a-text>
-                <a-gltf-model rotation="0 0 0 " position="0 -0.25 0" scale="1 1 1" src="https://raw.githubusercontent.com/Rayasd396kr/ar/main/zcl.glb" animation-mixer></a-gltf-model>
-                <a-box id="button-left" class="clickable" color="black" width="0.7" height="0.3" depth="0.2" position="0 -0.8 0"
-                onclick="window.parent.postMessage({ action: 'navigate', url: '/floorselect' }, '*');">
-                    <a-text value="大樓介紹" font="https://raw.githubusercontent.com/Rayasd396kr/ar/main/floor-msdf.json" negate="false" align="center" color="white" position="0 0 0.1" scale="0.75 0.75 0.75"></a-text>
-                </a-box>
-                <a-plane color="white" width="2" height="2.5" position="0 0 -0.5" rotation="0 0 0"></a-plane>
-            </a-entity>
+        <a-scene arjs='sourceType: webcam; videoTexture: true; debugUIEnabled: false' renderer='antialias: true; alpha: true'>
+            <a-camera>
+                <!-- 将方块作为相机的子实体，并调整位置使其固定在右上角 -->
+                <a-entity material='color: red' position="0.5 0.5 -1" geometry='primitive: box' scale="0.2 0.2 0.2"></a-entity>
+            </a-camera>
+            <a-entity material='color: green' position="0 1 -3" geometry='primitive: box'></a-entity>
+        
         </a-scene>
     </div>
     
