@@ -1762,74 +1762,8 @@
                 }
         });
 
-        let hasShownCongratulations = false;
 
-        const exampleTarget = document.querySelector('#bearEntity');
-
-        exampleTarget.addEventListener("targetFound", event => {
-            console.log("target found");
-            document.getElementById('cell-1').innerText = 'OK';
-            localStorage.setItem('okStatus1', 'true');
-            if (!hasShownCongratulations) {
-                const congratulationsMessage = document.createElement('div');
-                congratulationsMessage.textContent = '恭喜您找到了';
-                congratulationsMessage.style.position = 'fixed';
-                congratulationsMessage.style.top = '50%';
-                congratulationsMessage.style.left = '50%';
-                congratulationsMessage.style.transform = 'translate(-50%, -50%)';
-                congratulationsMessage.style.backgroundColor = 'rgba(255, 255, 255, 0.8)';
-                congratulationsMessage.style.padding = '20px';
-                congratulationsMessage.style.borderRadius = '10px';
-                congratulationsMessage.style.zIndex = '9999';
-
-                document.body.appendChild(congratulationsMessage);
-
-                hasShownCongratulations = true;
-
-                setTimeout(() => {
-                    congratulationsMessage.remove();
-                }, 2000); 
-
-                
-            }
-        });
-
-
-
-        let hasShownCongratulations2 = false;
-
-        const exampleTarget1 = document.querySelector('#bearEntity');
-
-        exampleTarget1.addEventListener("targetFound", event => {
-            console.log("target found1");
-            document.getElementById('cell-1').innerText = 'OK';
-            localStorage.setItem('okStatus1', 'true');
-            if (!hasShownCongratulations2) {
-                const congratulationsMessage = document.createElement('div');
-                congratulationsMessage.textContent = '恭喜您找到了';
-                congratulationsMessage.style.position = 'fixed';
-                congratulationsMessage.style.top = '50%';
-                congratulationsMessage.style.left = '50%';
-                congratulationsMessage.style.transform = 'translate(-50%, -50%)';
-                congratulationsMessage.style.backgroundColor = 'rgba(255, 255, 255, 0.8)';
-                congratulationsMessage.style.padding = '20px';
-                congratulationsMessage.style.borderRadius = '10px';
-                congratulationsMessage.style.zIndex = '9999';
-
-                
-                document.body.appendChild(congratulationsMessage);
-
-                
-                hasShownCongratulations2 = true;
-
-                
-                setTimeout(() => {
-                    congratulationsMessage.remove();
-                }, 2000); 
-
-                
-            }
-        });
+      
         
         
         function resetLocalStorage() {
