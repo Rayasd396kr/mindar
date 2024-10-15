@@ -50,7 +50,7 @@
         }
 
        
-        .hand-icon {
+        /* .hand-icon {
             position: fixed;
             top: 185px;  
             left: 50px; 
@@ -81,7 +81,7 @@
                 transform: translate(-50%, -50%) scale(1) rotate(-45deg); 
                 opacity: 1;
             }
-        }
+        } */
         /* 地圖按鈕 */
         .map-toggle-icon {
             position: fixed;
@@ -125,8 +125,8 @@
         
         .toggle-info-window {
             position: fixed;
-            top: 160px;  
-            right: 10px; 
+            top: 220px;  
+            left: 10px; 
             z-index: 1001;
             background-color: #307fb7;
             color: white;
@@ -148,8 +148,8 @@
         }
         .toggleStamp{
             position: fixed;
-            top: 100px;  
-            right: 10px; 
+            top: 160px;  
+            left: 10px; 
             z-index: 1001;
             background-color: #307fb7;
             color: white;
@@ -744,15 +744,50 @@
             cursor: pointer;
         }
         
-        .leaflet-control-locate {
+        /* .leaflet-control-locate {
             position: fixed;
             top: 150px;  
             left: 5px; 
             z-index: 2000;
             cursor: pointer;
+        } */
+        /* 將容器置中 */
+        #customButtonContainer {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 70%;
+            padding: 20px;
+            z-index: 3000;
+            background-color: white;
+            color: black;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.59);
+            text-align: center; /* 將容器內部元素置中 */
         }
 
-        
+        /* 按鈕樣式 */
+        #customButton {
+            padding: 10px;
+            background-color: #b74834;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+
+        /* 標題和文字 */
+        #customButtonContainer h2{
+            margin-top: 0px;
+        }
+        #customButtonContainer p {
+            margin: 10px 0;
+        }
+
+                
 
     </style>
 
@@ -762,26 +797,54 @@
         <button onclick="toggleMarkers('navigation')" class="active">導覽路線</button>
         <button onclick="toggleMarkers('sports')">運動場</button>
         <button onclick="toggleMarkers('events')">活動</button>
+        <button onclick="toggleMarkers('events')">活動</button>
     </div>
-    <!-- <button class="onclick-button" onclick="createBox()">生成方塊</button> -->
     <div class="scene-container" id="scene-container" style="z-index: 999;">
-        <button class="close-button" onclick="toggleScene()">X</button>
-        
         <a-scene arjs='sourceType: webcam; videoTexture: true; debugUIEnabled: false' renderer='antialias: true; alpha: true'>
             <a-camera>
-                <a-entity material='color: red' position="0.5 0.5 -1" geometry='primitive: box' scale="0.2 0.2 0.2"></a-entity>
+                <a-entity id="box-container" position="0.25 0.55 -1">
+                    <a-entity 
+                        material="color: green" 
+                        position="0 0 0" 
+                        geometry="primitive: box" 
+                        scale="0.1 0.1 0.1">
+                    </a-entity>
+                    <a-entity position="0 -0.2 0">
+                        <!-- 背景平面 -->
+                        <a-plane 
+                            position="0 0 0.01" 
+                            width="0.3" 
+                            height="0.1" 
+                            color="black">
+                        </a-plane>
+                        <!-- 文字 -->
+                        <a-entity 
+                            id="text-entity"
+                            position="0 0 0.02" 
+                            text="value: talk; align: center; width: 1; color: white;">
+                        </a-entity>
+                    </a-entity>
+                </a-entity>
             </a-camera>
             <!-- <a-entity material='color: green' position="0 1 -3" geometry='primitive: box'></a-entity> -->
-            <a-entity id="dynamic-entity" geometry='primitive: box' position="0 1 -3" material='color: green'></a-entity>
+            <a-assets>
+                <a-asset-item id="my-model" src="https://raw.githubusercontent.com/Rayasd396kr/ar/main/bluenew.glb"></a-asset-item>
+            </a-assets>
+            <a-entity id="dynamic-entity" gltf-model="#my-model" position="0 1 -3" visible="false"></a-entity>
         </a-scene>
     </div>
     
     <!-- <i class="fa-solid fa-map-location-dot map-toggle-icon" aria-hidden="true" onclick="toggleMap()"></i> -->
-    <i class="fa-solid fa-tag info-toggle-icon" id="toggle-info-window" aria-hidden="true" ></i>
+    <!-- <i class="fa-solid fa-tag info-toggle-icon" id="toggle-info-window" aria-hidden="true" ></i> -->
     <i class="fa-solid fa-file-lines toggle-info-window" id="toggle-info-window" aria-hidden="true" onclick="toggleinfo1()" ></i>
     <i class="fa-solid fa-stamp stamp-icon toggleStamp" id="toggleStamp" aria-hidden="true" onclick="toggleGrid()"></i>
     <i class="fa-solid fa-search searchIcon" id="searchIcon" aria-hidden="true" onclick="toggleSearchBox()"></i>
-   
+    <div id="customButtonContainer">
+        <h2>使用說明</h2>
+        <p>適用於校園環境中</p>
+        <button id="customButton"><i class="fa-solid fa-location-dot"></i>&nbsp;定位</button>
+    </div>
+    
     <div id="searchBox" class="search-box hidden">
         <div class="button-container-search">
             <button class="button-container-search-button button-container-search-button1 active" onclick="updateContent('id', this)">編號</button>
@@ -796,6 +859,8 @@
             <p id="id">編號：</p>
             <p id="deleteMarkerButton" onclick="deleteMarkers()">刪除標記</p>
         </div>
+        
+        
         <div id="content-office" class="content-div hidden">
             <select id="dropdownMenu-office" class="dropdownMenu" onchange="updateOffice()">
                 <option value="" selected disabled>請選擇處室</option>
@@ -893,7 +958,7 @@
                 <p id="info-title"><strong>標題</strong></p>
                 <p id="info-text">文字</p>
                 <div class="info-button-container">
-                    <button id="info-button1">定位</button>
+                    <!-- <button id="info-button1">定位</button> -->
                     <button id="info-button2">掃描</button>
                 </div>
             </div>
@@ -905,7 +970,6 @@
                 <div class="slide-content">
                     <span class="close-btn">&times;</span>
                     <img class="slide-img" src="https://raw.githubusercontent.com/Rayasd396kr/ar/main/zcl-1.png" />
-                    <i class="fa-solid fa-camera-retro" onclick="toggleScene()"></i>
                     <i class="fa-solid fa-location-dot location-dot1"></i>
                     <div class="slide-background">
                         <p class="slide-title">1.資訊館一樓內部</p>
@@ -918,7 +982,6 @@
                 <div class="slide-content">
                     <span class="close-btn">&times;</span>
                     <img class="slide-img" src="https://swiperjs.com/demos/images/nature-3.jpg" />
-                    <i class="fa-solid fa-camera-retro"></i>
                     <div class="slide-background">
                         <p class="slide-title">資管四樓某地方</p>
                         <p class="slide-text">此處是資管大本營，每個資管人都在此上過課，培養出很多優秀人才。</p>
@@ -930,7 +993,6 @@
                 <div class="slide-content">
                     <span class="close-btn">&times;</span>
                     <img class="slide-img" src="https://swiperjs.com/demos/images/nature-3.jpg" />
-                    <i class="fa-solid fa-camera-retro"></i>
                     <div class="slide-background">
                         <p class="slide-title">資管四樓某地方</p>
                         <p class="slide-text">此處是資管大本營，每個資管人都在此上過課，培養出很多優秀人才。</p>
@@ -942,7 +1004,6 @@
                 <div class="slide-content">
                     <span class="close-btn">&times;</span>
                     <img class="slide-img" src="https://swiperjs.com/demos/images/nature-3.jpg" />
-                    <i class="fa-solid fa-camera-retro"></i>
                     <div class="slide-background">
                         <p class="slide-title">資管四樓某地方</p>
                         <p class="slide-text">此處是資管大本營，每個資管人都在此上過課，培養出很多優秀人才。</p>
@@ -954,7 +1015,6 @@
                 <div class="slide-content">
                     <span class="close-btn">&times;</span>
                     <img class="slide-img" src="https://swiperjs.com/demos/images/nature-3.jpg" />
-                    <i class="fa-solid fa-camera-retro"></i>
                     <div class="slide-background">
                         <p class="slide-title">資管四樓某地方</p>
                         <p class="slide-text">此處是資管大本營，每個資管人都在此上過課，培養出很多優秀人才。</p>
@@ -966,7 +1026,6 @@
                 <div class="slide-content">
                     <span class="close-btn">&times;</span>
                     <img class="slide-img" src="https://swiperjs.com/demos/images/nature-3.jpg" />
-                    <i class="fa-solid fa-camera-retro"></i>
                     <div class="slide-background">
                         <p class="slide-title">資管四樓某地方</p>
                         <p class="slide-text">此處是資管大本營，每個資管人都在此上過課，培養出很多優秀人才。</p>
@@ -978,7 +1037,6 @@
                 <div class="slide-content">
                     <span class="close-btn">&times;</span>
                     <img class="slide-img" src="https://swiperjs.com/demos/images/nature-3.jpg" />
-                    <i class="fa-solid fa-camera-retro"></i>
                     <div class="slide-background">
                         <p class="slide-title">資管四樓某地方</p>
                         <p class="slide-text">此處是資管大本營，每個資管人都在此上過課，培養出很多優秀人才。</p>
@@ -990,7 +1048,6 @@
                 <div class="slide-content">
                     <span class="close-btn">&times;</span>
                     <img class="slide-img" src="https://swiperjs.com/demos/images/nature-3.jpg" />
-                    <i class="fa-solid fa-camera-retro"></i>
                     <div class="slide-background">
                         <p class="slide-title">資管四樓某地方</p>
                         <p class="slide-text">此處是資管大本營，每個資管人都在此上過課，培養出很多優秀人才。</p>
@@ -1002,7 +1059,6 @@
                 <div class="slide-content">
                     <span class="close-btn">&times;</span>
                     <img class="slide-img" src="https://swiperjs.com/demos/images/nature-3.jpg" />
-                    <i class="fa-solid fa-camera-retro"></i>
                     <div class="slide-background">
                         <p class="slide-title">資管四樓某地方</p>
                         <p class="slide-text">此處是資管大本營，每個資管人都在此上過課，培養出很多優秀人才。</p>
@@ -1225,6 +1281,40 @@
         }).addTo(map);
         var markerLayer = L.layerGroup().addTo(map);
         
+        const targetCoords = { lat: 24.150896625919188, lng: 120.68148734742584 };
+        // lat: 24.150896625919188, lng: 120.68148734742584
+        // lat: 24.149777480517585, lng: 120.68385171379057
+        // 更新文本内容的函数
+        function updateTextIfNear(lat, lng) {
+            const distance = calculateDistance(lat, lng, targetCoords.lat, targetCoords.lng);
+            const textEntity = document.getElementById('text-entity');
+
+            if (distance < 50) { // 设定范围，例如 50 米
+                textEntity.setAttribute('text', 'value: yes!; align: center; width: 1; color: white;');
+            } 
+        }
+
+        // 计算两点之间的距离（使用 Haversine 公式）
+        function calculateDistance(lat1, lng1, lat2, lng2) {
+            const R = 6371000; // 地球半径，单位为米
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLng = (lng2 - lng1) * Math.PI / 180;
+
+            const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                    Math.sin(dLng / 2) * Math.sin(dLng / 2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+            return R * c; // 返回距离，单位为米
+        }
+
+        // 获取用户位置并更新文本
+        navigator.geolocation.watchPosition(position => {
+            const { latitude, longitude } = position.coords;
+            updateTextIfNear(latitude, longitude);
+        }, error => {
+            console.error('Error getting location:', error);
+        });
 
        
         var infoWindow = document.getElementById('info-window');
@@ -1271,25 +1361,25 @@
         };
         var pointsOfInterest = {
             navigation: [
-                { name: "h", 
+                { name: "集點", 
                   coords: [24.150896625919188, 120.68148734742584],
                   image: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/zcl-1.png',
                   title: '標題1',
                   description: "描述"
                 },
-                { name: "home2", 
+                { name: "大樓", 
                   coords: [24.150996625919188, 120.68148734742584],
                   image: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/zcl.png',
                   title: '標題2',
                   description: "描述"
                 },
-                { name: "資管1", 
+                { name: "集點", 
                   coords: [24.14961330934904, 120.68364591589136],
                   image: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/zcl-1.png',
                   title: '標題1',
                   description: "描述"
                 },
-                { name: "資管2", 
+                { name: "大樓", 
                   coords: [24.14971330934904, 120.68364591589136],
                   image: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/zcl.png',
                   title: '標題2',
@@ -1477,6 +1567,26 @@
                 handIcon.style.display = 'none';
             });
         });
+        document.addEventListener('DOMContentLoaded', (event) => {
+            // 查找自定義按鈕
+            const customButton = document.getElementById('customButton');
+
+            // 查找 Leaflet 定位控制按鈕
+            const locateButton = document.querySelector('.leaflet-control-locate a');
+
+            // 查找容器
+            const customButtonContainer = document.getElementById('customButtonContainer');
+
+            if (customButton && locateButton && customButtonContainer) {
+                // 綁定點擊事件
+                customButton.addEventListener('click', () => {
+                    locateButton.click();
+                    customButtonContainer.style.display = 'none'; // 隱藏容器
+                });
+            } else {
+                console.error('Cannot find customButton, locateButton, or customButtonContainer');
+            }
+        });
 
 
 
@@ -1484,30 +1594,44 @@
 
         var additionalMarkers = [
             { 
-                name: "New Location 1", 
+                name: "新位置1", 
                 coords: [24.150896625919188, 120.68148734742584],
                 title: '新位置1',
-                description: "描述1"
+                description: "描述1",
+                modelUrl: "https://raw.githubusercontent.com/Rayasd396kr/ar/main/map.glb",
+                iconUrl: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/web.png' 
             },
             { 
-                name: "New Location 2", 
+                name: "新位置2", 
                 coords: [24.150996625919188, 120.68148734742584],
                 title: '新位置2',
-                description: "描述2"
+                description: "描述2",
+                modelUrl: "https://raw.githubusercontent.com/Rayasd396kr/ar/main/bluenew.glb",
+                iconUrl: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/web.png' 
             },
             { 
-                name: "New Location 1", 
+                name: "新位置3", 
                 coords: [24.14961330934904, 120.68364591589136],
-                title: '新位置1',
-                description: "描述1"
+                title: '新位置3',
+                description: "描述3",
+                modelUrl: "https://raw.githubusercontent.com/Rayasd396kr/ar/main/bluenew.glb",
+                iconUrl: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/web.png' 
+            },
+            { 
+                name: "新位置4", 
+                coords: [24.14971330934904, 120.68364591589136],
+                title: '新位置4',
+                description: "描述4",
+                modelUrl: "https://raw.githubusercontent.com/Rayasd396kr/ar/main/map.glb",
+                iconUrl: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/web.png' 
             },
         ];
 
         function createBox(content) {
             var entity = document.getElementById('dynamic-entity');
-            entity.setAttribute('geometry', { primitive: content.primitive });
-            entity.setAttribute('material', { color: content.color });
+            entity.setAttribute('gltf-model', content.modelUrl);
             entity.setAttribute('position', content.position);
+            entity.setAttribute('visible', 'true');
         }
 
         function updateInfoWindow(latlng) {
@@ -1523,6 +1647,7 @@
                 return;
             }
 
+            // 計算距離並過濾出 50 米以內的點
             var nearbyLocations = [...Object.values(pointsOfInterest).flat()].filter(location => {
                 var distance = map.distance(latlng, location.coords);
                 return distance < 50;
@@ -1535,7 +1660,7 @@
 
             markers.forEach(marker => map.removeLayer(marker));
             markers = [];
-            
+
             if (nearbyLocations.length > 0) {
                 nearbyLocations.forEach(({ location, distance }) => {
                     var infoItem = document.createElement('div');
@@ -1547,30 +1672,39 @@
                         openCustomInfoWindow(location); 
                     });
                     infoList.appendChild(infoItem);
-
-                    var marker = L.marker(location.coords).addTo(map);
-                    markers.push(marker); 
-
-                    marker.on('click', function() {
-                        var content;
-                        if (location.name === 'h') {
-                            content = { primitive: 'box', color: 'blue', position: '0 1 -3' };
-                        } else if (location.name === 'home2') {
-                            content = { primitive: 'sphere', color: 'red', position: '0 1 -3' };
-                        } else if (location.name === '資管1') {
-                            content = { primitive: 'box', color: 'green', position: '0 1 -3' };
-                        } else if (location.name === '資管2') {
-                            content = { primitive: 'sphere', color: 'yellow', position: '0 1 -3' };
-                        }
-                        createBox(content);
-                    });
                 });
 
                 infoWindow.style.display = 'block';
+
+                // 添加 additionalMarkers 並且只在 50 米內的點
+                var additionalMarker = [];
+                additionalMarkers.forEach(function(location) {
+                    var customIcon = L.icon({
+                        iconUrl: location.iconUrl,
+                        iconSize: [32, 32], // 設置圖標大小
+                        iconAnchor: [16, 32], // 設置圖標錨點
+                        popupAnchor: [0, -32] // 設置彈出窗口錨點
+                    });
+                    var distance = map.distance(latlng, location.coords);
+                    if (distance < 50) {
+                        var marker = L.marker(location.coords, { icon: customIcon }).addTo(map); // 這裡應用 customIcon
+                        additionalMarker.push(marker);
+
+                        marker.on('click', function() {
+                            var content = {
+                                modelUrl: location.modelUrl,
+                                position: '0 1 -3'
+                            };
+                            createBox(content);
+                        });
+                    }
+                });
             } else {
                 infoWindow.style.display = 'none';
             }
         }
+
+
 
         // <p>發現${location.name}目標物，距離${distance.toFixed(2)}公尺</p>
         function openCustomInfoWindow(location) {
@@ -1578,7 +1712,7 @@
             var infoImage = document.getElementById('info-image');
             var infoTitle = document.getElementById('info-title');
             var infoText = document.getElementById('info-text');
-            var infoButton1 = document.getElementById('info-button1');
+            // var infoButton1 = document.getElementById('info-button1');
             var infoButton2 = document.getElementById('info-button2');
 
 
@@ -1587,10 +1721,10 @@
             infoText.textContent = location.description;
              
 
-            infoButton1.onclick = function() {
-                const infodistance = map.distance(userLatLng, location.coords);
-                addinfoMarkerToMap(location.coords, location.title, infodistance);
-            };
+            // infoButton1.onclick = function() {
+            //     const infodistance = map.distance(userLatLng, location.coords);
+            //     addinfoMarkerToMap(location.coords, location.title, infodistance);
+            // };
             function addinfoMarkerToMap(coords, title, distance) {
                 const marker = L.marker(coords).addTo(map);
                 const popupContent = `
@@ -1663,19 +1797,20 @@
            
            var iframeContainer = document.createElement('div');
             iframeContainer.style.position = 'fixed';
-            iframeContainer.style.top = '10%';
-            iframeContainer.style.left = '10%';
-            iframeContainer.style.width = '80%';
-            iframeContainer.style.height = '80%';
+            iframeContainer.style.top = '0px';
+            iframeContainer.style.left = '0px';
+            iframeContainer.style.width = '100%';
+            iframeContainer.style.height = '100%';
             iframeContainer.style.zIndex = '3000';
             iframeContainer.style.backgroundColor = 'white';
 
             
             var iframe = document.createElement('iframe');
-            iframe.src = 'http://127.0.0.1:5501/ar+location/mindar.html'; 
+            iframe.src = 'https://rayasd396kr.github.io/ar/index'; 
             iframe.style.width = '100%';
             iframe.style.height = '100%';
             iframe.style.border = 'none';
+            iframe.allow = 'camera';
 
            
             var closeButton = document.createElement('button');
@@ -1683,7 +1818,7 @@
             closeButton.style.position = 'absolute';
             closeButton.style.top = '10px';
             closeButton.style.right = '10px';
-            closeButton.style.zIndex = '1001';
+            closeButton.style.zIndex = '3001';
             closeButton.onclick = function() {
                 document.body.removeChild(iframeContainer);
             };
