@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
+    
 
     <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
     <script src='https://raw.githack.com/AR-js-org/AR.js/master/three.js/build/ar-threex-location-only.js'></script>
@@ -37,16 +38,17 @@
         #map-container {
             position: fixed;
             width: 100%;
-            height: 40%; /* 确保父容器有固定高度 */
+            height: 40%; 
             bottom: 0;
             left: 0;
             z-index: 999;
-            overflow: hidden; /* 防止内容溢出 */
+            overflow: hidden; 
+            display: block;
         }
 
         #map {
             width: 100%;
-            height: 100%; /* 确保地图占满父容器 */
+            height: 100%; 
         }
 
        
@@ -661,6 +663,7 @@
             align-items: center;
             justify-content: center;
             z-index: 1500;
+            display: none;
         }
         .infoslide {
             background-color: rgba(228, 222, 222, 0.875);
@@ -786,9 +789,37 @@
         #customButtonContainer p {
             margin: 10px 0;
         }
+        #text-entity {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px;
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        @keyframes bounce {
+            0%, 100% {
+                transform: scale(5);
+            }
+            50% {
+                transform: scale(7);
+            }
+        }
 
-                
+        .bouncing-icon img {
+            animation: bounce 1s infinite;
+        }
 
+        
+       
+        
+
+
+        
+       
     </style>
 
 </head>
@@ -801,7 +832,7 @@
     </div>
     <div class="scene-container" id="scene-container" style="z-index: 999;">
         <a-scene arjs='sourceType: webcam; videoTexture: true; debugUIEnabled: false' renderer='antialias: true; alpha: true'>
-            <a-camera>
+            <a-camera cursor="fuse: false; rayOrigin: mouse;" raycaster="far: ${customFields.libVersion}; objects: .clickable">
                 <a-entity id="box-container" position="0.25 0.55 -1">
                     <a-entity 
                         material="color: green" 
@@ -831,6 +862,13 @@
                 <a-asset-item id="my-model" src="https://raw.githubusercontent.com/Rayasd396kr/ar/main/bluenew.glb"></a-asset-item>
             </a-assets>
             <a-entity id="dynamic-entity" gltf-model="#my-model" position="0 1 -3" visible="false"></a-entity>
+            <a-entity id="text-box" position="0 0 -3" visible="false">
+                <a-plane color="#FFFFFF" width="3" height="0.5" position="0 0.7 0"></a-plane>
+                <a-text id="info-text" value="introduce" color="#000000" align="center" position="0 0.7 0.1"></a-text>
+                <a-plane id="toggle-button" color="#CCCCCC" width="1" height="0.5" position="0 0 0" class="clickable">
+                    <a-text value="map" color="#000000" align="center" position="0 0 0.1"></a-text>
+                </a-plane>
+            </a-entity>
         </a-scene>
     </div>
     
@@ -1281,17 +1319,43 @@
         }).addTo(map);
         var markerLayer = L.layerGroup().addTo(map);
         
-        const targetCoords = { lat: 24.150896625919188, lng: 120.68148734742584 };
-        // lat: 24.150896625919188, lng: 120.68148734742584
-        // lat: 24.149777480517585, lng: 120.68385171379057
-        // 更新文本内容的函数
+        const points = [
+            { lat: 24.149777480517585, lng: 120.68385171379057, message: 'go to 1' },
+            { lat: 24.150896625919188, lng: 120.68148734742584, message: '2' },
+        ];
+
+        let currentPointIndex = 0;
+        let currentMarker = null;
+
+        const customIcon1 = L.divIcon({
+            className: 'bouncing-icon',
+            html: '<img src="https://raw.githubusercontent.com/Rayasd396kr/ar/main/circles.png" style="width: 5px; height: 5px;"  />',
+            iconSize: [5, 5],
+            iconAnchor: [0, 0],
+        });
+
+        function updateMarkerAndText() {
+            if (currentMarker) {
+                map.removeLayer(currentMarker);
+            }
+
+            const currentPoint = points[currentPointIndex];
+            currentMarker = L.marker([currentPoint.lat, currentPoint.lng], { icon: customIcon1 }).addTo(map);
+            document.querySelector('#text-entity').setAttribute('text', 'value', currentPoint.message);
+        }
+
         function updateTextIfNear(lat, lng) {
-            const distance = calculateDistance(lat, lng, targetCoords.lat, targetCoords.lng);
-            const textEntity = document.getElementById('text-entity');
+            const currentPoint = points[currentPointIndex];
+            const distance = calculateDistance(lat, lng, currentPoint.lat, currentPoint.lng);
 
             if (distance < 50) { // 设定范围，例如 50 米
-                textEntity.setAttribute('text', 'value: yes!; align: center; width: 1; color: white;');
-            } 
+                currentPointIndex++;
+                if (currentPointIndex < points.length) {
+                    updateMarkerAndText();
+                } else {
+                    document.querySelector('#text-entity').setAttribute('text', 'value', 'done！');
+                }
+            }
         }
 
         // 计算两点之间的距离（使用 Haversine 公式）
@@ -1315,6 +1379,8 @@
         }, error => {
             console.error('Error getting location:', error);
         });
+
+        updateMarkerAndText();
 
        
         var infoWindow = document.getElementById('info-window');
@@ -1597,7 +1663,7 @@
                 name: "新位置1", 
                 coords: [24.150896625919188, 120.68148734742584],
                 title: '新位置1',
-                description: "描述1",
+                description: "introduce1",
                 modelUrl: "https://raw.githubusercontent.com/Rayasd396kr/ar/main/map.glb",
                 iconUrl: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/web.png' 
             },
@@ -1605,7 +1671,7 @@
                 name: "新位置2", 
                 coords: [24.150996625919188, 120.68148734742584],
                 title: '新位置2',
-                description: "描述2",
+                description: "introduce2",
                 modelUrl: "https://raw.githubusercontent.com/Rayasd396kr/ar/main/bluenew.glb",
                 iconUrl: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/web.png' 
             },
@@ -1613,7 +1679,7 @@
                 name: "新位置3", 
                 coords: [24.14961330934904, 120.68364591589136],
                 title: '新位置3',
-                description: "描述3",
+                description: "introduce3",
                 modelUrl: "https://raw.githubusercontent.com/Rayasd396kr/ar/main/bluenew.glb",
                 iconUrl: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/web.png' 
             },
@@ -1621,7 +1687,7 @@
                 name: "新位置4", 
                 coords: [24.14971330934904, 120.68364591589136],
                 title: '新位置4',
-                description: "描述4",
+                description: "introduce4",
                 modelUrl: "https://raw.githubusercontent.com/Rayasd396kr/ar/main/map.glb",
                 iconUrl: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/web.png' 
             },
@@ -1632,6 +1698,14 @@
             entity.setAttribute('gltf-model', content.modelUrl);
             entity.setAttribute('position', content.position);
             entity.setAttribute('visible', 'true');
+            
+            var textBox = document.getElementById('text-box');
+            var infoText = document.getElementById('info-text');
+            infoText.setAttribute('value', content.text);
+            textBox.setAttribute('visible', 'true');
+
+            var mapContainer = document.getElementById('map-container');
+            mapContainer.style.display = 'none';
         }
 
         function updateInfoWindow(latlng) {
@@ -1647,7 +1721,7 @@
                 return;
             }
 
-            // 計算距離並過濾出 50 米以內的點
+            // 计算距离并过滤出 50 米以内的点
             var nearbyLocations = [...Object.values(pointsOfInterest).flat()].filter(location => {
                 var distance = map.distance(latlng, location.coords);
                 return distance < 50;
@@ -1676,24 +1750,25 @@
 
                 infoWindow.style.display = 'block';
 
-                // 添加 additionalMarkers 並且只在 50 米內的點
+                // 添加 additionalMarkers 并且只在 50 米内的点
                 var additionalMarker = [];
                 additionalMarkers.forEach(function(location) {
                     var customIcon = L.icon({
                         iconUrl: location.iconUrl,
-                        iconSize: [32, 32], // 設置圖標大小
-                        iconAnchor: [16, 32], // 設置圖標錨點
-                        popupAnchor: [0, -32] // 設置彈出窗口錨點
+                        iconSize: [32, 32], // 设置图标大小
+                        iconAnchor: [16, 32], // 设置图标锚点
+                        popupAnchor: [0, -32] // 设置弹出窗口锚点
                     });
                     var distance = map.distance(latlng, location.coords);
                     if (distance < 50) {
-                        var marker = L.marker(location.coords, { icon: customIcon }).addTo(map); // 這裡應用 customIcon
+                        var marker = L.marker(location.coords, { icon: customIcon }).addTo(map); // 这里应用 customIcon
                         additionalMarker.push(marker);
 
                         marker.on('click', function() {
                             var content = {
                                 modelUrl: location.modelUrl,
-                                position: '0 1 -3'
+                                position: '0 1 -3',
+                                text: location.description // 添加文字描述
                             };
                             createBox(content);
                         });
@@ -1703,6 +1778,17 @@
                 infoWindow.style.display = 'none';
             }
         }
+
+        document.getElementById('toggle-button').addEventListener('click', function() {
+            var entity = document.getElementById('dynamic-entity');
+            var textBox = document.getElementById('text-box');
+
+            entity.setAttribute('visible', 'false');
+            textBox.setAttribute('visible', 'false');
+
+            var mapContainer = document.getElementById('map-container');
+            mapContainer.style.display = 'block';
+        });
 
 
 
@@ -1842,19 +1928,25 @@
 
         
         
-        let isInfoVisible = true;
-        function toggleinfo1(){
+        let isInfoVisible = true; 
+
+        function toggleinfo1() {
+            const infoContainer = document.querySelector('.info-container1');
+            const highlightText = document.querySelector('.highlight-text');
             
-            if(isInfoVisible){
-                document.querySelector('.info-container1').style.display = 'none';
-                document.querySelector('.highlight-text').style.color = 'black';
-            }else{
-                document.querySelector('.info-container1').style.display = 'block';
-                document.querySelector('.highlight-text').style.color = 'red';
+            if (isInfoVisible) {
+                infoContainer.style.display = 'block';
+                // highlightText.style.color = 'black';
+                
+                $(infoContainer).slick('setPosition');
+            } else {
+                infoContainer.style.display = 'none';
+                // highlightText.style.color = 'red';
             }
-            isInfoVisible = !isInfoVisible;
             
+            isInfoVisible = !isInfoVisible;
         }
+
         var swiper = new Swiper('.swiper-container', {
             effect: 'coverflow',
             grabCursor: true,
@@ -2348,5 +2440,6 @@
 
 
     </script>
+    
 </body>
 </html>
