@@ -1770,19 +1770,8 @@
 
                 infoWindow.style.display = 'block';
 
-                // 添加 additionalMarkers 并且只在 50 米内的点
                 var additionalMarker = [];
-                // 设定一个检查间隔时间，比如每 1 秒检查一次
-                var checkInterval = setInterval(function() {
-                    additionalMarker.forEach(function(marker, index) {
-                        var distance = map.distance(latlng, marker.getLatLng());
-                        if (distance > 10) {
-                            map.removeLayer(marker);  // 移除超出 10 米的标记
-                            additionalMarker.splice(index, 1);  // 从数组中删除标记
-                        }
-                    });
-                }, 1000); // 每 1000 毫秒检查一次
-
+                
                 // 添加 additionalMarkers 并且只在 10 米内的点
                 additionalMarkers.forEach(function(location) {
                     var customIcon = L.icon({
