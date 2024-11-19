@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <title>ar</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -451,7 +452,12 @@
             margin: 0;
             flex: 0 1 60%;
         }
-
+        #info-description{
+            color: black;
+            font-size: 18px;
+            margin: 0;
+            flex: 0 1 60%;
+        }
         .button-container {
             display: flex; 
             justify-content: center; 
@@ -832,14 +838,23 @@
     </div>
     <div class="scene-container" id="scene-container" style="z-index: 999;">
         <a-scene arjs='sourceType: webcam; videoTexture: true; debugUIEnabled: false' renderer='antialias: true; alpha: true'>
+            <a-assets>
+                <!-- <video id="penguin-sledding" autoplay loop="true" src="https://raw.githubusercontent.com/Rayasd396kr/ar/main/girl.mov"></video> -->
+                <img id="my-image" src="https://raw.githubusercontent.com/Rayasd396kr/ar/main/man.png">
+            </a-assets>
             <a-camera cursor="fuse: false; rayOrigin: mouse;" raycaster="far: ${customFields.libVersion}; objects: .clickable">
                 <a-entity id="box-container" position="0.25 0.55 -1">
-                    <a-entity 
-                        material="color: green" 
+                    <a-image src="#my-image" 
+                    position="0 0 0" 
+                    width="0.4" 
+                    height="0.4" 
+                    rotation="0 0 0"></a-image>
+                    <!-- <a-video src="#penguin-sledding" 
                         position="0 0 0" 
-                        geometry="primitive: box" 
-                        scale="0.1 0.1 0.1">
-                    </a-entity>
+                        width="0.3" 
+                        height="0.2" 
+                        rotation="0 0 0">
+                    </a-video> -->
                     <a-entity position="0 -0.2 0">
                         <!-- 背景平面 -->
                         <a-plane 
@@ -859,14 +874,14 @@
             </a-camera>
             <!-- <a-entity material='color: green' position="0 1 -3" geometry='primitive: box'></a-entity> -->
             <a-assets>
-                <a-asset-item id="my-model" src="https://raw.githubusercontent.com/Rayasd396kr/ar/main/bluenew.glb"></a-asset-item>
+                <!-- <a-asset-item id="my-model" src="https://raw.githubusercontent.com/Rayasd396kr/ar/main/bluenew.glb"></a-asset-item> -->
             </a-assets>
-            <a-entity id="dynamic-entity" gltf-model="#my-model" position="0 1 -3" visible="false"></a-entity>
+            <a-entity id="dynamic-entity" gltf-model="#my-model" position="1 1 0" scale="0.5 0.5 0.5" visible="false"></a-entity>
             <a-entity id="text-box" position="0 0 -3" visible="false">
                 <a-plane color="#FFFFFF" width="3" height="0.5" position="0 0.7 0"></a-plane>
-                <a-text id="info-text" value="introduce" color="#000000" align="center" position="0 0.7 0.1"></a-text>
+                <a-text id="info-text" font="" value="introduce" color="#000000" align="center" position="0 0.7 0.1" negate="false"></a-text>
                 <a-plane id="toggle-button" color="#CCCCCC" width="1" height="0.5" position="0 0 0" class="clickable">
-                    <a-text value="close" color="#000000" align="center" position="0 0 0.1"></a-text>
+                    <a-text value="Ok" color="#000000" align="center" position="0 0 0.1"></a-text>
                 </a-plane>
             </a-entity>
         </a-scene>
@@ -976,7 +991,7 @@
         <div class="grid-item">8</div>
         <div class="grid-item">9</div>
         <button class="grid-buttom" id="grid-buttom"><i class="fas fa-stamp"></i>集點卡</button>
-        <button onclick="resetLocalStorage()">重置</button>
+        <!-- <button onclick="resetLocalStorage()">重置</button> -->
     </div>
     <div id="map-container">
         <div id="map">
@@ -994,7 +1009,7 @@
             <button id="info-close-button">&times;</button>
             <div class="overlay">
                 <p id="info-title"><strong>標題</strong></p>
-                <p id="info-text">文字</p>
+                <p id="info-description">文字</p>
                 <div class="info-button-container">
                     <!-- <button id="info-button1">定位</button> -->
                     <button id="info-button2">掃描</button>
@@ -1228,7 +1243,7 @@
                 
             </div>
         </div>
-        <div class="infoslide">
+        <!-- <div class="infoslide">
             <img class="infoslide-img" src="https://swiperjs.com/demos/images/nature-3.jpg" />
             <div class="infoslide-content">
                 <div class="infoslide-title">
@@ -1239,7 +1254,7 @@
                 </div>
                 
             </div>
-        </div>
+        </div> -->
     </div>
    
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -1320,8 +1335,8 @@
         var markerLayer = L.layerGroup().addTo(map);
         
         const points = [
-            { lat: 24.149777480517585, lng: 120.68385171379057, message: 'go to 1' },
-            { lat: 24.149936946350714, lng: 120.68321904749284, message: 'go to 2' },
+            { lat: 24.149777480517585, lng: 120.68385171379057, message: '請前往第一個標示點', font: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/text1-msdf.json' },
+            { lat: 24.149936946350714, lng: 120.68321904749284, message: '請前往第二個標示點', font: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/text2-msdf.json' },
             { lat: 24.150896625919188, lng: 120.68148734742584, message: 'go to 3' },
         ];
 
@@ -1342,7 +1357,10 @@
 
             const currentPoint = points[currentPointIndex];
             currentMarker = L.marker([currentPoint.lat, currentPoint.lng], { icon: customIcon1 }).addTo(map);
-            document.querySelector('#text-entity').setAttribute('text', 'value', currentPoint.message);
+            const textEntity = document.querySelector('#text-entity');
+            textEntity.setAttribute('text', 'value', currentPoint.message);
+            textEntity.setAttribute('text', 'font', currentPoint.font);
+            textEntity.setAttribute('text', 'negate', 'false');
         }
 
         function updateTextIfNear(lat, lng) {
@@ -1399,7 +1417,7 @@
                 { circle: "7", name: "宿舍(男)", coords: [24.15157844348967, 120.68410448132035] },
                 { circle: "8", name: "奇秀樓", coords: [24.151224781813994, 120.68397935752898] },
                 { circle: "9", name: "弘業樓", coords: [24.1505058854478, 120.68404953097337] },
-                { circle: "10", name: "home", coords: [24.150996625919188, 120.68148734742584], image: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/zcl.png', title: 'home', description: '家的描述', buttonText: '集點', slideIndex: 2, toggleScene: true  },
+                // { circle: "10", name: "home", coords: [24.150996625919188, 120.68148734742584], image: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/zcl.png', title: 'home', description: '家的描述', buttonText: '集點', slideIndex: 2, toggleScene: true  },
             ],
            
             
@@ -1431,26 +1449,26 @@
                 { name: "集點", 
                   coords: [24.150896625919188, 120.68148734742584],
                   image: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/zcl-1.png',
-                  title: '標題1',
-                  description: "描述"
+                  title: '自助機器',
+                  description: "位於資訊樓1樓電梯左側，左邊是自動繳費機，右邊是自動加值跟儲值機，有需求的同學可前往使用。請至此集點處AR掃描~"
                 },
                 { name: "大樓", 
                   coords: [24.150996625919188, 120.68148734742584],
                   image: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/zcl.png',
-                  title: '標題2',
-                  description: "描述"
+                  title: '行政&資訊樓',
+                  description: "找到大樓啦~請至此處看板AR掃描看看會發生什麼事???"
                 },
                 { name: "集點", 
                   coords: [24.14961330934904, 120.68364591589136],
                   image: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/zcl-1.png',
                   title: '標題1',
-                  description: "描述"
+                  description: "描述1"
                 },
                 { name: "大樓", 
                   coords: [24.14971330934904, 120.68364591589136],
                   image: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/zcl.png',
                   title: '標題2',
-                  description: "描述"
+                  description: "描述1"
                 },
                 
             ]
@@ -1664,34 +1682,36 @@
                 name: "新位置1", 
                 coords: [24.150896625919188, 120.68148734742584],
                 title: '新位置1',
-                description: "introduce1",
-                modelUrl: "https://raw.githubusercontent.com/Rayasd396kr/ar/main/map.glb",
-                iconUrl: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/web.png' 
+                description: "此處是花園廣場，會舉辦市集",
+                font:"https://raw.githubusercontent.com/Rayasd396kr/ar/main/flower-msdf.json",
+                modelUrl: "https://raw.githubusercontent.com/Rayasd396kr/ar/main/flower.glb",
+                iconUrl: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/surprise.png' 
             },
             { 
                 name: "新位置2", 
-                coords: [24.150996625919188, 120.68148734742584],
+                coords: [24.15022088767326, 120.68364978317109],
                 title: '新位置2',
-                description: "introduce2",
+                description: "此處是花園廣場，會舉辦市集",
+                font:"https://raw.githubusercontent.com/Rayasd396kr/ar/main/flower-msdf.json",
                 modelUrl: "https://raw.githubusercontent.com/Rayasd396kr/ar/main/bluenew.glb",
                 iconUrl: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/web.png' 
             },
-            { 
-                name: "新位置3", 
-                coords: [24.14961330934904, 120.68364591589136],
-                title: '新位置3',
-                description: "introduce3",
-                modelUrl: "https://raw.githubusercontent.com/Rayasd396kr/ar/main/bluenew.glb",
-                iconUrl: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/web.png' 
-            },
-            { 
-                name: "新位置4", 
-                coords: [24.14971330934904, 120.68364591589136],
-                title: '新位置4',
-                description: "introduce4",
-                modelUrl: "https://raw.githubusercontent.com/Rayasd396kr/ar/main/map.glb",
-                iconUrl: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/web.png' 
-            },
+            // { 
+            //     name: "新位置3", 
+            //     coords: [24.14961330934904, 120.68364591589136],
+            //     title: '新位置3',
+            //     description: "introduce3",
+            //     modelUrl: "https://raw.githubusercontent.com/Rayasd396kr/ar/main/bluenew.glb",
+            //     iconUrl: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/web.png' 
+            // },
+            // { 
+            //     name: "新位置4", 
+            //     coords: [24.14971330934904, 120.68364591589136],
+            //     title: '新位置4',
+            //     description: "introduce4",
+            //     modelUrl: "https://raw.githubusercontent.com/Rayasd396kr/ar/main/map.glb",
+            //     iconUrl: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/web.png' 
+            // },
         ];
 
         function createBox(content) {
@@ -1703,6 +1723,7 @@
             var textBox = document.getElementById('text-box');
             var infoText = document.getElementById('info-text');
             infoText.setAttribute('value', content.text);
+            infoText.setAttribute('font', content.font);
             textBox.setAttribute('visible', 'true');
 
             var mapContainer = document.getElementById('map-container');
@@ -1766,8 +1787,9 @@
                         marker.on('click', function() {
                             var content = {
                                 modelUrl: location.modelUrl,
-                                position: '0 1 -3',
-                                text: location.description // 添加文字描述
+                                position: '0 2 -3',
+                                text: location.description,
+                                font: location.font,
                             };
                             createBox(content);
                         });
@@ -1796,14 +1818,14 @@
             var customInfoWindow = document.getElementById('custom-info-window');
             var infoImage = document.getElementById('info-image');
             var infoTitle = document.getElementById('info-title');
-            var infoText = document.getElementById('info-text');
+            var infoDescription = document.getElementById('info-description');
             // var infoButton1 = document.getElementById('info-button1');
             var infoButton2 = document.getElementById('info-button2');
 
 
             infoImage.src = location.image || 'default-image.jpg'; 
-            infoText.infoTitle = location.title; 
-            infoText.textContent = location.description;
+            infoTitle.textContent = location.title;
+            infoDescription.textContent = location.description;
              
 
             // infoButton1.onclick = function() {
