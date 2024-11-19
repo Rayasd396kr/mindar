@@ -1367,7 +1367,7 @@
             const currentPoint = points[currentPointIndex];
             const distance = calculateDistance(lat, lng, currentPoint.lat, currentPoint.lng);
 
-            if (distance < 50) { // 设定范围，例如 50 米
+            if (distance < 10) { // 设定范围，例如 50 米
                 currentPointIndex++;
                 if (currentPointIndex < points.length) {
                     updateMarkerAndText();
