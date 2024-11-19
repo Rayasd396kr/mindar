@@ -1447,7 +1447,7 @@
         var pointsOfInterest = {
             navigation: [
                 { name: "集點", 
-                  coords: [24.150896625919188, 120.68148734742584],
+                  coords: [24.150996625919188, 120.68148734742584],
                   image: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/zcl-1.png',
                   title: '自助機器',
                   description: "位於資訊樓1樓電梯左側，左邊是自動繳費機，右邊是自動加值跟儲值機，有需求的同學可前往使用。請至此集點處AR掃描~"
@@ -1459,7 +1459,7 @@
                   description: "找到大樓啦~請至此處看板AR掃描看看會發生什麼事???"
                 },
                 { name: "集點", 
-                  coords: [24.14961330934904, 120.68364591589136],
+                  coords: [24.14971330934904, 120.68364591589136],
                   image: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/zcl-1.png',
                   title: '自助機器',
                   description: "位於資訊樓1樓電梯左側，左邊是自動繳費機，右邊是自動加值跟儲值機，有需求的同學可前往使用。請至此集點處AR掃描~"
@@ -1746,12 +1746,13 @@
             // 计算距离并过滤出 50 米以内的点
             var nearbyLocations = [...Object.values(pointsOfInterest).flat()].filter(location => {
                 var distance = map.distance(latlng, location.coords);
-                return distance < 50;
+                console.log(`距离 ${location.name}：${distance} 米`);
+                return distance < 30;
             }).map(location => ({
                 location,
                 distance: map.distance(latlng, location.coords)
             }));
-
+            console.log(nearbyLocations);
             infoList.innerHTML = '';
 
 
@@ -1780,7 +1781,7 @@
                         popupAnchor: [0, -32] // 设置弹出窗口锚点
                     });
                     var distance = map.distance(latlng, location.coords);
-                    if (distance < 50) {
+                    if (distance < 30) {
                         var marker = L.marker(location.coords, { icon: customIcon }).addTo(map); // 这里应用 customIcon
                         additionalMarker.push(marker);
 
