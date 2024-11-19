@@ -1746,7 +1746,7 @@
             // 计算距离并过滤出 50 米以内的点
             var nearbyLocations = [...Object.values(pointsOfInterest).flat()].filter(location => {
                 var distance = map.distance(latlng, location.coords);
-                return distance < 10;
+                return distance < 50;
             }).map(location => ({
                 location,
                 distance: map.distance(latlng, location.coords)
@@ -1780,7 +1780,7 @@
                         popupAnchor: [0, -32] // 设置弹出窗口锚点
                     });
                     var distance = map.distance(latlng, location.coords);
-                    if (distance < 10) {
+                    if (distance < 50) {
                         var marker = L.marker(location.coords, { icon: customIcon }).addTo(map); // 这里应用 customIcon
                         additionalMarker.push(marker);
 
