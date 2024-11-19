@@ -1777,9 +1777,6 @@
                 infoWindow.style.display = 'none';
             }
         }
-        // 存储当前显示的标记
-        var activeMarkers = [];
-
         if (navigator.geolocation) {
             navigator.geolocation.watchPosition(function(position) {
                 var latlng = L.latLng(position.coords.latitude, position.coords.longitude);
@@ -1794,20 +1791,8 @@
         }
 
         function updateNearbyMarkers(latlng) {
-            // 清除所有超出30米范围的标记
-            activeMarkers.forEach(function(marker) {
-                var distance = map.distance(latlng, marker.getLatLng());
-                if (distance >= 30) {
-                    map.removeLayer(marker); // 超过30米，移除标记
-                }
-            });
+            var additionalMarker = [];
 
-            // 清空 activeMarkers 数组中的已移除标记
-            activeMarkers = activeMarkers.filter(function(marker) {
-                return map.hasLayer(marker); // 保留仍在地图上的标记
-            });
-
-            // 遍历 additionalMarkers，根据新的距离添加标记
             additionalMarkers.forEach(function(location) {
                 var customIcon = L.icon({
                     iconUrl: location.iconUrl,
@@ -1815,11 +1800,10 @@
                     iconAnchor: [16, 32], // 设置图标锚点
                     popupAnchor: [0, -32] // 设置弹出窗口锚点
                 });
-
                 var distance = map.distance(latlng, location.coords);
                 if (distance < 30) { // 如果距离小于 30 米
                     var marker = L.marker(location.coords, { icon: customIcon }).addTo(map);
-                    activeMarkers.push(marker); // 将新标记添加到 activeMarkers 数组中
+                    additionalMarker.push(marker);
 
                     marker.on('click', function() {
                         var content = {
@@ -1833,7 +1817,6 @@
                 }
             });
         }
-
 
         document.getElementById('toggle-button').addEventListener('click', function() {
             var entity = document.getElementById('dynamic-entity');
