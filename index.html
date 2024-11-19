@@ -1771,34 +1771,51 @@
 
                 infoWindow.style.display = 'block';
 
-                // 添加 additionalMarkers 并且只在 50 米内的点
-                var additionalMarker = [];
-                additionalMarkers.forEach(function(location) {
-                    var customIcon = L.icon({
-                        iconUrl: location.iconUrl,
-                        iconSize: [32, 32], // 设置图标大小
-                        iconAnchor: [16, 32], // 设置图标锚点
-                        popupAnchor: [0, -32] // 设置弹出窗口锚点
-                    });
-                    var distance = map.distance(latlng, location.coords);
-                    if (distance < 30) {
-                        var marker = L.marker(location.coords, { icon: customIcon }).addTo(map); // 这里应用 customIcon
-                        additionalMarker.push(marker);
-
-                        marker.on('click', function() {
-                            var content = {
-                                modelUrl: location.modelUrl,
-                                position: '0 2 -3',
-                                text: location.description,
-                                font: location.font,
-                            };
-                            createBox(content);
-                        });
-                    }
-                });
+                
+                
             } else {
                 infoWindow.style.display = 'none';
             }
+        }
+        if (navigator.geolocation) {
+            navigator.geolocation.watchPosition(function(position) {
+                var latlng = L.latLng(position.coords.latitude, position.coords.longitude);
+                updateNearbyMarkers(latlng);
+            }, function(error) {
+                console.log('Error getting location: ', error);
+            }, {
+                enableHighAccuracy: true, // 启用高精度
+                maximumAge: 10000, // 最大缓存时间
+                timeout: 10000 // 最大等待时间
+            });
+        }
+
+        function updateNearbyMarkers(latlng) {
+            var additionalMarker = [];
+
+            additionalMarkers.forEach(function(location) {
+                var customIcon = L.icon({
+                    iconUrl: location.iconUrl,
+                    iconSize: [32, 32], // 设置图标大小
+                    iconAnchor: [16, 32], // 设置图标锚点
+                    popupAnchor: [0, -32] // 设置弹出窗口锚点
+                });
+                var distance = map.distance(latlng, location.coords);
+                if (distance < 30) { // 如果距离小于 30 米
+                    var marker = L.marker(location.coords, { icon: customIcon }).addTo(map);
+                    additionalMarker.push(marker);
+
+                    marker.on('click', function() {
+                        var content = {
+                            modelUrl: location.modelUrl,
+                            position: '0 2 -3',
+                            text: location.description,
+                            font: location.font,
+                        };
+                        createBox(content);
+                    });
+                }
+            });
         }
 
         document.getElementById('toggle-button').addEventListener('click', function() {
