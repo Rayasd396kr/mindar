@@ -2074,17 +2074,17 @@
             }
         }
         // 等待文檔加載完成
-        document.addEventListener('DOMContentLoaded', (event) => {
-            const okStatus1 = localStorage.getItem('okStatus1');
-            const okStatus2 = localStorage.getItem('okStatus2');
+        // document.addEventListener('DOMContentLoaded', (event) => {
+        //     const okStatus1 = localStorage.getItem('okStatus1');
+        //     const okStatus2 = localStorage.getItem('okStatus2');
 
-            if (okStatus1 === 'true') {
-                document.getElementById('cell-1').innerText = 'OK';
-            }
-            if (okStatus2 === 'true') {
-                document.getElementById('cell-2').innerText = 'OK';
-            }
-        });
+        //     if (okStatus1 === 'true') {
+        //         document.getElementById('cell-1').innerText = 'OK';
+        //     }
+        //     if (okStatus2 === 'true') {
+        //         document.getElementById('cell-2').innerText = 'OK';
+        //     }
+        // });
 
         // 使用 storage 事件監聽 localStorage 的變化，並更新頁面
         window.addEventListener('storage', (event) => {
