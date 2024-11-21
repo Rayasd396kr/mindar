@@ -2087,15 +2087,17 @@
         // });
 
         // 使用 storage 事件監聽 localStorage 的變化，並更新頁面
-        window.addEventListener('storage', (event) => {
-            if (event.key === 'okStatus1' && event.newValue === 'true') {
+        window.addEventListener('message', (event) => {
+        
+            
+            // 根据传来的数据更新页面内容
+            if (event.data.key === 'okStatus1' && event.data.value === 'true') {
                 document.getElementById('cell-1').innerText = 'OK';
             }
-            if (event.key === 'okStatus2' && event.newValue === 'true') {
+            if (event.data.key === 'okStatus2' && event.data.value === 'true') {
                 document.getElementById('cell-2').innerText = 'OK';
             }
         });
-
 
 
       
