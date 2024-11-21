@@ -454,10 +454,12 @@
             flex: 0 1 60%;
         }
         #info-description{
-            color: black;
+            color: rgb(41, 41, 41);
             font-size: 18px;
             margin: 0;
             flex: 0 1 60%;
+            text-align: center;
+            
         }
         .button-container {
             display: flex; 
@@ -465,7 +467,7 @@
         }
 
         #info-button1, #info-button2 {
-            background-color: rgba(0, 0, 0, 0.5);
+            background-color: rgba(37, 110, 165, 0.5);
             color: white;
             border: none;
             padding: 10px 20px;
@@ -1035,8 +1037,8 @@
                     <img class="slide-img" src="https://raw.githubusercontent.com/Rayasd396kr/ar/main/zcl-1.png" />
                     <i class="fa-solid fa-location-dot location-dot1"></i>
                     <div class="slide-background">
-                        <p class="slide-title">1.資訊館一樓內部</p>
-                        <p class="slide-text">此處位於資訊樓電梯旁邊，有一台關於學生影印相關文件的機器，還有冷氣儲值機。</p>
+                        <p class="slide-title">自助機器</p>
+                        <p class="slide-text">位於資訊樓1樓電梯左側，左邊是自動繳費機，右邊是自動加值跟儲值機。</p>
                     </div>
                     <i class="fa-solid fa-1 fa-number"></i>
                 </div>
@@ -1044,10 +1046,11 @@
             <div class="swiper-slide">
                 <div class="slide-content">
                     <span class="close-btn">&times;</span>
-                    <img class="slide-img" src="https://swiperjs.com/demos/images/nature-3.jpg" />
+                    <img class="slide-img" src="https://raw.githubusercontent.com/Rayasd396kr/ar/main/work.png" />
+                    <i class="fa-solid fa-location-dot location-dot1"></i>
                     <div class="slide-background">
-                        <p class="slide-title">資管四樓某地方</p>
-                        <p class="slide-text">此處是資管大本營，每個資管人都在此上過課，培養出很多優秀人才。</p>
+                        <p class="slide-title">工坊</p>
+                        <p class="slide-text">位於昌明樓地下1樓，是設計學院的工坊教室。</p>
                     </div>
                     <i class="fa-solid fa-2 fa-number"></i>
                 </div>
@@ -1055,10 +1058,11 @@
             <div class="swiper-slide">
                 <div class="slide-content">
                     <span class="close-btn">&times;</span>
-                    <img class="slide-img" src="https://swiperjs.com/demos/images/nature-3.jpg" />
+                    <img class="slide-img" src="https://raw.githubusercontent.com/Rayasd396kr/ar/main/farmer.png" />
+                    <i class="fa-solid fa-location-dot location-dot1"></i>
                     <div class="slide-background">
-                        <p class="slide-title">資管四樓某地方</p>
-                        <p class="slide-text">此處是資管大本營，每個資管人都在此上過課，培養出很多優秀人才。</p>
+                        <p class="slide-title">智慧菜園</p>
+                        <p class="slide-text">位於翰英樓後方，是智慧產業學院實驗場域。</p>
                     </div>
                     <i class="fa-solid fa-3 fa-number"></i>
                 </div>
@@ -1350,7 +1354,14 @@
             { lat: 24.149936946350714, lng: 120.68321904749284, message: '請前往第二個標示點', font: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/text2-msdf.json' },
             { lat: 24.150896625919188, lng: 120.68148734742584, message: 'go to 3' },
         ];
+        document.querySelector('.location-dot1').addEventListener('click', function() {
+            // 在地圖上添加標注點
+            const marker = L.marker([24.149398287039602, 120.68367148114709]).addTo(map);
+            marker.bindPopup('<b>自助機器集點位置</b>').openPopup();
 
+            const swiperContainer = document.querySelector('.swiper-container');
+            swiperContainer.style.display = 'none';
+        });
         let currentPointIndex = 0;
         let currentMarker = null;
 
@@ -1481,7 +1492,7 @@
                   coords: [24.14971330934904, 120.68364591589136],
                   image: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/zcl-1.png',
                   title: '自助機器',
-                  description: "位於資訊樓1樓電梯左側，左邊是自動繳費機，右邊是自動加值跟儲值機，有需求的同學可前往使用。請至此集點處AR掃描~"
+                  description: "位於資訊樓1樓電梯左側，左邊是自動繳費機，右邊是自動加值跟儲值機。請至此集點處AR掃描~"
                 },
                 { name: "大樓", 
                   coords: [24.14971330934904, 120.68364591589136],
@@ -2160,7 +2171,7 @@
 
         function addMarkerToMap(coords, buildingName, floor, id) {
             const marker = L.marker(coords).addTo(map)
-                .bindPopup(`<b>${buildingName}</b><br>樓層：${floor}<br>編號：${id}`)
+                .bindPopup(`<b>${buildingName}</b><br>${floor}<br>${id}`)
                 .openPopup();
             markers.push(marker); 
         }
@@ -2234,8 +2245,8 @@
             switch (selectedValue) {
                 case "office01":
                     buildingName.textContent = "大樓：中正樓";
-                    floor.textContent = "樓層：2樓";
-                    id.textContent = "編號：3215";
+                    floor.textContent = "2樓";
+                    id.textContent = "3215";
                     building = "中正樓";
                     break;
                 case "office02":
@@ -2370,14 +2381,14 @@
             switch (selectedValue) {
                 case "department01":
                     buildingName.textContent = "大樓：中商大樓";
-                    floor.textContent = "2樓";
-                    id.textContent = "7201";
+                    floor.textContent = "樓層：2樓";
+                    id.textContent = "編號：7201";
                     building = "中商大樓";
                     break;
                 case "department02":
                     buildingName.textContent = "大樓：中正樓";
-                    floor.textContent = "7樓";
-                    id.textContent = "3705";
+                    floor.textContent = "樓層：7樓";
+                    id.textContent = "編號：3705";
                     building = "中正樓";
                     break;
                 case "department03":
