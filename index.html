@@ -1354,14 +1354,13 @@
         const points = [
             { lat: 24.149827161356974, lng: 120.6837292274916, message: '請前往第一個標示點', font: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/text1-msdf.json' },
             { lat: 24.149936946350714, lng: 120.68321904749284, message: '請前往第二個標示點', font: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/text2-msdf.json' },
-            { lat: 24.150896625919188, lng: 120.68148734742584, message: '請前往第二個標示點', font: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/text2-msdf.json' },
-            { lat: 24.150275418370242, lng: 120.68314956998839, message: 'go to 4' },
-            { lat: 24.15104850857686, lng: 120.68285674253544, message: 'go to 5' },
-            { lat: 24.15108434283592, lng: 120.68248274344485, message: 'go to 6' },
-            { lat: 24.15176573167984, lng: 120.68334915775299, message: 'go to 7-1' },
-            { lat: 24.15161788382454, lng: 120.68391529083698, message: 'go to 7-2' },
-            { lat: 24.151202840126672, lng: 120.6839230995668, message: 'go to 8' },
-            { lat: 24.150408375049313, lng: 120.68400313907316, message: 'go to 9' },
+            { lat: 24.150896625919188, lng: 120.68148734742584, message: '請前往標示點', font: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/text3-msdf.json' },
+            { lat: 24.15104850857686, lng: 120.68285674253544, message: '請前往標示點', font: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/text3-msdf.json' },
+            { lat: 24.15108434283592, lng: 120.68248274344485, message: '請前往標示點', font: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/text3-msdf.json' },
+            { lat: 24.15176573167984, lng: 120.68334915775299, message: '請前往標示點', font: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/text3-msdf.json' },
+            { lat: 24.15161788382454, lng: 120.68391529083698, message: '請前往標示點', font: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/text3-msdf.json' },
+            { lat: 24.151202840126672, lng: 120.6839230995668, message: '請前往標示點', font: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/text3-msdf.json' },
+            { lat: 24.150408375049313, lng: 120.68400313907316, message: '請前往標示點', font: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/text3-msdf.json' },
         ];
         document.querySelector('.location1').addEventListener('click', function() {
             // 在地圖上添加標注點
@@ -1422,7 +1421,7 @@
             const currentPoint = points[currentPointIndex];
             const distance = calculateDistance(lat, lng, currentPoint.lat, currentPoint.lng);
 
-            if (distance < 10) { // 设定范围，例如 50 米
+            if (distance < 15) { // 设定范围，例如 50 米
                 currentPointIndex++;
                 if (currentPointIndex < points.length) {
                     updateMarkerAndText();
