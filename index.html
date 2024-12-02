@@ -129,7 +129,7 @@
         
         .toggle-info-window {
             position: fixed;
-            top: 220px;  
+            top: 280px;  
             left: 10px; 
             z-index: 1001;
             background-color: #307fb7;
@@ -152,7 +152,7 @@
         }
         .toggleStamp{
             position: fixed;
-            top: 160px;  
+            top: 220px;  
             left: 10px; 
             z-index: 1001;
             background-color: #307fb7;
@@ -170,6 +170,25 @@
             text-align: center;
         }
         .searchIcon{
+            position: fixed;
+            top: 160px;  
+            left: 10px; 
+            z-index: 1001;
+            background-color: #307fb7;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+            cursor: pointer;
+            font-size: 24px;
+            width: 25px; 
+            height: 25px; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        .helpicon{
             position: fixed;
             top: 100px;  
             left: 10px; 
@@ -227,7 +246,7 @@
             width: 235px;
             display: none;
             position: absolute;
-            top: 100px; 
+            top: 160px; 
             left: 70px; 
             border: none;
             border-radius: 5px;
@@ -278,7 +297,7 @@
             grid-template-columns: repeat(3, 1fr);
             gap: 10px;
             position: fixed;
-            top: 100px;
+            top: 220px;
             left: 180px;
             transform: translateX(-50%);
             z-index: 1005;
@@ -755,7 +774,49 @@
             z-index: 1001;
             cursor: pointer;
         }
-        
+        #helpContainer {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 70%;
+            padding: 20px;
+            z-index: 3000;
+            background-color: white;
+            color: black;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.59);
+            text-align: center; /* 將容器內部元素置中 */
+            display: none;
+        }
+        .helpinfo {
+            color: white;
+            background-color: #307fb7;
+            font-size: 16px; 
+            width: 25px; 
+            height: 25px;
+            border-radius: 3px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1; /* 確保圖示垂直居中 */
+        }
+        #helpContainer p {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px; /* 圖示和文字之間的間距 */
+        }
+        .infooverlay {
+            display: none; /* 初始隱藏 */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: transparent; /* 半透明黑色背景 */
+            z-index: 2999; /* 在視窗下方 */
+        }
         /* .leaflet-control-locate {
             position: fixed;
             top: 150px;  
@@ -905,12 +966,21 @@
     <i class="fa-solid fa-file-lines toggle-info-window" id="toggle-info-window" aria-hidden="true" onclick="toggleinfo1()" ></i>
     <i class="fa-solid fa-stamp stamp-icon toggleStamp" id="toggleStamp" aria-hidden="true" onclick="toggleGrid()"></i>
     <i class="fa-solid fa-search searchIcon" id="searchIcon" aria-hidden="true" onclick="toggleSearchBox()"></i>
+    <i class="fa-solid fa-info helpicon" id="helpicon" aria-hidden="true" onclick="helpBox()"></i>
     <div id="customButtonContainer">
         <h2>使用說明</h2>
         <p>適用於校園環境中</p>
         <button id="customButton"><i class="fa-solid fa-location-dot"></i>&nbsp;定位</button>
     </div>
-    
+    <div id="infooverlay" class="infooverlay" onclick="closeHelpContainer()"></div>
+    <div id="helpContainer" class="helpContainer">
+        <h2>使用說明</h2>
+        <p><i class="fa-solid fa-info helpinfo"></i>：使用介紹<i class="fa-solid fa-search helpinfo"></i>：搜尋功能</p>
+        <p><i class="fa-solid fa-stamp helpinfo"></i>：集點活動<i class="fa-solid fa-file-lines helpinfo"></i>：大樓資訊</p>
+        <p style="text-align: start;">建議使用流程：1.首先定位目前位置 > 2.根據右上角小導遊說明文字以及紅色閃爍點前往目標地點 > 3.靠近大樓和集點地會有提示 > 4.點選按鈕進行掃描 </p>
+        <p style="text-align: start;">補充：可自由探索校園或根據導覽路線行走，校園中有彩蛋點，會在下方地圖中出現，可點擊並查看相機畫面</p>
+
+    </div>
     <div id="searchBox" class="search-box hidden">
         <div class="button-container-search">
             <button class="button-container-search-button button-container-search-button1 active" onclick="updateContent('id', this)">編號</button>
@@ -997,7 +1067,7 @@
         <div id="cell-1" class="grid-item">1</div>
         <div id="cell-2" class="grid-item">2</div>
         <div id="cell-3" class="grid-item">3</div>
-        <div id="cell-4" class="grid-item">4</div>
+        <div class="grid-item">4</div>
         <div class="grid-item">5</div>
         <div class="grid-item">6</div>
         <div class="grid-item">7</div>
@@ -1056,7 +1126,7 @@
                     <i class="fa-solid fa-2 fa-number"></i>
                 </div>
             </div>
-            <div class="swiper-slide">
+            <!-- <div class="swiper-slide">
                 <div class="slide-content">
                     <span class="close-btn">&times;</span>
                     <img class="slide-img" src="https://raw.githubusercontent.com/Rayasd396kr/ar/main/aifarmer.png" />
@@ -1067,7 +1137,7 @@
                     </div>
                     <i class="fa-solid fa-3 fa-number"></i>
                 </div>
-            </div>
+            </div> -->
             <div class="swiper-slide">
                 <div class="slide-content">
                     <span class="close-btn">&times;</span>
@@ -1379,14 +1449,14 @@
             const swiperContainer = document.querySelector('.swiper-container');
             swiperContainer.style.display = 'none';
         });
-        document.querySelector('.location3').addEventListener('click', function() {
-            // 在地圖上添加標注點
-            const marker = L.marker([24.15151441672721, 120.6827037655753]).addTo(map);
-            marker.bindPopup('<b>智慧菜園集點位置</b>').openPopup();
+        // document.querySelector('.location3').addEventListener('click', function() {
+        //     // 在地圖上添加標注點
+        //     const marker = L.marker([24.15151441672721, 120.6827037655753]).addTo(map);
+        //     marker.bindPopup('<b>智慧菜園集點位置</b>').openPopup();
 
-            const swiperContainer = document.querySelector('.swiper-container');
-            swiperContainer.style.display = 'none';
-        });
+        //     const swiperContainer = document.querySelector('.swiper-container');
+        //     swiperContainer.style.display = 'none';
+        // });
         document.querySelector('.location4').addEventListener('click', function() {
             // 在地圖上添加標注點
             const marker = L.marker([24.151792761426837, 120.68322859015575]).addTo(map);
@@ -1984,22 +2054,28 @@
             //     const infodistance = map.distance(userLatLng, location.coords);
             //     addinfoMarkerToMap(location.coords, location.title, infodistance);
             // };
-            function addinfoMarkerToMap(coords, title, distance) {
-                const marker = L.marker(coords).addTo(map);
-                const popupContent = `
-                    <div>
-                        <h3>${title}</h3>
-                        ${distance !== undefined ? `<p>距離: ${distance.toFixed(2)} 公尺</p>` : ''}
-                    </div>
-                `;
-                marker.bindPopup(popupContent).openPopup();
-            }
+            // function addinfoMarkerToMap(coords, title, distance) {
+            //     const marker = L.marker(coords).addTo(map);
+            //     const popupContent = `
+            //         <div>
+            //             <h3>${title}</h3>
+            //             ${distance !== undefined ? `<p>距離: ${distance.toFixed(2)} 公尺</p>` : ''}
+            //         </div>
+            //     `;
+            //     marker.bindPopup(popupContent).openPopup();
+            // }
 
+            // infoButton2.onclick = function() {
+            //     toggleScene();
+            // };
             infoButton2.onclick = function() {
-                toggleScene();
+                if (location.name === '大樓') {
+                    toggleScene();
+                } else if (location.name === '集點') {
+                    togglePoint();
+                }
             };
-
-            
+                    
             customInfoWindow.style.display = 'block';
         }
 
@@ -2053,7 +2129,6 @@
             });
       });
       function toggleScene() {
-           
            var iframeContainer = document.createElement('div');
             iframeContainer.style.position = 'fixed';
             iframeContainer.style.top = '0px';
@@ -2066,7 +2141,7 @@
             
             var iframe = document.createElement('iframe');
             iframe.src = 'https://rayasd396kr.github.io/ar/index'; 
-            // iframe.src = 'http://127.0.0.1:5501/ar+location/mindar.html'; 
+            // iframe.src = 'http://127.0.0.1:5501/ar+location/building.html'; 
             iframe.style.width = '100%';
             iframe.style.height = '100%';
             iframe.style.border = 'none';
@@ -2091,6 +2166,43 @@
             document.body.appendChild(iframeContainer);
         }
 
+        function togglePoint() {
+           var iframeContainer = document.createElement('div');
+            iframeContainer.style.position = 'fixed';
+            iframeContainer.style.top = '0px';
+            iframeContainer.style.left = '0px';
+            iframeContainer.style.width = '100%';
+            iframeContainer.style.height = '100%';
+            iframeContainer.style.zIndex = '3000';
+            iframeContainer.style.backgroundColor = 'white';
+
+            
+            var iframe = document.createElement('iframe');
+            iframe.src = 'https://rayasd396kr.github.io/point/index'; 
+            // iframe.src = 'http://127.0.0.1:5501/ar+location/point.html';
+            iframe.style.width = '100%';
+            iframe.style.height = '100%';
+            iframe.style.border = 'none';
+            iframe.allow = 'camera';
+
+           
+            var closeButton = document.createElement('button');
+            closeButton.textContent = '關閉';
+            closeButton.style.position = 'absolute';
+            closeButton.style.top = '10px';
+            closeButton.style.right = '10px';
+            closeButton.style.zIndex = '3001';
+            closeButton.onclick = function() {
+                document.body.removeChild(iframeContainer);
+            };
+
+            
+            iframeContainer.appendChild(iframe);
+            iframeContainer.appendChild(closeButton);
+
+            
+            document.body.appendChild(iframeContainer);
+        }
         
         var userLatLng = null;
         map.on('locationfound', function(e) {
@@ -2098,7 +2210,15 @@
             updateInfoWindow(e.latlng);
         });
 
-        
+
+        function helpBox() {
+            document.getElementById('helpContainer').style.display = 'block';
+            document.getElementById('infooverlay').style.display = 'block';
+        }
+        function closeHelpContainer() {
+            document.getElementById('infooverlay').style.display = 'none';
+            document.getElementById('helpContainer').style.display = 'none';
+        }
 
         
         
@@ -2179,9 +2299,7 @@
             if (event.data.key === 'okStatus3' && event.data.value === 'true') {
                 document.getElementById('cell-3').innerText = 'OK';
             }
-            if (event.data.key === 'okStatus4' && event.data.value === 'true') {
-                document.getElementById('cell-4').innerText = 'OK';
-            }
+            
         });
 
 
