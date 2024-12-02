@@ -937,10 +937,10 @@
                 </a-entity>
             </a-camera>
             <!-- <a-entity material='color: green' position="0 1 -3" geometry='primitive: box'></a-entity> -->
-            <a-assets>
-                <!-- <a-asset-item id="my-model" src="https://raw.githubusercontent.com/Rayasd396kr/ar/main/bluenew.glb"></a-asset-item> -->
-            </a-assets>
-            <a-entity id="dynamic-entity" gltf-model="#my-model" position="1 1 0" scale="0.5 0.5 0.5" visible="false" animation="property: rotation; to: 0 360 0; loop: true; dur: 5000"></a-entity>
+            <!-- <a-assets>
+                <a-asset-item id="my-model" src="https://raw.githubusercontent.com/Rayasd396kr/ar/main/bluenew.glb"></a-asset-item>
+            </a-assets> -->
+            <a-entity id="dynamic-entity" gltf-model="" position="1 1 0" scale="0.5 0.5 0.5" visible="false" animation="property: rotation; to: 0 360 0; loop: true; dur: 5000"></a-entity>
             <a-entity id="text-box" position="0 0 -3" visible="false">
                 <a-plane color="#FFFFFF" width="2.5" height="1.5" position="0 0.7 0" material="src: url(https://raw.githubusercontent.com/Rayasd396kr/ar/main/square.png); transparent: true;"></a-plane>
                 <a-text id="info-text" font="" value="introduce" color="#000000" align="center" position="0 0.7 0.1" negate="false"></a-text>
@@ -970,6 +970,11 @@
     <div id="customButtonContainer">
         <h2>使用說明</h2>
         <p>適用於校園環境中</p>
+        <p><i class="fa-solid fa-info helpinfo"></i>：使用介紹<i class="fa-solid fa-search helpinfo"></i>：搜尋功能</p>
+        <p><i class="fa-solid fa-stamp helpinfo"></i>：集點活動<i class="fa-solid fa-file-lines helpinfo"></i>：大樓資訊</p>
+        <p style="text-align: start;">建議使用流程：1.首先定位目前位置 > 2.根據右上角小導遊說明文字以及紅色閃爍點前往目標地點 > 3.靠近大樓和集點地會有提示 > 4.點選按鈕進行掃描 </p>
+        <p style="text-align: start;">補充：可自由探索校園或根據導覽路線行走，校園中有彩蛋點，會在下方地圖中出現，可點擊並查看相機畫面</p>
+
         <button id="customButton"><i class="fa-solid fa-location-dot"></i>&nbsp;定位</button>
     </div>
     <div id="infooverlay" class="infooverlay" onclick="closeHelpContainer()"></div>
@@ -1577,6 +1582,7 @@
 
             ]
         };
+        // 24.149536185412746, 120.6830363195364
         var pointsOfInterest = {
             navigation: [
                 { name: "集點", 
@@ -1585,8 +1591,20 @@
                   title: '自助機器',
                   description: "位於資訊樓1樓電梯左側，左邊是自動繳費機，右邊是自動加值跟儲值機。請至此集點處AR掃描~"
                 },
+                { name: "集點", 
+                  coords: [24.149536185412746, 120.6830363195364],
+                  image: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/zcl-1.png',
+                  title: '自助機器',
+                  description: "位於資訊樓1樓電梯左側，左邊是自動繳費機，右邊是自動加值跟儲值機。請至此集點處AR掃描~"
+                },
                 { name: "大樓", 
                   coords: [24.150996625919188, 120.68148734742584],
+                  image: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/zcl.png',
+                  title: '行政&資訊樓',
+                  description: "找到大樓啦~請至此處看板AR掃描，看看會發生什麼事???"
+                },
+                { name: "大樓", 
+                  coords: [24.149536185412746, 120.6830363195364],
                   image: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/zcl.png',
                   title: '行政&資訊樓',
                   description: "找到大樓啦~請至此處看板AR掃描，看看會發生什麼事???"
@@ -1609,12 +1627,7 @@
                   title: '工坊',
                   description: "位於昌明樓地下1樓，是設計學院的工坊教室。"
                 },
-                { name: "集點", 
-                  coords: [24.15151441672721, 120.6827037655753],
-                  image: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/aifarmer.png',
-                  title: '智慧菜園',
-                  description: "位於翰英樓後方，是智慧產業學院實驗場域。"
-                },
+                
                 { name: "集點", 
                   coords: [24.151792761426837, 120.68322859015575],
                   image: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/gym.png',
@@ -1870,8 +1883,9 @@
 
 
         let isManuallyClosed = false;
-
+        // 24.149536185412746, 120.6830363195364
         var additionalMarkers = [
+            //花園
             { 
                 name: "新位置1", 
                 coords: [24.15022088767326, 120.68364978317109],
@@ -1890,22 +1904,16 @@
                 modelUrl: "https://raw.githubusercontent.com/Rayasd396kr/ar/main/flower.glb",
                 iconUrl: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/surprise.png' 
             },
-            // { 
-            //     name: "新位置3", 
-            //     coords: [24.14961330934904, 120.68364591589136],
-            //     title: '新位置3',
-            //     description: "introduce3",
-            //     modelUrl: "https://raw.githubusercontent.com/Rayasd396kr/ar/main/bluenew.glb",
-            //     iconUrl: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/web.png' 
-            // },
-            // { 
-            //     name: "新位置4", 
-            //     coords: [24.14971330934904, 120.68364591589136],
-            //     title: '新位置4',
-            //     description: "introduce4",
-            //     modelUrl: "https://raw.githubusercontent.com/Rayasd396kr/ar/main/map.glb",
-            //     iconUrl: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/web.png' 
-            // },
+            { 
+                name: "新位置3", 
+                coords: [24.149536185412746, 120.6830363195364],
+                title: '新位置3',
+                description: "此處是花園廣場，會舉辦市集",
+                font:"https://raw.githubusercontent.com/Rayasd396kr/ar/main/flower-msdf.json",
+                modelUrl: "https://raw.githubusercontent.com/Rayasd396kr/ar/main/flower.glb",
+                iconUrl: 'https://raw.githubusercontent.com/Rayasd396kr/ar/main/surprise.png' 
+            },
+            
         ];
 
         function createBox(content) {
@@ -2003,7 +2011,7 @@
                 var distance = map.distance(latlng, location.coords);
 
                 // 如果距离小于 30 米，添加标记
-                if (distance < 30) { 
+                if (distance < 20) { 
                     var marker = L.marker(location.coords, { icon: customIcon }).addTo(map);
                     additionalMarker.push(marker);
 
