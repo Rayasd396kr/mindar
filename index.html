@@ -971,7 +971,7 @@
         <h2>使用說明</h2>
         <p>適用於校園環境中</p>
         <p><i class="fa-solid fa-info helpinfo"></i>：使用介紹<i class="fa-solid fa-search helpinfo"></i>：搜尋功能</p>
-        <p><i class="fa-solid fa-stamp helpinfo"></i>：集點活動<i class="fa-solid fa-file-lines helpinfo"></i>：大樓資訊</p>
+        <p><i class="fa-solid fa-stamp helpinfo"></i>：集點活動<i class="fa-solid fa-file-lines helpinfo"></i>：大樓圖示</p>
         <p style="text-align: start;">建議使用流程：1.首先定位目前位置 > 2.根據右上角小導遊說明文字以及紅色閃爍點前往目標地點 > 3.靠近大樓和集點地會有提示 > 4.點選按鈕進行掃描 </p>
         <p style="text-align: start;">補充：可自由探索校園或根據導覽路線行走，校園中有彩蛋點，會在下方地圖中出現，可點擊並查看相機畫面</p>
 
@@ -981,12 +981,12 @@
     <div id="helpContainer" class="helpContainer">
         <h2>使用說明</h2>
         <p><i class="fa-solid fa-info helpinfo"></i>：使用介紹<i class="fa-solid fa-search helpinfo"></i>：搜尋功能</p>
-        <p><i class="fa-solid fa-stamp helpinfo"></i>：集點活動<i class="fa-solid fa-file-lines helpinfo"></i>：大樓資訊</p>
+        <p><i class="fa-solid fa-stamp helpinfo"></i>：集點活動<i class="fa-solid fa-file-lines helpinfo"></i>：大樓圖示</p>
         <p style="text-align: start;">建議使用流程：1.首先定位目前位置 > 2.根據右上角小導遊說明文字以及紅色閃爍點前往目標地點 > 3.靠近大樓和集點地會有提示 > 4.點選按鈕進行掃描 </p>
         <p style="text-align: start;">補充：可自由探索校園或根據導覽路線行走，校園中有彩蛋點，會在下方地圖中出現，可點擊並查看相機畫面</p>
 
     </div>
-    <div id="searchBox" class="search-box hidden">
+    <div id="searchBox" class="search-box" style="display: none;">
         <div class="button-container-search">
             <button class="button-container-search-button button-container-search-button1 active" onclick="updateContent('id', this)">編號</button>
             <button class="button-container-search-button" onclick="updateContent('office', this)">處室</button>
@@ -1152,7 +1152,7 @@
                         <p class="slide-title">健身房</p>
                         <p class="slide-text">位於女宿一樓，提供給大家健身運動。</p>
                     </div>
-                    <i class="fa-solid fa-4 fa-number"></i>
+                    <i class="fa-solid fa-3 fa-number"></i>
                 </div>
             </div>
             <!-- <div class="swiper-slide">
@@ -1445,6 +1445,8 @@
 
             const swiperContainer = document.querySelector('.swiper-container');
             swiperContainer.style.display = 'none';
+            const gridContainer = document.getElementById("grid-container");
+            gridContainer.style.display = 'none';
         });
         document.querySelector('.location2').addEventListener('click', function() {
             // 在地圖上添加標注點
@@ -1453,6 +1455,8 @@
 
             const swiperContainer = document.querySelector('.swiper-container');
             swiperContainer.style.display = 'none';
+            const gridContainer = document.getElementById("grid-container");
+            gridContainer.style.display = 'none';
         });
         // document.querySelector('.location3').addEventListener('click', function() {
         //     // 在地圖上添加標注點
@@ -1469,6 +1473,8 @@
 
             const swiperContainer = document.querySelector('.swiper-container');
             swiperContainer.style.display = 'none';
+            const gridContainer = document.getElementById("grid-container");
+            gridContainer.style.display = 'none';
         });
         let currentPointIndex = 0;
         let currentMarker = null;
@@ -2276,6 +2282,8 @@
             var gridContainer = document.getElementById("grid-container");
             if (gridContainer.style.display === "none") {
                 gridContainer.style.display = "grid";
+                const searchBox = document.getElementById("searchBox");
+                searchBox.style.display = "none";
             } else {
                 gridContainer.style.display = "none";
             }
@@ -2322,12 +2330,12 @@
         }
 
         function toggleSearchBox() {
-            var searchBox = document.getElementById("searchBox");
-            if (searchBox.classList.contains("hidden")) {
-                searchBox.classList.remove("hidden");
+            const searchBox = document.getElementById("searchBox");
+            if (searchBox.style.display == "none") {
                 searchBox.style.display = "block";
+                const gridContainer = document.getElementById("grid-container");
+                gridContainer.style.display = 'none';
             } else {
-                searchBox.classList.add("hidden");
                 searchBox.style.display = "none";
             }
         }
