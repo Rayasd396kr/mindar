@@ -2408,7 +2408,7 @@
                     document.getElementById('floor').textContent = `樓層：${result.floor}`;
                     document.getElementById('id').textContent = `編號：${result.id}`;
                     
-                    addMarkerToMap(result.coords, result.buildingName, result.floor, result.id);
+                    addMarkerToMap(result.coords, `大樓：${result.buildingName}`, `樓層：${result.floor}`, `編號：${result.id}`);
                 } else {
                     document.getElementById('searchInput').value = '';
                     document.getElementById('buildingName').textContent = "大樓名稱：";
